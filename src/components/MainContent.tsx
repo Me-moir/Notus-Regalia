@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useTransition, useRef, Suspense, lazy } from 'react';
+import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
 // Lazy load tab components for code splitting
 const HomeTab = lazy(() => import('./tabs/HomeTab'));
@@ -23,7 +23,6 @@ const TabLoadingFallback = () => (
 
 const MainContent = ({ activeTab }: MainContentProps) => {
   const [displayedTab, setDisplayedTab] = useState(activeTab);
-  const [isPending, startTransition] = useTransition();
   const [activeCardIndex, setActiveCardIndex] = useState(1);
   const [textAnimationKey, setTextAnimationKey] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -49,9 +48,7 @@ const MainContent = ({ activeTab }: MainContentProps) => {
   useEffect(() => {
     if (activeTab !== displayedTab) {
       const timer = setTimeout(() => {
-        startTransition(() => {
-          setDisplayedTab(activeTab);
-        });
+        setDisplayedTab(activeTab);
       }, 300);
       return () => clearTimeout(timer);
     }
@@ -185,7 +182,7 @@ const MainContent = ({ activeTab }: MainContentProps) => {
     }
   };
 
-  const isTransitioning = activeTab !== displayedTab || isPending;
+  const isTransitioning = activeTab !== displayedTab;
 
   return (
     <div 

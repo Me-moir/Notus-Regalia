@@ -45,7 +45,7 @@ export function ContainerTextFlip({
     }, interval);
 
     return () => clearInterval(intervalId);
-  }, [words, interval]);
+  }, [words.length, interval]);
 
   return (
     <motion.span
@@ -54,7 +54,7 @@ export function ContainerTextFlip({
       animate={{ width }}
       transition={{ duration: animationDuration / 2000 }}
       className={cn(
-        "relative inline-block rounded-lg pt-2 pb-3 px-4 font-bold text-white origin-left",
+        "relative inline-block rounded-lg pt-2 pb-3 px-4 font-bold origin-left",
         "[background:linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.05))]",
         "shadow-[inset_0_-1px_rgba(255,255,255,0.1),inset_0_0_0_1px_rgba(255,255,255,0.1),_0_4px_8px_rgba(0,0,0,0.2)]",
         "dark:[background:linear-gradient(to_bottom,rgba(55,65,81,0.3),rgba(31,41,55,0.3))]",

@@ -1,0 +1,740 @@
+/* Performance optimizations */
+.projectCard,
+.cardOuter,
+.cardInnerWrapper {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.cardsScrollContainer {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.projectCard {
+  flex-shrink: 0;
+  width: 400px;
+  height: 500px;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cardInactive {
+  opacity: 0.3;
+}
+
+.cardInactive * {
+  animation-play-state: paused !important;
+}
+
+.cardInactive .cardInnerWrapper::before {
+  opacity: 0 !important;
+}
+
+.cardActive {
+  opacity: 1;
+}
+
+/* Glowing Effect Box Styles */
+.notificationBox {
+  position: relative;
+  height: auto;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+}
+
+/* Glowing Effect Box Styles */
+.notificationBox::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 1.5rem;
+  padding: 2px;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(0, 255, 166, 0.8),
+    rgba(255, 215, 0, 0.6),
+    rgba(236, 72, 153, 0.6),
+    rgba(147, 51, 234, 0.6),
+    rgba(59, 130, 246, 0.5),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  pointer-events: none;
+  z-index: 1;
+  will-change: opacity;
+}
+
+.notificationBox:hover::before {
+  opacity: 1;
+}
+
+.notificationBox:hover .boxLineGradient {
+  opacity: 1;
+}
+
+.notificationBox:hover .boxIconGradient {
+  opacity: 1;
+}
+
+.boxLineGradient,
+.boxIconGradient {
+  transition: opacity 0.4s ease-in-out;
+}
+
+.boxInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  height: auto;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  background: rgba(24, 24, 27, 0.5);
+  border: 0.75px solid rgba(255, 255, 255, 0.05);
+  z-index: 2;
+}
+
+.notititle {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  margin-top: 0;
+  transition: color 0.5s ease-in-out;
+}
+
+.notibody {
+  color: rgb(163, 163, 163);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 3.75rem;
+  max-height: 3.75rem;
+  transition: color 0.5s ease-in-out;
+}
+
+/* Card Outer Styles */
+.cardOuter {
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  padding: 0;
+  background: transparent;
+  position: relative;
+  perspective: 3500px;
+  overflow: visible;
+}
+
+.cardInnerWrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
+  border-radius: 24px;
+  padding: 0.9px;
+  background: transparent;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.cardInnerWrapper::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+  padding: 2px;
+  background: radial-gradient(
+    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(34, 197, 94, 0.8),
+    rgba(59, 130, 246, 0.6),
+    transparent 60%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 10;
+  will-change: opacity;
+}
+
+.projectCard:hover .cardInnerWrapper::before {
+  opacity: 1;
+}
+
+.cardInner {
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 23px;
+  border: 0.75px solid rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, #0f0f0f 0%, #050505 100%);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 24px;
+  transform-style: preserve-3d;
+}
+
+/* Domain Tag Hover Effect */
+.domainTag {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.domainTag::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 4px;
+  padding: 1px;
+  background: radial-gradient(
+    100px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(34, 197, 94, 0.5),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.domainTag:hover::before {
+  opacity: 1;
+}
+
+/* Simple White Bullet */
+.prismBullet {
+  display: inline-block;
+  font-size: 6px;
+  margin-top: 0.125rem;
+  color: white;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+/* Tech Checkpoints */
+.techCheckpoint {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.techCheckpoint::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 30%,
+    100% 70%,
+    70% 100%,
+    30% 100%,
+    0% 70%,
+    0% 30%
+  );
+}
+
+.checkpointInner {
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(135deg, #ffffff, #e5e5e5);
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 30%,
+    100% 70%,
+    70% 100%,
+    30% 100%,
+    0% 70%,
+    0% 30%
+  );
+}
+
+.techCheckpointComplete::before {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.6),
+    rgba(59, 130, 246, 0.5)
+  );
+}
+
+.techCheckpointCurrent {
+  width: 10px;
+  height: 10px;
+}
+
+.techCheckpointCurrent::before {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.8),
+    rgba(236, 72, 153, 0.7)
+  );
+  animation: checkpointGlow 2s ease-in-out infinite;
+}
+
+.checkpointPulse {
+  position: absolute;
+  inset: -4px;
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 30%,
+    100% 70%,
+    70% 100%,
+    30% 100%,
+    0% 70%,
+    0% 30%
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  transform: rotate(45deg);
+  animation: checkpointPulseRing 2s ease-in-out infinite;
+}
+
+@keyframes checkpointGlow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes checkpointPulseRing {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: rotate(45deg) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1.2);
+  }
+}
+
+.techCheckpointFuture::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02)
+  );
+}
+
+.techCheckpointFuture .checkpointInner {
+  background: linear-gradient(135deg, #d4d4d4, #a3a3a3);
+}
+
+/* Timeline Grid Box */
+.timelineGridBox {
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+}
+
+/* Premium Button - FIXED: Removed width: 100% to prevent full-width stretch */
+.premiumBtn {
+  --border-radius: 8px;
+  --button-color: #101010;
+  position: relative;
+  user-select: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background-color: var(--button-color);
+  box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0px 2px 2px rgba(255, 255, 255, 0.15),
+    inset 0px 4px 4px rgba(255, 255, 255, 0.1);
+  border: solid 1px #fff2;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.premiumBtnLetter {
+  position: relative;
+  display: inline-block;
+  color: #fff5;
+  z-index: 2;
+  animation: premiumLetterAnim 2s ease-in-out infinite;
+}
+
+@keyframes premiumLetterAnim {
+  50% {
+    text-shadow: 0 0 3px #fff8;
+    color: #fff;
+  }
+}
+
+.premiumBtnSvg {
+  flex-shrink: 0;
+  height: 16px;
+  width: 16px;
+  margin-right: 0.5rem;
+  fill: none;
+  stroke: #e8e8e8;
+  stroke-width: 1.5;
+  z-index: 2;
+  animation: premiumFlicker 2s linear infinite;
+  filter: drop-shadow(0 0 2px #fff9);
+}
+
+@keyframes premiumFlicker {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.premiumBtnBorder {
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--border-radius);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.premiumBtn:hover .premiumBtnBorder {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .projectCard {
+    width: 300px;
+    height: 400px;
+  }
+}
+
+/* Email Input Component Styles */
+.emailContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.emailInputWrapper {
+  position: relative;
+  flex: 1;
+}
+
+.emailInput {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background-color: #101010;
+  box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0px 2px 2px rgba(255, 255, 255, 0.15),
+    inset 0px 4px 4px rgba(255, 255, 255, 0.1);
+  border: solid 1px #fff2;
+  border-radius: 8px;
+  color: #fff5;
+  font-size: 0.95rem;
+  font-weight: 400;
+  outline: none;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.emailInput::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  transition: opacity 0.3s ease;
+}
+
+.emailInput:focus {
+  color: #fff;
+}
+
+.emailInput:focus::placeholder {
+  opacity: 0.5;
+}
+
+.emailInputBorder {
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  padding: 2px;
+  background: radial-gradient(
+    150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(34, 197, 94, 0.6),
+    rgba(59, 130, 246, 0.4),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.emailInputWrapper:hover .emailInputBorder,
+.emailInput:focus ~ .emailInputBorder {
+  opacity: 1;
+}
+
+.emailPillbox {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.5rem 1rem;
+  background: rgba(34, 197, 94, 0.2);
+  border: 1.5px solid rgba(34, 197, 94, 0.6);
+  border-radius: 16px;
+  color: rgb(34, 197, 94);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  animation: pillboxSlide 0.3s ease;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+}
+
+.emailPillbox:hover {
+  background: rgba(34, 197, 94, 0.35);
+  border-color: rgba(34, 197, 94, 0.8);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+}
+
+@keyframes pillboxSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.emailSubmitBtn {
+  position: relative;
+  padding: 0.875rem 1.75rem;
+  background-color: #101010;
+  box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0px 2px 2px rgba(255, 255, 255, 0.15),
+    inset 0px 4px 4px rgba(255, 255, 255, 0.1);
+  border: solid 1px #fff2;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.emailSubmitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.emailSubmitBtn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.emailBtnText {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+}
+
+.emailBtnLetter {
+  display: inline-block;
+  color: #fff5;
+  animation: emailLetterPulse 2s ease-in-out infinite;
+}
+
+@keyframes emailLetterPulse {
+  0%, 100% {
+    color: #fff5;
+  }
+  50% {
+    color: #fff;
+    text-shadow: 0 0 3px #fff8;
+  }
+}
+
+.emailSubmitBorder {
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  padding: 2px;
+  background: radial-gradient(
+    150px circle at 50% 50%,
+    rgba(34, 197, 94, 0.6),
+    rgba(59, 130, 246, 0.4),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.emailSubmitBtn:not(:disabled):hover .emailSubmitBorder {
+  opacity: 1;
+}
+
+.emailVanishing {
+  animation: emailVanishInput 0.8s ease forwards;
+}
+
+@keyframes emailVanishInput {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.98);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(4px);
+  }
+}
+
+@media (max-width: 640px) {
+  .emailContainer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .emailSubmitBtn {
+    width: 100%;
+  }
+}
+
+/* PlaceholdersAndVanishInput Component Styles - Minimal Premium Overlay */
+.emailFormWrapper {
+  width: 100%;
+  position: relative;
+}
+
+/* Don't override form structure - let component handle it */
+.emailFormWrapper :global(form) {
+  width: 100%;
+}
+
+/* Minimal input styling - only colors, let component handle everything else */
+.emailFormWrapper :global(input[type="text"]),
+.emailFormWrapper :global(input[type="email"]) {
+  background-color: rgba(16, 16, 16, 0.8) !important;
+  box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0px 2px 2px rgba(255, 255, 255, 0.15),
+    inset 0px 4px 4px rgba(255, 255, 255, 0.1) !important;
+  border: solid 1px #fff2 !important;
+  color: #fff5 !important;
+}
+
+.emailFormWrapper :global(input[type="text"]:focus),
+.emailFormWrapper :global(input[type="email"]:focus) {
+  color: #fff !important;
+}
+
+/* Premium button styling - restore proper appearance */
+.emailFormWrapper :global(button[type="submit"]) {
+  background-color: #101010 !important;
+  box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0px 2px 2px rgba(255, 255, 255, 0.15),
+    inset 0px 4px 4px rgba(255, 255, 255, 0.1) !important;
+  border: solid 1px #fff2 !important;
+  border-radius: 8px !important;
+  color: #fff5 !important;
+  padding: 0.875rem 1.75rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: color 0.3s ease !important;
+}
+
+.emailFormWrapper :global(button[type="submit"]:hover) {
+  color: #fff !important;
+}
+
+/* Add hover glow effect */
+.emailFormWrapper :global(button[type="submit"]) {
+  position: relative !important;
+}
+
+.emailFormWrapper :global(button[type="submit"]::before) {
+  content: '' !important;
+  position: absolute !important;
+  inset: -2px !important;
+  border-radius: 10px !important;
+  padding: 2px !important;
+  background: radial-gradient(150px circle at 50% 50%, rgba(34, 197, 94, 0.6), rgba(59, 130, 246, 0.4), transparent 70%) !important;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask-composite: exclude !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+.emailFormWrapper :global(button[type="submit"]:hover::before) {
+  opacity: 1 !important;
+}
+
+/* Hide only the specific premium-btn-border div */
+.emailFormWrapper :global(div.premium-btn-border) {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .emailFormWrapper :global(form) {
+    width: 100%;
+  }
+}
