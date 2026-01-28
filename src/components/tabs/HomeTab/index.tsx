@@ -7,7 +7,7 @@ import PartnersSection from './sections/ExecutiveSummary';
 
 // Lazy load: Load on-demand as user scrolls
 const IndustriesCarousel = lazy(() => import('./sections/IndustriesCarousel'));
-const JourneyStepsSection = lazy(() => import('./sections/JourneyStepsSection'));
+const JourneyStepsSection = lazy(() => import('./sections/Statements'));
 const CTASection = lazy(() => import('./sections/CTASection'));
 
 interface HomeTabProps {

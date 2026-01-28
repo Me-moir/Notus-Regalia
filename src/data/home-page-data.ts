@@ -37,57 +37,76 @@ export interface FeatureBox {
   description: string;
 }
 
+export interface CompanyRelease {
+  id: string;
+  title: string;
+  date: string;
+  tags: Array<'Public Disclosure' | 'Compliance' |  'Recruitment' | 'Governance' | 'Venture' | 'Capital' | 'Research & Development' | 'Partnerships' | 'Operations'>;
+  content: string[];
+  pdfUrl?: string;
+  linkUrl?: string;
+}
+
 export const executiveSummary: ExecutiveSummaryContent = {
   title: 'Regalitica Holdings',
   description: [
-    'Regalitica is a student-led innovation holding company and venture studio, built as a platform for ideas, experimentation, and future startups. We exist to build systems that create companies, incubate concepts, and accelerate projects across industries — all while maintaining a shared ecosystem where student founders can grow their ventures together.',
-    'Currently in its pre-seed, stealth phase, Regalitica is developing and validating multiple projects, ranging from early-stage concepts to potential startups. Each project is nurtured under the Regalitica umbrella, gaining visibility, mentorship, and operational guidance — without requiring external funding at this stage.'
+    'Regalitica is a holding and venture-building entity established to develop, steward, and scale early-stage systems and ventures across multiple industries. We operate as a structured platform for capital-efficient experimentation, validation, and long-term value creation.',
+    'Currently operating in a pre-seed, stealth phase, Regalitica is advancing a portfolio of early initiatives at varying stages of maturity. Projects developed under the Regalitica umbrella leverage shared infrastructure, governance, and operational oversight, without reliance on external funding at this stage.'
   ],
-  buttonText: 'More about us'
+  buttonText: 'About Regalitica'
 };
 
 export const featureBoxes: FeatureBox[] = [
   {
     icon: 'bi-collection',
-    title: 'Venture Studio Model',
-    description: "We don't run a single startup — we build and incubate multiple ventures under one structured system."
+    title: 'Venture-Building Platform',
+    description:
+      'We develop and oversee multiple ventures through a centralized operating framework, rather than managing a single standalone company.'
   },
   {
     icon: 'bi-arrows-move',
-    title: 'Multi-Sector Exploration',
-    description: 'Our projects span across different industries, allowing us to identify high-impact opportunities beyond a single market.'
+    title: 'Cross-Sector Mandate',
+    description:
+      'Our activities are sector-agnostic, allowing capital and effort to be allocated toward opportunities with asymmetric impact.'
   },
   {
     icon: 'bi-bounding-box',
-    title: 'Systems-First Approach',
-    description: 'We focus on building repeatable systems for ideation, validation, execution, and scaling — not one-off experiments.'
+    title: 'Systems-First Governance',
+    description:
+      'We prioritize repeatable operating systems for ideation, validation, execution, and scale over isolated experimentation.'
   },
   {
     icon: 'bi-mortarboard',
-    title: 'Student-Led Innovation',
-    description: 'Founded and operated by students, we move fast, experiment boldly, and build with a long-term learning mindset.'
+    title: 'Founder-Operator Model',
+    description:
+      'Regalitica functions as a founder-operator platform. While student-founded, ventures are governed with institutional discipline and long-term ownership principles.'
   },
   {
     icon: 'bi-leaf',
-    title: 'Pre-Seed Venture Incubation',
-    description: 'We specialize in turning early concepts into real, testable ventures through MVPs, pilots, and market validation.'
+    title: 'Early-Stage Capital Formation',
+    description:
+      'We focus on converting undeveloped concepts into venture-ready entities through disciplined validation and controlled deployment of resources.'
   },
   {
     icon: 'bi-eye-slash',
-    title: 'Stealth & Future-Oriented',
-    description: 'Operating in stealth allows us to develop frontier ideas quietly while preparing for public launches and partnerships.'
+    title: 'Stealth Operations',
+    description:
+      'Operating in stealth enables concentrated development, reduced external signaling, and strategic optionality ahead of public exposure.'
   },
   {
     icon: 'bi-stars',
-    title: 'Tech-Enabled Systems',
-    description: 'We leverage state of the art tools, systems, and processes to scale projects efficiently. Our projects aim to solve meaningful problems across industries, shaping the future of work, society, and technology.'
+    title: 'Shared Infrastructure',
+    description:
+      'Ventures leverage centralized technical, operational, and strategic infrastructure designed to compound execution efficiency.'
   },
   {
     icon: 'bi-share',
-    title: 'Open to Collaboration',
-    description: 'We actively collaborate with partners, institutions, and external teams, with pathways for projects to evolve into independent companies.'
+    title: 'Selective External Alignment',
+    description:
+      'We engage selectively with external partners and institutions where alignment supports long-term structural objectives.'
   }
 ];
+
 
 export const industries: Industry[] = [
   {
@@ -221,4 +240,112 @@ export const partners = [
   'GammaInvest',
   'DeltaFund',
   'EpsilonCapital'
+];
+
+export const companyReleases: CompanyRelease[] = [
+  {
+    id: 'release-001',
+    title: 'Regalitica Holdings Announces Formation and Stealth Operating Framework',
+    date: 'January 15, 2025',
+    tags: ['Public Disclosure', 'Recruitment'],
+    content: [
+      'Regalitica Holdings has been formally established as a holding and venture-building entity focused on developing, stewarding, and scaling early-stage systems across multiple industries.',
+
+      'Operating in a pre-seed, stealth phase, the entity will pursue capital-efficient experimentation and validation through a centralized platform designed for long-term value creation.',
+      
+      'The organizational framework prioritizes repeatable operating systems, shared infrastructure, and disciplined governance over isolated project execution.'
+    ],
+    pdfUrl: '/documents/formation-announcement.pdf',
+    linkUrl: 'https://regalitica.com/announcements/formation'
+  },
+  {
+    id: 'release-002',
+    title: 'Portfolio Development Update: Healthcare and FinTech Ventures Progress to Beta',
+    date: 'December 8, 2024',
+    tags: ['Venture', 'Research & Development', 'Operations'],
+    content: [
+      'Two ventures under the Regalitica umbrella—AI Telemedicine Platform and Micro-Lending Blockchain—have successfully transitioned to private beta and beta testing phases respectively.',
+      'The AI Telemedicine Platform is currently undergoing controlled deployment with select healthcare partners in underserved regions, demonstrating offline diagnostic capabilities and real-time synchronization protocols.',
+      'The blockchain-based microfinancing platform has completed smart contract audits and is conducting pilot programs with small business borrowers in three emerging markets, showing early validation of AI-powered credit scoring mechanisms.'
+    ],
+    pdfUrl: '/documents/q4-2024-venture-update.pdf'
+  },
+  {
+    id: 'release-003',
+    title: 'Governance Framework and Operational Principles Published',
+    date: 'November 22, 2024',
+    tags: ['Governance', 'Compliance', 'Public Disclosure'],
+    content: [
+      'Regalitica has formalized its governance framework outlining decision-making protocols, resource allocation methodologies, and venture oversight mechanisms.',
+      'The framework establishes clear delineation between holding entity responsibilities and individual venture operations, ensuring institutional discipline while maintaining operational flexibility.',
+      'Key principles include systems-first thinking, capital efficiency, asymmetric opportunity prioritization, and founder-operator alignment with long-term ownership structures.',
+      'Documentation includes standardized processes for venture validation, stage-gate advancement criteria, and risk management protocols across the portfolio.'
+    ],
+    linkUrl: 'https://regalitica.com/governance/framework'
+  },
+  {
+    id: 'release-004',
+    title: 'CleanTech Initiative Reaches Pilot Stage with Industrial Partners',
+    date: 'October 30, 2024',
+    tags: ['Venture', 'Research & Development', 'Partnerships'],
+    content: [
+      'The Smart Carbon Capture system has advanced to pilot deployment following successful prototype validation and environmental impact assessment.',
+      'Three industrial facilities across manufacturing and energy sectors have been selected as initial pilot sites for IoT-enabled carbon monitoring and capture technology.',
+      'Preliminary data indicates potential emissions reductions of 40-50% with real-time analytics capabilities significantly exceeding baseline projections.',
+      'Strategic partnerships with carbon credit verification agencies are in advanced discussions to establish tradeable credit generation protocols.'
+    ],
+    pdfUrl: '/documents/cleantech-pilot-report.pdf',
+    linkUrl: 'https://regalitica.com/ventures/cleantech'
+  },
+  {
+    id: 'release-005',
+    title: 'Strategic Infrastructure Investment: Shared Technical Platform Operational',
+    date: 'September 18, 2024',
+    tags: ['Operations', 'Capital', 'Research & Development'],
+    content: [
+      'Regalitica has completed development and deployment of centralized technical infrastructure designed to support multiple ventures simultaneously.',
+      'The platform includes shared development environments, API frameworks, data analytics pipelines, and security protocols that compound execution efficiency across the portfolio.',
+      'This infrastructure investment enables ventures to achieve production readiness 35-40% faster than traditional standalone development approaches.',
+      'The architecture supports modular integration, allowing new ventures to leverage existing systems while maintaining operational independence where strategically appropriate.'
+    ]
+  },
+  {
+    id: 'release-006',
+    title: 'EdTech Platform Enters Testing Phase with Education Partners',
+    date: 'August 12, 2024',
+    tags: ['Venture', 'Partnerships', 'Research & Development'],
+    content: [
+      'The Adaptive STEM Learning platform has commenced testing phase in partnership with educational institutions across three developing regions.',
+      'Initial cohorts of 500+ students are engaging with AI-powered personalized learning paths, with early metrics showing promising engagement and comprehension improvements.',
+      'Teacher feedback sessions have informed iterative refinements to interface design, content delivery mechanisms, and progress tracking analytics.',
+      'Platform architecture supports both online and offline learning modes, addressing connectivity challenges prevalent in target deployment regions.'
+    ],
+    pdfUrl: '/documents/edtech-testing-report.pdf'
+  },
+  {
+    id: 'release-007',
+    title: 'Regalitica Establishes Advisory Board for Long-Term Strategic Guidance',
+    date: 'July 5, 2024',
+    tags: ['Governance', 'Partnerships', 'Operations'],
+    content: [
+      'An advisory board comprising industry veterans, academic researchers, and operational experts has been established to provide strategic oversight and domain-specific guidance.',
+      'Board members bring expertise spanning healthcare technology, financial systems, sustainable infrastructure, and educational innovation.',
+      'The advisory structure is designed to complement founder-operator decision-making with external perspective while maintaining operational autonomy.',
+      'Quarterly strategic reviews will assess portfolio performance, validate market assumptions, and inform resource allocation decisions.'
+    ],
+    linkUrl: 'https://regalitica.com/about/advisory-board'
+  },
+  {
+    id: 'release-008',
+    title: 'Compliance and Regulatory Framework Certification Achieved',
+    date: 'June 20, 2024',
+    tags: ['Compliance', 'Governance', 'Operations'],
+    content: [
+      'Regalitica has completed comprehensive compliance assessments across all active ventures, achieving necessary certifications and regulatory approvals.',
+      'Healthcare venture operations have obtained HIPAA compliance certification, ensuring patient data protection and privacy standards.',
+      'FinTech platform has completed KYC/AML framework implementation and received preliminary regulatory approval in initial deployment markets.',
+      'Ongoing compliance monitoring systems have been established to maintain adherence to evolving regulatory requirements across all sectors.'
+    ],
+    pdfUrl: '/documents/compliance-certification.pdf'
+  }
 ];

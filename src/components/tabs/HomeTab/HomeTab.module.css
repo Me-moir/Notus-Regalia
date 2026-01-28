@@ -63,7 +63,7 @@
   position: absolute;
   inset: -1px;
   border-radius: 1.5rem;
-  padding: 2px;
+  padding: 1px;
   background: radial-gradient(
     400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
     rgba(0, 255, 166, 0.8),
@@ -110,7 +110,7 @@
   overflow: hidden;
   border-radius: 0.75rem;
   padding: 1.25rem;
-  background: rgba(24, 24, 27, 0.5);
+  background: linear-gradient(135deg, #0f0f0f 0%, #050505 100%);
   border: 0.75px solid rgba(255, 255, 255, 0.05);
   z-index: 2;
 }
@@ -170,7 +170,7 @@
   position: absolute;
   inset: -2px;
   border-radius: 24px;
-  padding: 2px;
+  padding: 1px;
   background: radial-gradient(
     500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
     rgba(34, 197, 94, 0.8),
@@ -497,7 +497,7 @@
   position: absolute;
   inset: -2px;
   border-radius: 10px;
-  padding: 2px;
+  padding: 1px;
   background: radial-gradient(
     150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
     rgba(34, 197, 94, 0.6),
@@ -605,7 +605,7 @@
   position: absolute;
   inset: -2px;
   border-radius: 10px;
-  padding: 2px;
+  padding: 1px;
   background: radial-gradient(
     150px circle at 50% 50%,
     rgba(34, 197, 94, 0.6),
@@ -713,7 +713,7 @@
   position: absolute !important;
   inset: -2px !important;
   border-radius: 10px !important;
-  padding: 2px !important;
+  padding: 1px !important;
   background: radial-gradient(150px circle at 50% 50%, rgba(34, 197, 94, 0.6), rgba(59, 130, 246, 0.4), transparent 70%) !important;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
   -webkit-mask-composite: xor !important;
@@ -736,5 +736,115 @@
 @media (max-width: 640px) {
   .emailFormWrapper :global(form) {
     width: 100%;
+  }
+}
+
+/* Company Releases Accordion Styles - Add to existing stylesheet */
+
+/* Smooth accordion transitions */
+.accordion-content {
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tag hover effects */
+.release-tag {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.release-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* Icon hover animations */
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.attachment-icon:hover svg {
+  animation: iconPulse 0.6s ease-in-out;
+}
+
+/* Gradient text effect for titles on hover */
+.release-title-hover {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(34, 197, 94, 0.9),
+    rgba(59, 130, 246, 0.9)
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.5s ease;
+}
+
+.release-title-hover:hover {
+  background-position: 100% center;
+}
+
+/* Enhanced glow for notification boxes in releases section */
+.notificationBox:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Stagger animation for initial load */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notificationBox {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.notificationBox:nth-child(1) { animation-delay: 0.1s; }
+.notificationBox:nth-child(2) { animation-delay: 0.15s; }
+.notificationBox:nth-child(3) { animation-delay: 0.2s; }
+.notificationBox:nth-child(4) { animation-delay: 0.25s; }
+.notificationBox:nth-child(5) { animation-delay: 0.3s; }
+.notificationBox:nth-child(6) { animation-delay: 0.35s; }
+.notificationBox:nth-child(7) { animation-delay: 0.4s; }
+.notificationBox:nth-child(8) { animation-delay: 0.45s; }
+
+/* Chevron rotation animation */
+.chevron-icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Content fade-in when expanding */
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.accordion-content.open > div {
+  animation: contentFadeIn 0.4s ease-in-out 0.1s backwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .notificationBox {
+    animation-delay: 0s !important;
   }
 }
