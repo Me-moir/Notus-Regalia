@@ -1,17 +1,17 @@
 "use client";
 import { useState, useRef, useEffect, memo, useMemo } from 'react';
-import { companyReleases, type CompanyRelease } from '@/data/home-page-data';
+import { statements, type Statement } from '@/data/home-page-data';
 import styles from '../HomeTab.module.css';
 
 const ITEMS_PER_PAGE = 4;
 
-interface ReleaseAccordionItemProps {
-  release: CompanyRelease;
+interface StatementAccordionItemProps {
+  statement: Statement;
   isOpen: boolean;
   onToggle: () => void;
 }
 
-const ReleaseAccordionItem = memo(({ release, isOpen, onToggle }: ReleaseAccordionItemProps) => {
+const StatementAccordionItem = memo(({ statement, isOpen, onToggle }: StatementAccordionItemProps) => {
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,10 +30,7 @@ const ReleaseAccordionItem = memo(({ release, isOpen, onToggle }: ReleaseAccordi
     };
 
     box.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      box.removeEventListener('mousemove', handleMouseMove);
-    };
+    return () => box.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   return (
@@ -46,35 +43,37 @@ const ReleaseAccordionItem = memo(({ release, isOpen, onToggle }: ReleaseAccordi
           aria-expanded={isOpen}
         >
           <div className="flex items-start justify-between gap-4 mb-3">
-            <h3 className={`flex-1 line-clamp-2 pr-4 text-white/70 group-hover:text-white font-semibold text-base leading-tight transition-colors duration-300`}>
-              {release.title}
+            <h3 className="flex-1 line-clamp-2 pr-4 text-white/70 group-hover:text-white font-semibold text-base leading-tight transition-colors duration-300">
+              {statement.title}
             </h3>
             <div className="flex-shrink-0 flex items-center gap-3">
               {/* Attachment Icons */}
-              <div className="flex items-center gap-2">
-                {release.pdfUrl && (
-                  <a
-                    href={release.pdfUrl}
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-8 h-8 rounded-lg bg-neutral-800/50 border border-neutral-700/50 flex items-center justify-center hover:bg-neutral-700/50 hover:border-neutral-600/50 transition-all duration-300 group/pdf"
-                    title="Download PDF"
-                  >
-                    <i className="bi bi-filetype-pdf text-base text-neutral-400 group-hover/pdf:scale-110 group-hover/pdf:text-neutral-300 transition-all"></i>
-                  </a>
-                )}
-                {release.linkUrl && (
-                  <a
-                    href={release.linkUrl}
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-8 h-8 rounded-lg bg-neutral-800/50 border border-neutral-700/50 flex items-center justify-center hover:bg-neutral-700/50 hover:border-neutral-600/50 transition-all duration-300 group/link"
-                    title="Open Link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <i className="bi bi-link-45deg text-lg text-neutral-400 group-hover/link:scale-110 group-hover/link:text-neutral-300 transition-all"></i>
-                  </a>
-                )}
-              </div>
+              {(statement.pdfUrl || statement.linkUrl) && (
+                <div className="flex items-center gap-2">
+                  {statement.pdfUrl && (
+                    <a
+                      href={statement.pdfUrl}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-8 h-8 rounded-lg bg-neutral-800/50 border border-neutral-700/50 flex items-center justify-center hover:bg-neutral-700/50 hover:border-neutral-600/50 transition-all duration-300 group/pdf"
+                      title="Download PDF"
+                    >
+                      <i className="bi bi-filetype-pdf text-base text-neutral-400 group-hover/pdf:scale-110 group-hover/pdf:text-neutral-300 transition-all"></i>
+                    </a>
+                  )}
+                  {statement.linkUrl && (
+                    <a
+                      href={statement.linkUrl}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-8 h-8 rounded-lg bg-neutral-800/50 border border-neutral-700/50 flex items-center justify-center hover:bg-neutral-700/50 hover:border-neutral-600/50 transition-all duration-300 group/link"
+                      title="Open Link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <i className="bi bi-link-45deg text-lg text-neutral-400 group-hover/link:scale-110 group-hover/link:text-neutral-300 transition-all"></i>
+                    </a>
+                  )}
+                </div>
+              )}
               {/* Chevron */}
               <svg
                 className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${
@@ -96,10 +95,10 @@ const ReleaseAccordionItem = memo(({ release, isOpen, onToggle }: ReleaseAccordi
 
           {/* Date and Tags Row */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-gray-500 font-medium">{release.date}</span>
+            <span className="text-sm text-gray-500 font-medium">{statement.date}</span>
             <span className="text-gray-700">•</span>
             <div className="flex flex-wrap gap-2">
-              {release.tags.slice(0, 3).map((tag, idx) => (
+              {statement.tags.slice(0, 3).map((tag, idx) => (
                 <span
                   key={idx}
                   className={`px-2.5 py-1 text-xs font-semibold rounded-md border ${
@@ -115,23 +114,16 @@ const ReleaseAccordionItem = memo(({ release, isOpen, onToggle }: ReleaseAccordi
           </div>
         </button>
 
-        {/* Expandable Content */}
+        {/* Expandable Content - FIXED HEIGHT */}
         <div
           className={`overflow-hidden transition-all duration-500 ease-in-out ${
-            isOpen ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'
+            isOpen ? 'max-h-32 opacity-100 mt-4' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="pt-4 border-t border-white/5">
-            <div className="space-y-3">
-              {release.content.map((paragraph, idx) => (
-                <p
-                  key={idx}
-                  className="text-gray-400 text-sm leading-relaxed"
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+            <p className="text-gray-400 text-sm leading-relaxed line-clamp-5">
+              {statement.content}
+            </p>
           </div>
         </div>
       </div>
@@ -139,10 +131,10 @@ const ReleaseAccordionItem = memo(({ release, isOpen, onToggle }: ReleaseAccordi
   );
 });
 
-ReleaseAccordionItem.displayName = 'ReleaseAccordionItem';
+StatementAccordionItem.displayName = 'StatementAccordionItem';
 
-const CompanyReleasesSection = memo(() => {
-  const [openReleaseId, setOpenReleaseId] = useState<string | null>(null);
+const StatementsSection = memo(() => {
+  const [openStatementId, setOpenStatementId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLDivElement>(null);
@@ -164,43 +156,40 @@ const CompanyReleasesSection = memo(() => {
     };
 
     searchInput.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      searchInput.removeEventListener('mousemove', handleMouseMove);
-    };
+    return () => searchInput.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const handleToggle = (releaseId: string) => {
-    setOpenReleaseId(openReleaseId === releaseId ? null : releaseId);
+  const handleToggle = (statementId: string) => {
+    setOpenStatementId(prev => prev === statementId ? null : statementId);
   };
 
-  // Filter releases based on search query
-  const filteredReleases = useMemo(() => {
-    if (!searchQuery.trim()) return companyReleases;
+  // Filter statements based on search query
+  const filteredStatements = useMemo(() => {
+    if (!searchQuery.trim()) return statements;
     
     const query = searchQuery.toLowerCase();
-    return companyReleases.filter((release) => 
-      release.title.toLowerCase().includes(query) ||
-      release.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      release.content.some(paragraph => paragraph.toLowerCase().includes(query))
+    return statements.filter((statement) => 
+      statement.title.toLowerCase().includes(query) ||
+      statement.tags.some(tag => tag.toLowerCase().includes(query)) ||
+      statement.content.toLowerCase().includes(query)
     );
   }, [searchQuery]);
 
   // Calculate pagination
-  const totalPages = Math.ceil(filteredReleases.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredStatements.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentReleases = filteredReleases.slice(startIndex, endIndex);
+  const currentStatements = filteredStatements.slice(startIndex, endIndex);
 
   // Reset to page 1 when search changes
   useEffect(() => {
     setCurrentPage(1);
-    setOpenReleaseId(null);
+    setOpenStatementId(null);
   }, [searchQuery]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    setOpenReleaseId(null);
+    setOpenStatementId(null);
   };
 
   return (
@@ -230,7 +219,7 @@ const CompanyReleasesSection = memo(() => {
 
         {/* Search and Pagination Row */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-8">
-          {/* Search Bar - Left Side - Hero Email Input Style */}
+          {/* Search Bar - Left Side */}
           <div ref={searchInputRef} className="relative flex-1 sm:max-w-md">
             <div 
               className="relative h-14 rounded-lg overflow-hidden transition duration-200 group"
@@ -257,7 +246,7 @@ const CompanyReleasesSection = memo(() => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search releases..."
+                  placeholder="Search statements..."
                   className="w-full h-full pl-12 pr-4 bg-transparent border-none text-white/70 placeholder-white/30 focus:outline-none focus:ring-0 relative z-50"
                 />
               </div>
@@ -353,19 +342,19 @@ const CompanyReleasesSection = memo(() => {
         {/* Results Info */}
         {searchQuery && (
           <div className="mb-4 text-sm text-gray-500">
-            Found {filteredReleases.length} release{filteredReleases.length !== 1 ? 's' : ''}
+            Found {filteredStatements.length} statement{filteredStatements.length !== 1 ? 's' : ''}
           </div>
         )}
 
-        {/* Accordion List Container */}
-        <div className="space-y-4">
-          {currentReleases.length > 0 ? (
-            currentReleases.map((release) => (
-              <ReleaseAccordionItem
-                key={release.id}
-                release={release}
-                isOpen={openReleaseId === release.id}
-                onToggle={() => handleToggle(release.id)}
+        {/* Accordion List Container - FIXED HEIGHT */}
+        <div className="space-y-4" style={{ minHeight: '800px' }}>
+          {currentStatements.length > 0 ? (
+            currentStatements.map((statement) => (
+              <StatementAccordionItem
+                key={statement.id}
+                statement={statement}
+                isOpen={openStatementId === statement.id}
+                onToggle={() => handleToggle(statement.id)}
               />
             ))
           ) : (
@@ -381,8 +370,8 @@ const CompanyReleasesSection = memo(() => {
                     <i className="bi bi-cup-hot text-3xl text-neutral-400"></i>
                   </div>
                   <div className="text-center">
-                    <p className="text-gray-300 text-lg font-medium mb-2">No releases found</p>
-                    <p className="text-gray-500 text-sm">Try adjusting your search terms or browse all releases</p>
+                    <p className="text-gray-300 text-lg font-medium mb-2">No statements found</p>
+                    <p className="text-gray-500 text-sm">Try adjusting your search terms or browse all statements</p>
                   </div>
                 </div>
               </div>
@@ -391,9 +380,9 @@ const CompanyReleasesSection = memo(() => {
         </div>
 
         {/* Page Info at Bottom */}
-        {filteredReleases.length > 0 && (
+        {filteredStatements.length > 0 && (
           <div className="mt-6 text-center text-sm text-gray-500">
-            Showing {startIndex + 1}-{Math.min(endIndex, filteredReleases.length)} of {filteredReleases.length} release{filteredReleases.length !== 1 ? 's' : ''}
+            Showing {startIndex + 1}-{Math.min(endIndex, filteredStatements.length)} of {filteredStatements.length} statement{filteredStatements.length !== 1 ? 's' : ''}
           </div>
         )}
       </div>
@@ -401,6 +390,6 @@ const CompanyReleasesSection = memo(() => {
   );
 });
 
-CompanyReleasesSection.displayName = 'CompanyReleasesSection';
+StatementsSection.displayName = 'StatementsSection';
 
-export default CompanyReleasesSection;
+export default StatementsSection;
