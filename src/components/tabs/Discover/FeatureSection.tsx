@@ -191,6 +191,12 @@ const FeatureSection = memo(({
     }
   }, [setActiveCardIndex]);
 
+  // Function to go to next card
+  const goToNextCard = useCallback(() => {
+    const nextIndex = activeCardIndex >= allProjects.length ? 1 : activeCardIndex + 1;
+    goToCard(nextIndex, true);
+  }, [activeCardIndex, goToCard]);
+
   // 🔥 FIX: Auto-advance carousel - PROPERLY CHECKING VISIBILITY
   useEffect(() => {
     console.log('⏱️ Auto-scroll effect triggered', {
@@ -500,7 +506,17 @@ const FeatureSection = memo(({
               </div>
               
               <div className="relative">
-                <button className={styles.premiumBtn}>
+                <button 
+                  className={styles.premiumBtn}
+                  onClick={goToNextCard}
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                    e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+                  }}
+                >
                   <svg className={styles.premiumBtnSvg} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -510,7 +526,7 @@ const FeatureSection = memo(({
                   </svg>
                   <div className="premium-txt-wrapper">
                     <div className="premium-txt-1">
-                      {'Learn More'.split('').map((letter, i) => (
+                      {'Next Venture'.split('').map((letter, i) => (
                         <span key={i} className={styles.premiumBtnLetter} style={{ animationDelay: `${i * 0.08}s` }}>
                           {letter === ' ' ? '\u00A0' : letter}
                         </span>
@@ -566,7 +582,16 @@ const FeatureSection = memo(({
                   <div 
                     className={styles.cardInnerWrapper}
                     style={{
-                      transform: `rotateX(${rotation.rotateX}deg) rotateY(${rotation.rotateY}deg)`
+                      transform: `rotateX(${rotation.rotateX}deg) rotateY(${rotation.rotateY}deg)`,
+                      transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                    }}
+                    onMouseMove={(e) => {
+                      if (!isActive) return;
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = e.clientX - rect.left;
+                      const y = e.clientY - rect.top;
+                      e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                      e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
                     }}
                   >
                     <div className={styles.cardInner}>
@@ -626,7 +651,27 @@ const FeatureSection = memo(({
                                 willChange: 'opacity'
                               }}
                             />
-                            <div className={`${styles.timelineGridBox} relative bg-gray-900/80 rounded-lg p-5`} style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                            <div 
+                              className={`${styles.timelineGridBox} relative bg-gray-900/80 rounded-lg p-5`} 
+                              style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
+                              onMouseMove={(e) => {
+                                const border = e.currentTarget.previousElementSibling as HTMLElement;
+                                if (border) {
+                                  const rect = e.currentTarget.getBoundingClientRect();
+                                  const x = e.clientX - rect.left;
+                                  const y = e.clientY - rect.top;
+                                  border.style.setProperty('--mouse-x', `${x}px`);
+                                  border.style.setProperty('--mouse-y', `${y}px`);
+                                  border.style.opacity = '1';
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                const border = e.currentTarget.previousElementSibling as HTMLElement;
+                                if (border) {
+                                  border.style.opacity = '0';
+                                }
+                              }}
+                            >
                               <div 
                                 className="absolute inset-0 rounded-lg pointer-events-none overflow-hidden opacity-30"
                                 style={{
@@ -643,7 +688,8 @@ const FeatureSection = memo(({
                                     style={{ 
                                       width: `${(project.timeline.filter(t => t.status === 'complete').length / project.timeline.length) * 100}%`,
                                       background: 'linear-gradient(to right, rgba(34, 197, 94, 1), rgba(59, 130, 246, 1), rgba(236, 72, 153, 1))',
-                                      boxShadow: '0 0 10px rgba(34, 197, 94, 0.5)'
+                                      boxShadow: '0 0 10px rgba(34, 197, 94, 0.5)',
+                                      transition: 'width 0.8s ease-in-out'
                                     }}
                                   />
                                 </div>
@@ -673,7 +719,16 @@ const FeatureSection = memo(({
                           
                           <div className="pt-3 border-t border-white/10">
                             <div className="relative join-button-wrapper">
-                              <button className={styles.premiumBtn}>
+                              <button 
+                                className={styles.premiumBtn}
+                                onMouseMove={(e) => {
+                                  const rect = e.currentTarget.getBoundingClientRect();
+                                  const x = e.clientX - rect.left;
+                                  const y = e.clientY - rect.top;
+                                  e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                                  e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+                                }}
+                              >
                                 <svg className={styles.premiumBtnSvg} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                   <path
                                     strokeLinecap="round"
@@ -749,14 +804,17 @@ const FeatureSection = memo(({
                   }}
                 >
                   <div 
-                    className={`h-full rounded-full transition-all duration-500 ease-out ${isActive ? 'w-full' : 'w-0'}`}
+                    className={`h-full rounded-full transition-all duration-800 ease-in-out ${isActive ? 'w-full' : 'w-0'}`}
                     style={{ 
                       background: isActive 
                         ? `linear-gradient(to right, 
                             hsl(${142 - (gradientStart * 2.5)}, 70%, 50%), 
                             hsl(${142 - (gradientEnd * 2.5)}, 70%, 50%)
                           )`
-                        : 'transparent'
+                        : 'transparent',
+                      transitionProperty: 'width, background',
+                      transitionDuration: '800ms, 800ms',
+                      transitionTimingFunction: 'ease-in-out, ease-in-out'
                     }}
                   />
                 </div>

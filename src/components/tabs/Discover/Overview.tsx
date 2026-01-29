@@ -1,7 +1,9 @@
 "use client";
 import { memo, useEffect, useRef, useState } from 'react';
 import styles from '@/styles/ui.module.css';
-import { OverviewSection, FeatureSections } from '@/data/Discover-data';
+import { OverviewSection, OverviewContentData, FeatureSections } from '@/data/Discover-data';
+
+type ContentType = 'about' | 'mission' | 'vision';
 
 const Overview = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -13,6 +15,10 @@ const Overview = memo(() => {
   const hoveredOrbitRef = useRef<number | null>(null);
   const hoveredVentureRef = useRef<number | null>(null);
   const pausedAnglesRef = useRef<{ [key: number]: number }>({});
+  
+  // State for active content type and fade animation
+  const [activeContent, setActiveContent] = useState<ContentType>('about');
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Venture data for orbital system
   const ventures = [
@@ -23,6 +29,19 @@ const Overview = memo(() => {
     { name: 'CleanTech Venture', angle: 180, orbit: 2, color: 'rgba(59, 130, 246, 0.8)' },
     { name: 'PropTech Venture', angle: 300, orbit: 2, color: 'rgba(0, 255, 166, 0.6)' },
   ];
+
+  // Handle content switching with smooth transition
+  const handleContentChange = (newContent: ContentType) => {
+    if (newContent === activeContent) return;
+    
+    setIsTransitioning(true);
+    
+    // Wait for fade out, then change content
+    setTimeout(() => {
+      setActiveContent(newContent);
+      setIsTransitioning(false);
+    }, 400); // Increased timing to match transition duration
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -45,16 +64,13 @@ const Overview = memo(() => {
         const rect = canvas.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) return;
         
-        // Set display size (css pixels)
         canvas.style.width = rect.width + 'px';
         canvas.style.height = rect.height + 'px';
         
-        // Set actual size in memory (scaled for retina displays)
         const scale = window.devicePixelRatio || 1;
         canvas.width = rect.width * scale;
         canvas.height = rect.height * scale;
         
-        // Scale context to match
         ctx.scale(scale, scale);
       } catch (error) {
         console.error('Canvas resize error:', error);
@@ -71,23 +87,18 @@ const Overview = memo(() => {
     
     window.addEventListener('resize', resizeHandler);
 
-    // Mouse move handler - using refs to prevent re-render glitch
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
 
-      let foundHover = false;
-
-      // Check ventures first (higher priority)
       for (const venture of currentVentures) {
         const distance = Math.sqrt(
           Math.pow(mouseX - venture.x, 2) + Math.pow(mouseY - venture.y, 2)
         );
         if (distance <= venture.radius) {
-          // Position tooltip well above the venture logo with more clearance
           const tooltipX = rect.left + venture.x;
-          const tooltipY = rect.top + venture.y - venture.radius - 50; // Increased offset to prevent obstruction
+          const tooltipY = rect.top + venture.y - venture.radius - 50;
           setTooltip({ x: tooltipX, y: tooltipY, text: venture.name });
           hoveredVentureRef.current = venture.index;
           hoveredOrbitRef.current = null;
@@ -96,7 +107,6 @@ const Overview = memo(() => {
         }
       }
 
-      // Check orbits (no tooltip, just opacity change and pause all logos in that orbit)
       for (const orbit of currentOrbits) {
         const distance = Math.sqrt(
           Math.pow(mouseX - orbit.centerX, 2) + Math.pow(mouseY - orbit.centerY, 2)
@@ -132,7 +142,6 @@ const Overview = memo(() => {
     const animate = () => {
       if (!isActive || !canvas) return;
 
-      // Use the display size for calculations, not the internal scaled size
       const rect = canvas.getBoundingClientRect();
       const width = rect.width;
       const height = rect.height;
@@ -150,27 +159,23 @@ const Overview = memo(() => {
       const orbit1Radius = Math.min(width, height) * 0.3;
       const orbit2Radius = Math.min(width, height) * 0.42;
 
-      // Store orbit data for hit detection
       currentOrbits = [
         { centerX, centerY, radius: orbit1Radius, orbitIndex: 1 },
         { centerX, centerY, radius: orbit2Radius, orbitIndex: 2 }
       ];
 
-      // Draw orbit 1 (full circle) with hover effect
       ctx.strokeStyle = hoveredOrbitRef.current === 1 ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.1)';
       ctx.lineWidth = hoveredOrbitRef.current === 1 ? 2 : 1;
       ctx.beginPath();
       ctx.arc(centerX, centerY, orbit1Radius, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Draw orbit 2 (full circle) with hover effect
       ctx.strokeStyle = hoveredOrbitRef.current === 2 ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.1)';
       ctx.lineWidth = hoveredOrbitRef.current === 2 ? 2 : 1;
       ctx.beginPath();
       ctx.arc(centerX, centerY, orbit2Radius, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Draw connecting lines from center (like spokes)
       ventures.forEach((venture) => {
         const orbitRadius = venture.orbit === 1 ? orbit1Radius : orbit2Radius;
         const angle = ((venture.angle + time * (venture.orbit === 1 ? 0.3 : 0.2)) * Math.PI) / 180;
@@ -186,29 +191,24 @@ const Overview = memo(() => {
         ctx.stroke();
       });
 
-      // Draw center logo (Regalitica)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
       ctx.font = 'bold 20px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('R', centerX, centerY);
 
-      // Draw center circle
       ctx.beginPath();
       ctx.arc(centerX, centerY, 35, 0, Math.PI * 2);
       ctx.strokeStyle = 'rgba(0, 255, 166, 0.6)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Store venture positions for hit detection and draw ventures
       currentVentures = [];
       
-      // Helper function to normalize angle to 0-360 range
       const normalizeAngle = (angle: number) => {
         return ((angle % 360) + 360) % 360;
       };
       
-      // Helper function to calculate shortest angular distance
       const getAngularDistance = (angle1: number, angle2: number) => {
         let diff = angle2 - angle1;
         while (diff > 180) diff -= 360;
@@ -216,33 +216,24 @@ const Overview = memo(() => {
         return diff;
       };
       
-      // Calculate all venture angles first for collision detection
       const ventureAngles: { [key: number]: number } = {};
       const pausedVentures = new Set<number>();
       
       ventures.forEach((venture, index) => {
-        const orbitRadius = venture.orbit === 1 ? orbit1Radius : orbit2Radius;
-        
-        // Check if this venture is hovered
         const isVentureHovered = hoveredVentureRef.current === index;
-        // Check if this orbit is hovered (pause all ventures in this orbit)
         const isOrbitHovered = hoveredOrbitRef.current === venture.orbit;
         
         let currentAngle;
         if (isVentureHovered || isOrbitHovered) {
-          // Pause this venture
           if (!(index in pausedAnglesRef.current)) {
             pausedAnglesRef.current[index] = venture.angle + time * (venture.orbit === 1 ? 0.3 : 0.2);
           }
           currentAngle = pausedAnglesRef.current[index];
           pausedVentures.add(index);
         } else {
-          // Check if it was paused before - if so, continue from paused position
           if (index in pausedAnglesRef.current) {
-            // Resume from paused position by setting the base angle
             const pausedAngle = pausedAnglesRef.current[index];
             const speed = venture.orbit === 1 ? 0.3 : 0.2;
-            // Calculate how much time has passed and adjust base angle
             venture.angle = pausedAngle - (time * speed);
             delete pausedAnglesRef.current[index];
           }
@@ -252,23 +243,20 @@ const Overview = memo(() => {
         ventureAngles[index] = normalizeAngle(currentAngle);
       });
       
-      // Collision detection - queue like marbles
-      const minDistance = 20; // degrees - minimum gap between ventures
+      const minDistance = 20;
       let collisionDetected = true;
       let iterations = 0;
-      const maxIterations = 10; // Prevent infinite loops
+      const maxIterations = 10;
       
       while (collisionDetected && iterations < maxIterations) {
         collisionDetected = false;
         iterations++;
         
         ventures.forEach((venture, index) => {
-          // Skip if already manually paused (hovered)
           if (hoveredVentureRef.current === index || hoveredOrbitRef.current === venture.orbit) {
             return;
           }
           
-          // Get all ventures on the same orbit
           const sameOrbitVentures = ventures
             .map((v, i) => ({ ...v, index: i }))
             .filter(v => v.orbit === venture.orbit && v.index !== index);
@@ -277,16 +265,12 @@ const Overview = memo(() => {
             const angle1 = ventureAngles[index];
             const angle2 = ventureAngles[other.index];
             
-            // Calculate signed angular distance (positive = other is ahead)
             const distance = getAngularDistance(angle1, angle2);
             
-            // If we're catching up to a paused venture (or queued venture)
             if (distance > 0 && distance < minDistance && pausedVentures.has(other.index)) {
-              // Queue this venture behind the paused one
               const queuedAngle = normalizeAngle(angle2 - minDistance);
               ventureAngles[index] = queuedAngle;
               
-              // Mark this venture as paused (queued)
               if (!(index in pausedAnglesRef.current)) {
                 pausedAnglesRef.current[index] = queuedAngle;
                 pausedVentures.add(index);
@@ -297,7 +281,6 @@ const Overview = memo(() => {
         });
       }
       
-      // Now draw all ventures
       ventures.forEach((venture, index) => {
         const orbitRadius = venture.orbit === 1 ? orbit1Radius : orbit2Radius;
         const currentAngle = (ventureAngles[index] * Math.PI) / 180;
@@ -305,7 +288,6 @@ const Overview = memo(() => {
         const x = centerX + orbitRadius * Math.cos(currentAngle);
         const y = centerY + orbitRadius * Math.sin(currentAngle);
 
-        // Enlarge if hovered
         const isVentureHovered = hoveredVentureRef.current === index;
         const radius = isVentureHovered ? 26 : 22;
 
@@ -337,8 +319,6 @@ const Overview = memo(() => {
 
     return () => {
       isActive = false;
-      
-      // Clean up event listeners
       window.removeEventListener('resize', resizeHandler);
       
       if (canvas) {
@@ -346,17 +326,18 @@ const Overview = memo(() => {
           canvas.removeEventListener('mousemove', handleMouseMove);
           canvas.removeEventListener('mouseleave', handleMouseLeave);
         } catch (error) {
-          // Silently handle if canvas is already removed
+          // Silently handle
         }
       }
       
-      // Cancel animation frame
       if (animationRef.current !== undefined) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = undefined;
       }
     };
   }, []);
+
+  const currentContent = OverviewContentData[activeContent];
 
   return (
     <section 
@@ -366,6 +347,13 @@ const Overview = memo(() => {
         borderBottom: '1px dashed rgba(255, 255, 255, 0.2)'
       }}
     >
+      {/* Add keyframes for orbiting gradient animation */}
+      <style>{`
+        @keyframes orbitBorder {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 200% 0%; }
+        }
+      `}</style>
       {/* Grain overlay */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.02]"
@@ -377,14 +365,20 @@ const Overview = memo(() => {
       />
 
       <div className="relative z-10 px-12 lg:px-20">
-        {/* EXACT REFERENCE LAYOUT: LEFT-RIGHT SPLIT */}
         <div className="grid grid-cols-1 lg:grid-cols-2">
           
-          {/* LEFT SIDE - Content container without flex stretch */}
+          {/* LEFT SIDE */}
           <div className="pt-16 py-8 pr-8" style={{ borderRight: '1px dashed rgba(255, 255, 255, 0.2)' }}>
-            {/* Large Title with Eye Icon */}
-            <div className="mb-6 pb-6 overflow-visible">
-              <div className="flex items-center gap-3">
+            {/* Large Title with Eye Icon - With fade transition and fixed min height */}
+            <div className="mb-6 pb-6 overflow-visible" style={{ minHeight: '100px' }}>
+              <div 
+                className="flex items-center gap-3"
+                style={{ 
+                  opacity: isTransitioning ? 0 : 1,
+                  transform: isTransitioning ? 'translateY(-10px)' : 'translateY(0)',
+                  transition: 'opacity 0.4s ease-in-out, transform 0.4s ease-in-out'
+                }}
+              >
                 <h1 
                   className="text-5xl lg:text-6xl font-bold"
                   style={{
@@ -395,10 +389,10 @@ const Overview = memo(() => {
                     lineHeight: '1.3'
                   }}
                 >
-                  {OverviewSection.title}
+                  {currentContent.title}
                 </h1>
                 
-                {/* Eye Icon Circle - Clickable */}
+                {/* Eye Icon Circle */}
                 <div
                   ref={eyeIconRef}
                   className="relative flex-shrink-0 w-12 h-12 rounded-full bg-gray-900/60 border border-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-800/80 transition-all group"
@@ -412,11 +406,9 @@ const Overview = memo(() => {
                   }}
                   onMouseLeave={() => setEyeTooltip(null)}
                   onClick={() => {
-                    // Placeholder for future hyperlink
                     console.log('Eye icon clicked - Add hyperlink here');
                   }}
                 >
-                  {/* Gradient border on hover */}
                   <div 
                     className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                     style={{
@@ -428,7 +420,6 @@ const Overview = memo(() => {
                     }}
                   />
                   
-                  {/* Eye Icon */}
                   <svg className="w-5 h-5 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -440,17 +431,29 @@ const Overview = memo(() => {
             {/* Divider Line */}
             <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-5" />
             
-            {/* Description */}
-            <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-              {OverviewSection.description[0]}
-              <br /><br />
-              {OverviewSection.description[1]}
-            </p>
+            {/* Description with smooth fade transition and fixed height container */}
+            <div style={{ minHeight: '180px' }}>
+              <div
+                style={{ 
+                  opacity: isTransitioning ? 0 : 1,
+                  transform: isTransitioning ? 'translateY(-10px)' : 'translateY(0)',
+                  transition: 'opacity 0.4s ease-in-out, transform 0.4s ease-in-out'
+                }}
+              >
+                <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+                  {currentContent.description[0]}
+                  <br /><br />
+                  {currentContent.description[1]}
+                </p>
+              </div>
+            </div>
 
-            {/* Button */}
-            <div className="mb-6">
+            {/* Three Buttons */}
+            <div className="flex gap-3 mb-6">
+              {/* About Button */}
               <button 
-                className={styles.premiumBtn + " inline-flex"}
+                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group" + (activeContent !== 'about' ? ' hover:-translate-y-1' : '')}
+                onClick={() => handleContentChange('about')}
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const x = e.clientX - rect.left;
@@ -459,39 +462,161 @@ const Overview = memo(() => {
                   e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
                 }}
               >
-                <svg className={styles.premiumBtnSvg} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
+                <i className="bi bi-person-bounding-box text-white/80 mr-2" style={{ fontSize: '16px' }}></i>
                 <div className="premium-txt-wrapper">
                   <div className="premium-txt-1">
-                    {OverviewSection.buttonText.split('').map((letter, i) => (
+                    {'About Regalitica'.split('').map((letter, i) => (
                       <span key={i} className={styles.premiumBtnLetter} style={{ animationDelay: `${i * 0.08}s` }}>
                         {letter === ' ' ? '\u00A0' : letter}
                       </span>
                     ))}
                   </div>
                 </div>
-                <div 
-                  className={styles.premiumBtnBorder}
-                  style={{
-                    background: 'radial-gradient(150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
-                    padding: '2px',
-                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    WebkitMaskComposite: 'xor',
-                    maskComposite: 'exclude'
-                  } as React.CSSProperties}
-                />
+                {/* Hover Border - Shows on hover when not active, follows mouse */}
+                {activeContent !== 'about' && (
+                  <div 
+                    className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      background: 'radial-gradient(150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
+                      padding: '1px',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      maskComposite: 'exclude',
+                      borderRadius: '8px'
+                    }}
+                  />
+                )}
+                {/* Active Border - Always shows when active, travels around button */}
+                {activeContent === 'about' && (
+                  <div 
+                    className="absolute inset-0 rounded-lg pointer-events-none"
+                    style={{
+                      padding: '1px',
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(0, 255, 166, 0.8) 15%, rgba(255, 215, 0, 0.6) 30%, rgba(236, 72, 153, 0.6) 45%, rgba(147, 51, 234, 0.6) 60%, rgba(59, 130, 246, 0.5) 75%, transparent 90%)',
+                      backgroundSize: '200% 100%',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      maskComposite: 'exclude',
+                      borderRadius: '8px',
+                      animation: 'orbitBorder 3s linear infinite'
+                    }}
+                  />
+                )}
+              </button>
+
+              {/* Mission Button */}
+              <button 
+                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group" + (activeContent !== 'mission' ? ' hover:-translate-y-1' : '')}
+                onClick={() => handleContentChange('mission')}
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                  e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+                }}
+              >
+                <i className="bi bi-crosshair text-white/80 mr-2" style={{ fontSize: '16px' }}></i>
+                <div className="premium-txt-wrapper">
+                  <div className="premium-txt-1">
+                    {'Mission'.split('').map((letter, i) => (
+                      <span key={i} className={styles.premiumBtnLetter} style={{ animationDelay: `${i * 0.08}s` }}>
+                        {letter === ' ' ? '\u00A0' : letter}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                {/* Hover Border - Shows on hover when not active, follows mouse */}
+                {activeContent !== 'mission' && (
+                  <div 
+                    className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      background: 'radial-gradient(150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
+                      padding: '1px',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      maskComposite: 'exclude',
+                      borderRadius: '8px'
+                    }}
+                  />
+                )}
+                {/* Active Border - Always shows when active, travels around button */}
+                {activeContent === 'mission' && (
+                  <div 
+                    className="absolute inset-0 rounded-lg pointer-events-none"
+                    style={{
+                      padding: '1px',
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(0, 255, 166, 0.8) 15%, rgba(255, 215, 0, 0.6) 30%, rgba(236, 72, 153, 0.6) 45%, rgba(147, 51, 234, 0.6) 60%, rgba(59, 130, 246, 0.5) 75%, transparent 90%)',
+                      backgroundSize: '200% 100%',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      maskComposite: 'exclude',
+                      borderRadius: '8px',
+                      animation: 'orbitBorder 3s linear infinite'
+                    }}
+                  />
+                )}
+              </button>
+
+              {/* Vision Button */}
+              <button 
+                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group" + (activeContent !== 'vision' ? ' hover:-translate-y-1' : '')}
+                onClick={() => handleContentChange('vision')}
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                  e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+                }}
+              >
+                <i className="bi bi-compass text-white/80 mr-2" style={{ fontSize: '16px' }}></i>
+                <div className="premium-txt-wrapper">
+                  <div className="premium-txt-1">
+                    {'Vision'.split('').map((letter, i) => (
+                      <span key={i} className={styles.premiumBtnLetter} style={{ animationDelay: `${i * 0.08}s` }}>
+                        {letter === ' ' ? '\u00A0' : letter}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                {/* Hover Border - Shows on hover when not active, follows mouse */}
+                {activeContent !== 'vision' && (
+                  <div 
+                    className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      background: 'radial-gradient(150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
+                      padding: '1px',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      maskComposite: 'exclude',
+                      borderRadius: '8px'
+                    }}
+                  />
+                )}
+                {/* Active Border - Always shows when active, travels around button */}
+                {activeContent === 'vision' && (
+                  <div 
+                    className="absolute inset-0 rounded-lg pointer-events-none"
+                    style={{
+                      padding: '1px',
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(0, 255, 166, 0.8) 15%, rgba(255, 215, 0, 0.6) 30%, rgba(236, 72, 153, 0.6) 45%, rgba(147, 51, 234, 0.6) 60%, rgba(59, 130, 246, 0.5) 75%, transparent 90%)',
+                      backgroundSize: '200% 100%',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      maskComposite: 'exclude',
+                      borderRadius: '8px',
+                      animation: 'orbitBorder 3s linear infinite'
+                    }}
+                  />
+                )}
               </button>
             </div>
 
             {/* Divider Line before Canvas */}
             <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-6" />
 
-            {/* Canvas Area - Slightly bigger fixed size */}
+            {/* Canvas Area */}
             <div ref={containerRef} className="relative w-full h-[480px]">
               <canvas 
                 ref={canvasRef} 
@@ -499,7 +624,7 @@ const Overview = memo(() => {
                 style={{ display: 'block' }}
               />
               
-              {/* Venture Tooltip - Positioned well above logo with pointer-events-none */}
+              {/* Venture Tooltip */}
               {tooltip && (
                 <div 
                   className="fixed z-50 pointer-events-none"
@@ -554,10 +679,8 @@ const Overview = memo(() => {
                   e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
                 }}
               >
-                {/* Background Lighten Effect on Hover */}
                 <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 
-                {/* Gradient Border Effect on Hover */}
                 <div 
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{
@@ -569,17 +692,14 @@ const Overview = memo(() => {
                   }}
                 />
                 
-                {/* Icon - Lift upwards on hover */}
                 <div className="mb-6 text-2xl text-white/80 transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   <i className={`bi ${feature.icon}`}></i>
                 </div>
                 
-                {/* Title - Lift upwards on hover */}
                 <h3 className="text-lg font-semibold text-white mb-3 leading-tight transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   {feature.title}
                 </h3>
                 
-                {/* Description - Lift upwards on hover */}
                 <p className="text-sm text-gray-400 leading-relaxed transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   {feature.description}
                 </p>

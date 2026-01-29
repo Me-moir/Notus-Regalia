@@ -31,6 +31,11 @@ export interface OverviewSection {
   buttonText: string;
 }
 
+export interface OverviewContent {
+  title: string;
+  description: string[];
+}
+
 export interface FeatureSection {
   icon: string;
   title: string;
@@ -54,6 +59,30 @@ export const OverviewSection: OverviewSection = {
     'Currently operating in a pre-seed, stealth phase, Regalitica is advancing a portfolio of early initiatives at varying stages of maturity. Projects developed under the Regalitica umbrella leverage shared infrastructure, governance, and operational oversight, without reliance on external funding at this stage.'
   ],
   buttonText: 'About Regalitica'
+};
+
+export const OverviewContentData: Record<'about' | 'mission' | 'vision', OverviewContent> = {
+  about: {
+    title: 'Regalitica Holdings',
+    description: [
+      'Regalitica is a holding and venture-building entity established to develop, steward, and scale early-stage systems and ventures across multiple industries. We operate as a structured platform for capital-efficient experimentation, validation, and long-term value creation.',
+      'Currently operating in a pre-seed, stealth phase, Regalitica is advancing a portfolio of early initiatives at varying stages of maturity. Projects developed under the Regalitica umbrella leverage shared infrastructure, governance, and operational oversight, without reliance on external funding at this stage.'
+    ]
+  },
+  mission: {
+    title: 'Our Mission',
+    description: [
+      'To build and scale ventures that address fundamental inefficiencies across industries through systematic innovation, disciplined execution, and sustainable business models. We exist to transform undeveloped concepts into market-ready solutions that create measurable impact.',
+      'Our mission is grounded in the belief that the most significant value creation occurs at the intersection of technical capability, market need, and operational excellence. We pursue ventures that demonstrate clear paths to profitability while maintaining alignment with long-term structural objectives.'
+    ]
+  },
+  vision: {
+    title: 'Our Vision',
+    description: [
+      'To establish Regalitica as a recognized platform for building category-defining ventures that reshape how industries operate. We envision a portfolio of sustainable, high-impact companies that set new standards for innovation, execution, and value creation.',
+      'Our vision extends beyond individual venture success to the development of a repeatable system for identifying opportunity, validating concepts, and scaling solutions. We aim to demonstrate that disciplined, systems-first approaches to venture building can consistently outperform traditional models.'
+    ]
+  }
 };
 
 export const FeatureSections: FeatureSection[] = [

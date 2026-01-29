@@ -4,12 +4,12 @@ import { lazy, Suspense } from 'react';
 // Eager load: These are preloaded during LoadingScreen
 import HeroSection from './HeroSection';
 import Overview from './Overview';
+import ProjectHighlightsTitle from './ProjectHighlightsTitle';
 import FeatureSection from './FeatureSection';
 
 // Lazy load: Load on-demand as user scrolls
-const Features = lazy(() => import('./FeatureSection'));
-const JourneyStepsSection = lazy(() => import('../Information/Statements'));
-const CTASection = lazy(() => import('./CTASection'));
+const Team = lazy(() => import('./Team'));
+const Contact = lazy(() => import('./Contact'));
 
 interface DiscoverProps {
   activeCardIndex: number;
@@ -26,12 +26,14 @@ const Discover = ({
 }: DiscoverProps) => {
   return (
     <>
-      {/* Already loaded during LoadingScreen - show immediately */}
+      {/* Home - Hero Section */}
       <HeroSection />
       
+      {/* About Us - Overview Section */}
       <Overview />
       
-      {/* Lazy loaded - minimal invisible fallbacks since user already saw loading screen */}
+      {/* Project Highlights Section */}
+      <ProjectHighlightsTitle />
       <Suspense fallback={<div className="h-screen bg-gradient-to-b from-[#141414] via-[#0a0a0a] to-black" />}>
         <FeatureSection
           activeCardIndex={activeCardIndex}
@@ -41,13 +43,16 @@ const Discover = ({
         />
       </Suspense>
       
+      {/* Our Team Section */}
       <Suspense fallback={<div className="min-h-screen bg-black" />}>
-        <JourneyStepsSection />
+        <Team />
       </Suspense>
       
+      {/* Reach Out Section */}
       <Suspense fallback={<div className="min-h-screen bg-black" />}>
-        <CTASection />
+        <Contact />
       </Suspense>
+
     </>
   );
 };

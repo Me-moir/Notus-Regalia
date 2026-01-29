@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Spline from '@splinetool/react-spline';
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
-import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+import { EmailFormEffect } from "@/components/ui/EmailFormEffect";
 
 const HeroSection = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -68,10 +68,10 @@ const HeroSection = () => {
           <strong className="font-bold text-gray-200">Regalitica</strong>is a holding and venture-building entity focused on developing early-stage systems, ventures, and future companies across multiple sectors. From foundational assets to frontier concepts, we operate across the full lifecycle of idea formation, validation, and execution.
         </p>
 
-        {/* Email Input - Use the fixed PlaceholdersAndVanishInput component */}
+        {/* Email Input - Use the fixed EmailFormEffect component */}
         {isMounted && (
           <div className="max-w-2xl mx-auto pointer-events-auto relative z-30">
-            <PlaceholdersAndVanishInput
+            <EmailFormEffect
               placeholders={placeholders}
               onChange={handleChange}
               onSubmit={handleSubmit}
