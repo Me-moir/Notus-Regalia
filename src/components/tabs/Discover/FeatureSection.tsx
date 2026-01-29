@@ -1,21 +1,21 @@
 "use client";
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
-import { allProjects } from '@/data/home-page-data';
-import styles from '../HomeTab.module.css';
+import { allProjects } from '@/data/Discover-data';
+import styles from '@/styles/ui.module.css';
 
-interface IndustriesCarouselProps {
+interface FeatureSectionProps {
   activeCardIndex: number;
   setActiveCardIndex: (index: number) => void;
   textAnimationKey: number;
   isAnimating: boolean;
 }
 
-const IndustriesCarousel = memo(({
+const FeatureSection = memo(({
   activeCardIndex,
   setActiveCardIndex,
   textAnimationKey,
   isAnimating
-}: IndustriesCarouselProps) => {
+}: FeatureSectionProps) => {
   const [cardRotations, setCardRotations] = useState<Record<number, { rotateX: number; rotateY: number }>>({});
   const [isSection3Visible, setIsSection3Visible] = useState(false);
   const isSection3VisibleRef = useRef(false);
@@ -775,6 +775,6 @@ const IndustriesCarousel = memo(({
   );
 });
 
-IndustriesCarousel.displayName = 'IndustriesCarousel';
+FeatureSection.displayName = 'FeatureSection';
 
-export default IndustriesCarousel;
+export default FeatureSection;

@@ -1,9 +1,9 @@
 "use client";
 import { memo, useEffect, useRef, useState } from 'react';
-import styles from '../HomeTab.module.css';
-import { executiveSummary, featureBoxes } from '@/data/home-page-data';
+import styles from '@/styles/ui.module.css';
+import { OverviewSection, FeatureSections } from '@/data/Discover-data';
 
-const ExecutiveSummary = memo(() => {
+const Overview = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -395,7 +395,7 @@ const ExecutiveSummary = memo(() => {
                     lineHeight: '1.3'
                   }}
                 >
-                  {executiveSummary.title}
+                  {OverviewSection.title}
                 </h1>
                 
                 {/* Eye Icon Circle - Clickable */}
@@ -442,9 +442,9 @@ const ExecutiveSummary = memo(() => {
             
             {/* Description */}
             <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-              {executiveSummary.description[0]}
+              {OverviewSection.description[0]}
               <br /><br />
-              {executiveSummary.description[1]}
+              {OverviewSection.description[1]}
             </p>
 
             {/* Button */}
@@ -468,7 +468,7 @@ const ExecutiveSummary = memo(() => {
                 </svg>
                 <div className="premium-txt-wrapper">
                   <div className="premium-txt-1">
-                    {executiveSummary.buttonText.split('').map((letter, i) => (
+                    {OverviewSection.buttonText.split('').map((letter, i) => (
                       <span key={i} className={styles.premiumBtnLetter} style={{ animationDelay: `${i * 0.08}s` }}>
                         {letter === ' ' ? '\u00A0' : letter}
                       </span>
@@ -537,7 +537,7 @@ const ExecutiveSummary = memo(() => {
 
           {/* RIGHT SIDE - 2 columns × 4 rows Grid */}
           <div className="grid grid-cols-2 grid-rows-4 gap-0">
-            {featureBoxes.map((feature, index) => (
+            {FeatureSections.map((feature, index) => (
               <div 
                 key={index}
                 className="relative backdrop-blur-sm p-8 transition-all group overflow-hidden"
@@ -593,6 +593,6 @@ const ExecutiveSummary = memo(() => {
   );
 });
 
-ExecutiveSummary.displayName = 'ExecutiveSummary';
+Overview.displayName = 'Overview';
 
-export default ExecutiveSummary;
+export default Overview;

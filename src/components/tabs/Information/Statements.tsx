@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect, memo, useMemo } from 'react';
-import { statements, type Statement } from '@/data/home-page-data';
-import styles from '../HomeTab.module.css';
+import { statements, type Statement } from '@/data/Discover-data';
+import styles from '@/styles/ui.module.css';
 
 const ITEMS_PER_PAGE = 4;
 
@@ -198,6 +198,7 @@ const StatementsSection = memo(() => {
       style={{
         background: 'linear-gradient(to bottom, rgb(20, 20, 20) 0%, rgb(10, 10, 10) 50%, rgb(0, 0, 0) 100%)',
         borderTop: '1px dashed rgba(255, 255, 255, 0.2)',
+        borderBottom: '1px dashed rgba(255, 255, 255, 0.2)',
         marginTop: '10vh'
       }}
     >
@@ -253,89 +254,98 @@ const StatementsSection = memo(() => {
             </div>
           </div>
 
-          {/* Page Numbers - Right Side */}
-          <div className="flex items-center gap-2">
-            {/* Previous Button */}
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#101010] border border-[rgba(255,255,255,0.13)] text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all overflow-hidden group"
-              style={{
-                boxShadow: 'inset 0px 1px 1px rgba(255, 255, 255, 0.25), inset 0px 2px 2px rgba(255, 255, 255, 0.2), inset 0px 4px 4px rgba(255, 255, 255, 0.15)'
-              }}
-              aria-label="Previous page"
-            >
-              <div 
-                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          {/* Page Numbers and Info - Right Side */}
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              {/* Previous Button */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#101010] border border-[rgba(255,255,255,0.13)] text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all overflow-hidden group"
                 style={{
-                  background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
-                  padding: '1px',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude',
+                  boxShadow: 'inset 0px 1px 1px rgba(255, 255, 255, 0.25), inset 0px 2px 2px rgba(255, 255, 255, 0.2), inset 0px 4px 4px rgba(255, 255, 255, 0.15)'
                 }}
-              />
-              <svg className="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            {/* Page Numbers */}
-            <div className="flex items-center gap-1.5">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`relative min-w-[36px] h-9 px-3 flex items-center justify-center rounded-lg font-medium text-sm transition-all overflow-hidden ${
-                    currentPage === page
-                      ? 'bg-[#101010] text-white'
-                      : 'bg-[#101010] border border-[rgba(255,255,255,0.13)] text-gray-400 hover:text-white'
-                  }`}
+                aria-label="Previous page"
+              >
+                <div 
+                  className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                   style={{
-                    boxShadow: 'inset 0px 1px 1px rgba(255, 255, 255, 0.25), inset 0px 2px 2px rgba(255, 255, 255, 0.2), inset 0px 4px 4px rgba(255, 255, 255, 0.15)'
+                    background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
+                    padding: '1px',
+                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'xor',
+                    maskComposite: 'exclude',
                   }}
-                >
-                  {currentPage === page && (
-                    <div 
-                      className="absolute inset-0 rounded-lg pointer-events-none"
-                      style={{
-                        background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
-                        padding: '1px',
-                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                        WebkitMaskComposite: 'xor',
-                        maskComposite: 'exclude',
-                      }}
-                    />
-                  )}
-                  <span className="relative z-10">{page}</span>
-                </button>
-              ))}
+                />
+                <svg className="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Page Numbers */}
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`relative min-w-[36px] h-9 px-3 flex items-center justify-center rounded-lg font-medium text-sm transition-all overflow-hidden ${
+                      currentPage === page
+                        ? 'bg-[#101010] text-white'
+                        : 'bg-[#101010] border border-[rgba(255,255,255,0.13)] text-gray-400 hover:text-white'
+                    }`}
+                    style={{
+                      boxShadow: 'inset 0px 1px 1px rgba(255, 255, 255, 0.25), inset 0px 2px 2px rgba(255, 255, 255, 0.2), inset 0px 4px 4px rgba(255, 255, 255, 0.15)'
+                    }}
+                  >
+                    {currentPage === page && (
+                      <div 
+                        className="absolute inset-0 rounded-lg pointer-events-none"
+                        style={{
+                          background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
+                          padding: '1px',
+                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                          WebkitMaskComposite: 'xor',
+                          maskComposite: 'exclude',
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10">{page}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#101010] border border-[rgba(255,255,255,0.13)] text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all overflow-hidden group"
+                style={{
+                  boxShadow: 'inset 0px 1px 1px rgba(255, 255, 255, 0.25), inset 0px 2px 2px rgba(255, 255, 255, 0.2), inset 0px 4px 4px rgba(255, 255, 255, 0.15)'
+                }}
+                aria-label="Next page"
+              >
+                <div 
+                  className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
+                    padding: '1px',
+                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'xor',
+                    maskComposite: 'exclude',
+                  }}
+                />
+                <svg className="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             </div>
 
-            {/* Next Button */}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#101010] border border-[rgba(255,255,255,0.13)] text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all overflow-hidden group"
-              style={{
-                boxShadow: 'inset 0px 1px 1px rgba(255, 255, 255, 0.25), inset 0px 2px 2px rgba(255, 255, 255, 0.2), inset 0px 4px 4px rgba(255, 255, 255, 0.15)'
-              }}
-              aria-label="Next page"
-            >
-              <div 
-                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{
-                  background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
-                  padding: '1px',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude',
-                }}
-              />
-              <svg className="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            {/* Page Info below pagination buttons */}
+            {filteredStatements.length > 0 && (
+              <div className="text-sm text-gray-500">
+                Showing {startIndex + 1}-{Math.min(endIndex, filteredStatements.length)} of {filteredStatements.length} statement{filteredStatements.length !== 1 ? 's' : ''}
+              </div>
+            )}
           </div>
         </div>
 
@@ -378,13 +388,6 @@ const StatementsSection = memo(() => {
             </div>
           )}
         </div>
-
-        {/* Page Info at Bottom */}
-        {filteredStatements.length > 0 && (
-          <div className="mt-6 text-center text-sm text-gray-500">
-            Showing {startIndex + 1}-{Math.min(endIndex, filteredStatements.length)} of {filteredStatements.length} statement{filteredStatements.length !== 1 ? 's' : ''}
-          </div>
-        )}
       </div>
     </section>
   );

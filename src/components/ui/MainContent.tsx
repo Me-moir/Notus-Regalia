@@ -2,10 +2,10 @@
 import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
 // Lazy load tab components for code splitting
-const HomeTab = lazy(() => import('./tabs/HomeTab'));
-const VenturesTab = lazy(() => import('./tabs/VenturesTab'));
-const AffiliatesTab = lazy(() => import('./tabs/AffiliatesTab'));
-const SandboxTab = lazy(() => import('./tabs/SandboxTab'));
+const DiscoverTab = lazy(() => import('@/components/tabs/Discover'));
+const VenturesTab = lazy(() => import('@/components/tabs/Ventures'));
+const AffiliatesTab = lazy(() => import('@/components/tabs/Affiliations'));
+const InformationTab = lazy(() => import('@/components/tabs/Information'));
 
 interface MainContentProps {
   activeTab: string;
@@ -15,7 +15,7 @@ interface MainContentProps {
 const TabLoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="text-center">
-      <div className="w-12 h-12 border-2 border-green-500/30 border-t-green-500 rounded-full animate-spin mx-auto mb-4" />
+      <div className="w-12 h-12 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin mx-auto mb-4" />
       <p className="text-gray-400 text-sm">Loading...</p>
     </div>
   </div>
@@ -56,8 +56,8 @@ const MainContent = ({ activeTab }: MainContentProps) => {
 
   // 🎯 HYPER-FOCUSED: Mouse tracking ONLY on specific elements that need it
   useEffect(() => {
-    // Only run on 'fool' tab (HomeTab with Section 3)
-    if (displayedTab !== 'fool') return;
+    // Only run on 'discover' tab (DiscoverTab with interactive elements)
+    if (displayedTab !== 'discover') return;
 
     const listeners: Array<{ element: Element; handler: EventListener }> = [];
     let rafId: number | null = null;
@@ -108,8 +108,6 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       selectors.forEach(selector => {
         const elements = document.querySelectorAll(selector);
         
-        console.log(`🔍 Found ${elements.length} elements for: ${selector}`);
-        
         elements.forEach(element => {
           // Skip if already has listener
           if (listeners.some(l => l.element === element)) return;
@@ -118,8 +116,6 @@ const MainContent = ({ activeTab }: MainContentProps) => {
           
           // Attach listener directly to each element
           element.addEventListener('mousemove', handler as EventListener, { passive: true });
-          
-          console.log(`✅ Attached listener to: ${selector}`);
           
           // Store for cleanup
           listeners.push({ element, handler: handler as EventListener });
@@ -132,13 +128,12 @@ const MainContent = ({ activeTab }: MainContentProps) => {
     
     // Watch for DOM changes using MutationObserver
     const observer = new MutationObserver(() => {
-      console.log('🔄 DOM changed, re-attaching listeners...');
       attachListeners(); // Re-attach to any new elements
     });
     
-    // Observe the entire fool tab, not just Section 3
-    const homeTab = document.querySelector('[class*="fool"]') || document.body;
-    observer.observe(homeTab, {
+    // Observe the entire discover tab
+    const discoverTab = document.querySelector('[class*="discover"]') || document.body;
+    observer.observe(discoverTab, {
       childList: true,
       subtree: true,
     });
@@ -156,13 +151,13 @@ const MainContent = ({ activeTab }: MainContentProps) => {
         cancelAnimationFrame(rafId);
       }
     };
-  }, [displayedTab]); // Only depend on tab
+  }, [displayedTab]);
 
   const renderContent = () => {
     switch (displayedTab) {
-      case 'fool':
+      case 'discover':
         return (
-          <HomeTab
+          <DiscoverTab
             activeCardIndex={activeCardIndex}
             setActiveCardIndex={setActiveCardIndex}
             textAnimationKey={textAnimationKey}
@@ -171,12 +166,10 @@ const MainContent = ({ activeTab }: MainContentProps) => {
         );
       case 'ventures':
         return <VenturesTab />;
-      case 'affiliates':
+      case 'affiliations':
         return <AffiliatesTab />;
-      case 'sandbox':
-        return <SandboxTab activeCardIndex={0} setActiveCardIndex={function (index: number): void {
-          throw new Error('Function not implemented.');
-        } } textAnimationKey={0} isAnimating={false} />;
+      case 'information':
+        return <InformationTab />;
       default:
         return null;
     }

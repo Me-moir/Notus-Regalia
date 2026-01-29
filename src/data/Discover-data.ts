@@ -25,13 +25,13 @@ export interface Project {
   timeline: { stage: string; date: string; status: 'complete' | 'current' | 'future' }[];
 }
 
-export interface ExecutiveSummaryContent {
+export interface OverviewSection {
   title: string;
   description: string[];
   buttonText: string;
 }
 
-export interface FeatureBox {
+export interface FeatureSection {
   icon: string;
   title: string;
   description: string;
@@ -47,7 +47,7 @@ export interface Statement {
   linkUrl?: string;
 }
 
-export const executiveSummary: ExecutiveSummaryContent = {
+export const OverviewSection: OverviewSection = {
   title: 'Regalitica Holdings',
   description: [
     'Regalitica is a holding and venture-building entity established to develop, steward, and scale early-stage systems and ventures across multiple industries. We operate as a structured platform for capital-efficient experimentation, validation, and long-term value creation.',
@@ -56,7 +56,7 @@ export const executiveSummary: ExecutiveSummaryContent = {
   buttonText: 'About Regalitica'
 };
 
-export const featureBoxes: FeatureBox[] = [
+export const FeatureSections: FeatureSection[] = [
   {
     icon: 'bi-collection',
     title: 'Venture-Building Platform',

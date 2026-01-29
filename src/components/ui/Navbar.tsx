@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+
 const logoImage = '/assets/Logo.png';
 
 interface NavbarProps {
@@ -196,21 +197,18 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
     });
   };
 
-  // Smooth scroll to section when tab is clicked
+  // Handle tab click - switch tabs and scroll to top
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
-    
-    const section = document.getElementById(tabId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // Scroll to top when switching tabs
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const navItems: NavItem[] = [
-    { id: 'fool', label: 'Home' },
-    { id: 'ventures', label: 'Ventures' },
-    { id: 'affiliates', label: 'Affiliates' },
-    { id: 'sandbox', label: 'Sandbox', isSpecial: true }
+    { id: 'discover', label: 'Discover' },
+    { id: 'information', label: 'Information' },
+    { id: 'affiliations', label: 'Affiliations' },
+    { id: 'ventures', label: 'Ventures', isSpecial: true }
   ];
 
   const sidebarSections: SidebarSection[] = [
@@ -456,11 +454,9 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
           -webkit-overflow-scrolling: touch;
           scroll-snap-type: y proximity;
           overscroll-behavior: contain;
-          /* Add momentum scrolling weight */
           scroll-padding: 20px;
         }
         
-        /* Add custom scroll momentum for webkit browsers */
         .sidebar-content::-webkit-scrollbar {
           width: 6px;
         }
@@ -508,7 +504,7 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
           transform: translateY(-6px) rotate(-45deg);
         }
 
-        /* Expandable Section Animations - Weighted and slow */
+        /* Expandable Section Animations */
         .sidebar-section-content {
           overflow: hidden;
           max-height: 0;
@@ -691,7 +687,7 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
             </div>
           </div>
 
-          {/* Help Section - Two full section buttons */}
+          {/* Help Section */}
           <div className="flex">
             <button
               className="flex-1 text-xs text-gray-500 hover:text-gray-400 hover:bg-white/5 transition-all py-3 px-6 text-left border-r border-white/5"

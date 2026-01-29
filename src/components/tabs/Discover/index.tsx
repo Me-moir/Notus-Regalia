@@ -2,37 +2,38 @@
 import { lazy, Suspense } from 'react';
 
 // Eager load: These are preloaded during LoadingScreen
-import HeroSection from './sections/HeroSection';
-import PartnersSection from './sections/ExecutiveSummary';
+import HeroSection from './HeroSection';
+import Overview from './Overview';
+import FeatureSection from './FeatureSection';
 
 // Lazy load: Load on-demand as user scrolls
-const IndustriesCarousel = lazy(() => import('./sections/IndustriesCarousel'));
-const JourneyStepsSection = lazy(() => import('./sections/Statements'));
-const CTASection = lazy(() => import('./sections/CTASection'));
+const Features = lazy(() => import('./FeatureSection'));
+const JourneyStepsSection = lazy(() => import('../Information/Statements'));
+const CTASection = lazy(() => import('./CTASection'));
 
-interface HomeTabProps {
+interface DiscoverProps {
   activeCardIndex: number;
   setActiveCardIndex: (index: number) => void;
   textAnimationKey: number;
   isAnimating: boolean;
 }
 
-const HomeTab = ({ 
+const Discover = ({ 
   activeCardIndex, 
   setActiveCardIndex,
   textAnimationKey,
   isAnimating 
-}: HomeTabProps) => {
+}: DiscoverProps) => {
   return (
     <>
       {/* Already loaded during LoadingScreen - show immediately */}
       <HeroSection />
       
-      <PartnersSection />
+      <Overview />
       
       {/* Lazy loaded - minimal invisible fallbacks since user already saw loading screen */}
       <Suspense fallback={<div className="h-screen bg-gradient-to-b from-[#141414] via-[#0a0a0a] to-black" />}>
-        <IndustriesCarousel
+        <FeatureSection
           activeCardIndex={activeCardIndex}
           setActiveCardIndex={setActiveCardIndex}
           textAnimationKey={textAnimationKey}
@@ -51,4 +52,4 @@ const HomeTab = ({
   );
 };
 
-export default HomeTab;
+export default Discover;
