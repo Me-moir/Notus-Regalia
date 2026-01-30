@@ -738,7 +738,7 @@ const FeatureSection = memo(({
                                 </svg>
                                 <div className="premium-txt-wrapper">
                                   <div className="premium-txt-1">
-                                    {'Join Our Initiative'.split('').map((letter, i) => (
+                                    {'Support Project'.split('').map((letter, i) => (
                                       <span key={i} className={styles.premiumBtnLetter} style={{ animationDelay: `${i * 0.08}s` }}>
                                         {letter === ' ' ? '\u00A0' : letter}
                                       </span>
