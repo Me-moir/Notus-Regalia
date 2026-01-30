@@ -49,7 +49,7 @@ export interface Statement {
   tags: Array<'Public Disclosure' | 'Compliance' |  'Recruitment' | 'Governance' | 'Venture' | 'Capital' | 'Research & Development' | 'Partnerships' | 'Operations'>;
   content: string;
   pdfUrl?: string;
-  linkUrl?: string;
+  linkUrl?: string; 
 }
 
 export const OverviewSection: OverviewSection = {

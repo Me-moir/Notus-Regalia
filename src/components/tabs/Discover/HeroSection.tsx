@@ -65,7 +65,7 @@ const HeroSection = () => {
         
         {/* Second paragraph */}
         <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto drop-shadow-lg leading-relaxed mb-10">
-          <strong className="font-bold text-gray-200">Regalitica</strong>is a holding and venture-building entity focused on developing early-stage systems, ventures, and future companies across multiple sectors. From foundational assets to frontier concepts, we operate across the full lifecycle of idea formation, validation, and execution.
+          <strong className="font-bold text-gray-200">Regalitica</strong> is a holding and venture-building entity focused on developing early-stage systems.
         </p>
 
         {/* Email Input - Use the fixed EmailFormEffect component */}
