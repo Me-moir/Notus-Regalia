@@ -160,9 +160,9 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
 
         @media (max-width: 640px) {
           .sandbox-loader-wrapper {
-            width: 12px;
-            height: 12px;
-            margin-right: 4px;
+            width: 10px;
+            height: 10px;
+            margin-right: 3px;
           }
         }
 
@@ -186,7 +186,7 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
         }
 
         @media (max-width: 640px) {
-          .sandbox-loader { transform: scale(0.12); }
+          .sandbox-loader { transform: scale(0.1); }
         }
 
         .sandbox-loader::before {
@@ -358,14 +358,14 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
       {/* Main Navbar */}
       <nav className={`fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-500 ${
         scrolled ? 'pt-2' : 'pt-4'
-      }`} style={{ paddingLeft: '12px', paddingRight: '12px' }}>
-        <div className="w-full max-w-fit flex items-center gap-3">
+      }`} style={{ paddingLeft: '8px', paddingRight: '8px' }}>
+        <div className="w-full max-w-fit flex items-center gap-2">
           {/* Glassmorphic Dock Container */}
           <div ref={navContainerRef} className="glass-nav rounded-full border border-white/10">
             <div 
-              className="flex items-center gap-2" 
+              className="flex items-center gap-1.5" 
               style={{ 
-                padding: isMobile ? '5px 8px' : '7px 10px'
+                padding: isMobile ? '4px 6px' : '7px 10px'
               }}
             >
               {navItems.map((item) => {
@@ -385,8 +385,8 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
                           }
                         `}
                         style={{ 
-                          padding: isMobile ? '5px 10px' : '7px 18px',
-                          fontSize: isMobile ? '0.75rem' : '0.875rem'
+                          padding: isMobile ? '4px 8px' : '7px 18px',
+                          fontSize: isMobile ? '0.7rem' : '0.875rem'
                         }}
                       >
                         <div className="sandbox-loader-wrapper">
@@ -426,11 +426,11 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
                         }
                       `}
                       style={{ 
-                        padding: isMobile ? '5px 10px' : '7px 16px',
-                        fontSize: isMobile ? '0.75rem' : '0.875rem'
+                        padding: isMobile ? '4px 8px' : '7px 16px',
+                        fontSize: isMobile ? '0.7rem' : '0.875rem'
                       }}
                     >
-                      <i className={`bi ${item.icon} ${isMobile ? 'text-xs' : 'text-sm'} mr-1.5`}></i>
+                      <i className={`bi ${item.icon} ${isMobile ? 'text-[10px]' : 'text-sm'} mr-1`}></i>
                       <span className={isActive ? 'nav-button-active-text' : ''}>{item.label}</span>
                     </button>
                   </div>
@@ -439,15 +439,15 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
             </div>
           </div>
 
-          {/* Hamburger Menu Button - Increased size to match navbar height */}
+          {/* Hamburger Menu Button - Compact on mobile */}
           <button
             ref={menuButtonRef}
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className={`hamburger-btn glass-nav rounded-full border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all ${sidebarOpen ? 'open' : ''}`}
             style={{
-              padding: isMobile ? '10px' : '14px',
-              width: isMobile ? '38px' : '52px',
-              height: isMobile ? '38px' : '52px',
+              padding: isMobile ? '8px' : '14px',
+              width: isMobile ? '32px' : '52px',
+              height: isMobile ? '32px' : '52px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -455,7 +455,7 @@ const Navbar = ({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }: Navbar
           >
             <i 
               className={`bi ${sidebarOpen ? 'bi-dash-square' : 'bi-grid'} transition-all duration-300`}
-              style={{ fontSize: isMobile ? '16px' : '20px' }}
+              style={{ fontSize: isMobile ? '14px' : '20px' }}
             ></i>
           </button>
         </div>
