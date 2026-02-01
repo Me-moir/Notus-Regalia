@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "../styles/mobile-hero-global.css";
+import "../styles/mobile-global.css";
 
 export const metadata: Metadata = {
   title: "Regalitica",
