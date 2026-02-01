@@ -341,7 +341,7 @@ const Overview = memo(() => {
 
   return (
     <section 
-      className="relative overflow-hidden bg-[#0a0a0a] mb-20"
+      className="relative overflow-hidden bg-[#0a0a0a] mb-12 md:mb-20"
       style={{
         borderTop: '1px dashed rgba(255, 255, 255, 0.2)',
         borderBottom: '1px dashed rgba(255, 255, 255, 0.2)'
@@ -364,15 +364,15 @@ const Overview = memo(() => {
         }}
       />
 
-      <div className="relative z-10 px-12 lg:px-20">
+      <div className="relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2">
           
-          {/* LEFT SIDE */}
-          <div className="pt-16 py-8 pr-8" style={{ borderRight: '1px dashed rgba(255, 255, 255, 0.2)' }}>
-            {/* Large Title with Eye Icon - With fade transition and fixed min height */}
-            <div className="mb-6 pb-6 overflow-visible" style={{ minHeight: '100px' }}>
+          {/* LEFT SIDE - Mobile Responsive */}
+          <div className="pt-8 md:pt-12 lg:pt-16 py-6 md:py-8 pr-0 lg:pr-8 lg:border-r lg:border-dashed lg:border-white/20">
+            {/* Large Title with Eye Icon - Mobile Responsive */}
+            <div className="mb-4 md:mb-6 pb-4 md:pb-6 overflow-visible min-h-[60px] md:min-h-[100px]">
               <div 
-                className="flex items-center gap-3"
+                className="flex items-center gap-2 md:gap-3"
                 style={{ 
                   opacity: isTransitioning ? 0 : 1,
                   transform: isTransitioning ? 'translateY(-10px)' : 'translateY(0)',
@@ -380,7 +380,7 @@ const Overview = memo(() => {
                 }}
               >
                 <h1 
-                  className="text-5xl lg:text-6xl font-bold"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold"
                   style={{
                     background: 'linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #a3a3a3 100%)',
                     WebkitBackgroundClip: 'text',
@@ -392,10 +392,10 @@ const Overview = memo(() => {
                   {currentContent.title}
                 </h1>
                 
-                {/* Eye Icon Circle */}
+                {/* Eye Icon Circle - Mobile Responsive */}
                 <div
                   ref={eyeIconRef}
-                  className="relative flex-shrink-0 w-12 h-12 rounded-full bg-gray-900/60 border border-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-800/80 transition-all group"
+                  className="relative flex-shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-full bg-gray-900/60 border border-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-800/80 transition-all group"
                   onMouseEnter={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect();
                     setEyeTooltip({ x: rect.left, y: rect.top + rect.height / 2 });
@@ -420,7 +420,7 @@ const Overview = memo(() => {
                     }}
                   />
                   
-                  <svg className="w-5 h-5 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
@@ -429,10 +429,10 @@ const Overview = memo(() => {
             </div>
             
             {/* Divider Line */}
-            <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-5" />
+            <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-3 md:mb-5" />
             
-            {/* Description with smooth fade transition and fixed height container */}
-            <div style={{ minHeight: '180px' }}>
+            {/* Description - Mobile Responsive */}
+            <div className="min-h-[120px] md:min-h-[180px]">
               <div
                 style={{ 
                   opacity: isTransitioning ? 0 : 1,
@@ -440,7 +440,7 @@ const Overview = memo(() => {
                   transition: 'opacity 0.4s ease-in-out, transform 0.4s ease-in-out'
                 }}
               >
-                <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-400 mb-4 md:mb-6 leading-relaxed">
                   {currentContent.description[0]}
                   <br /><br />
                   {currentContent.description[1]}
@@ -448,11 +448,11 @@ const Overview = memo(() => {
               </div>
             </div>
 
-            {/* Three Buttons */}
-            <div className="flex gap-3 mb-6">
+            {/* Three Buttons - Mobile Responsive (Stack on very small screens) */}
+            <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6">
               {/* About Button */}
               <button 
-                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group" + (activeContent !== 'about' ? ' hover:-translate-y-1' : '')}
+                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group text-xs md:text-sm px-3 md:px-4 py-2 md:py-2.5" + (activeContent !== 'about' ? ' hover:-translate-y-1' : '')}
                 onClick={() => handleContentChange('about')}
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -462,7 +462,7 @@ const Overview = memo(() => {
                   e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
                 }}
               >
-                <i className="bi bi-person-bounding-box text-white/80 mr-2" style={{ fontSize: '16px' }}></i>
+                <i className="bi bi-person-bounding-box text-white/80 mr-1.5 md:mr-2" style={{ fontSize: '14px' }}></i>
                 <div className="premium-txt-wrapper">
                   <div className="premium-txt-1">
                     {'About Regalitica'.split('').map((letter, i) => (
@@ -472,7 +472,6 @@ const Overview = memo(() => {
                     ))}
                   </div>
                 </div>
-                {/* Hover Border - Shows on hover when not active, follows mouse */}
                 {activeContent !== 'about' && (
                   <div 
                     className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -486,7 +485,6 @@ const Overview = memo(() => {
                     }}
                   />
                 )}
-                {/* Active Border - Always shows when active, travels around button */}
                 {activeContent === 'about' && (
                   <div 
                     className="absolute inset-0 rounded-lg pointer-events-none"
@@ -506,7 +504,7 @@ const Overview = memo(() => {
 
               {/* Mission Button */}
               <button 
-                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group" + (activeContent !== 'mission' ? ' hover:-translate-y-1' : '')}
+                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group text-xs md:text-sm px-3 md:px-4 py-2 md:py-2.5" + (activeContent !== 'mission' ? ' hover:-translate-y-1' : '')}
                 onClick={() => handleContentChange('mission')}
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -516,7 +514,7 @@ const Overview = memo(() => {
                   e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
                 }}
               >
-                <i className="bi bi-crosshair text-white/80 mr-2" style={{ fontSize: '16px' }}></i>
+                <i className="bi bi-crosshair text-white/80 mr-1.5 md:mr-2" style={{ fontSize: '14px' }}></i>
                 <div className="premium-txt-wrapper">
                   <div className="premium-txt-1">
                     {'Mission'.split('').map((letter, i) => (
@@ -526,7 +524,6 @@ const Overview = memo(() => {
                     ))}
                   </div>
                 </div>
-                {/* Hover Border - Shows on hover when not active, follows mouse */}
                 {activeContent !== 'mission' && (
                   <div 
                     className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -540,7 +537,6 @@ const Overview = memo(() => {
                     }}
                   />
                 )}
-                {/* Active Border - Always shows when active, travels around button */}
                 {activeContent === 'mission' && (
                   <div 
                     className="absolute inset-0 rounded-lg pointer-events-none"
@@ -560,7 +556,7 @@ const Overview = memo(() => {
 
               {/* Vision Button */}
               <button 
-                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group" + (activeContent !== 'vision' ? ' hover:-translate-y-1' : '')}
+                className={styles.premiumBtn + " inline-flex transition-transform duration-300 group text-xs md:text-sm px-3 md:px-4 py-2 md:py-2.5" + (activeContent !== 'vision' ? ' hover:-translate-y-1' : '')}
                 onClick={() => handleContentChange('vision')}
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -570,7 +566,7 @@ const Overview = memo(() => {
                   e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
                 }}
               >
-                <i className="bi bi-compass text-white/80 mr-2" style={{ fontSize: '16px' }}></i>
+                <i className="bi bi-compass text-white/80 mr-1.5 md:mr-2" style={{ fontSize: '14px' }}></i>
                 <div className="premium-txt-wrapper">
                   <div className="premium-txt-1">
                     {'Vision'.split('').map((letter, i) => (
@@ -580,7 +576,6 @@ const Overview = memo(() => {
                     ))}
                   </div>
                 </div>
-                {/* Hover Border - Shows on hover when not active, follows mouse */}
                 {activeContent !== 'vision' && (
                   <div 
                     className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -594,7 +589,6 @@ const Overview = memo(() => {
                     }}
                   />
                 )}
-                {/* Active Border - Always shows when active, travels around button */}
                 {activeContent === 'vision' && (
                   <div 
                     className="absolute inset-0 rounded-lg pointer-events-none"
@@ -614,10 +608,10 @@ const Overview = memo(() => {
             </div>
 
             {/* Divider Line before Canvas */}
-            <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-6" />
+            <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-4 md:mb-6" />
 
-            {/* Canvas Area */}
-            <div ref={containerRef} className="relative w-full h-[480px]">
+            {/* Canvas Area - Mobile Responsive */}
+            <div ref={containerRef} className="relative w-full h-[280px] sm:h-[350px] md:h-[400px] lg:h-[480px]">
               <canvas 
                 ref={canvasRef} 
                 className="w-full h-full"
@@ -634,7 +628,7 @@ const Overview = memo(() => {
                     transform: 'translateX(-50%)'
                   }}
                 >
-                  <div className="bg-gray-900 text-white px-3 py-2 rounded-lg shadow-xl border border-white/20 text-sm whitespace-nowrap">
+                  <div className="bg-gray-900 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-lg shadow-xl border border-white/20 text-xs md:text-sm whitespace-nowrap">
                     {tooltip.text}
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-gray-900 border-r border-b border-white/20 rotate-45" />
                   </div>
@@ -651,7 +645,7 @@ const Overview = memo(() => {
                     transform: 'translateY(-50%)'
                   }}
                 >
-                  <div className="bg-gray-900 text-white px-3 py-2 rounded-lg shadow-xl border border-white/20 text-sm whitespace-nowrap">
+                  <div className="bg-gray-900 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-lg shadow-xl border border-white/20 text-xs md:text-sm whitespace-nowrap">
                     About our team
                     <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gray-900 border-l border-t border-white/20 rotate-45" />
                   </div>
@@ -660,16 +654,22 @@ const Overview = memo(() => {
             </div>
           </div>
 
-          {/* RIGHT SIDE - 2 columns × 4 rows Grid */}
-          <div className="grid grid-cols-2 grid-rows-4 gap-0">
+          {/* RIGHT SIDE - Mobile Responsive Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 mt-6 lg:mt-0">
             {FeatureSections.map((feature, index) => (
               <div 
                 key={index}
-                className="relative backdrop-blur-sm p-8 transition-all group overflow-hidden"
+                className={`relative backdrop-blur-sm p-4 sm:p-6 md:p-8 transition-all group overflow-hidden
+                  border-l border-r border-white/20 border-dashed
+                  ${index === 0 ? 'border-t' : ''} 
+                  ${index === FeatureSections.length - 1 ? '' : 'border-b'}
+                  sm:border-dashed sm:border-white/20
+                  ${index >= FeatureSections.length - 2 ? 'sm:border-b-0' : 'sm:border-b'}
+                  ${index < 2 ? 'sm:border-t lg:border-t-0' : 'sm:border-t-0'}
+                  ${index % 2 === 0 ? 'sm:border-l lg:border-l-0 sm:border-r-0 lg:border-r-0' : 'sm:border-l sm:border-r lg:border-r'}
+                `}
                 style={{
                   background: 'linear-gradient(135deg, #0f0f0f 0%, #050505 100%)',
-                  borderBottom: index < 6 ? '1px dashed rgba(255, 255, 255, 0.2)' : 'none',
-                  borderRight: '1px dashed rgba(255, 255, 255, 0.2)'
                 }}
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -692,15 +692,15 @@ const Overview = memo(() => {
                   }}
                 />
                 
-                <div className="mb-6 text-2xl text-white/80 transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
+                <div className="mb-3 md:mb-6 text-xl md:text-2xl text-white/80 transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   <i className={`bi ${feature.icon}`}></i>
                 </div>
                 
-                <h3 className="text-lg font-semibold text-white mb-3 leading-tight transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
+                <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 leading-tight transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   {feature.title}
                 </h3>
                 
-                <p className="text-sm text-gray-400 leading-relaxed transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
+                <p className="text-xs md:text-sm text-gray-400 leading-relaxed transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   {feature.description}
                 </p>
               </div>

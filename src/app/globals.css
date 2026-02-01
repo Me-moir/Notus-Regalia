@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import url('bootstrap-icons/font/bootstrap-icons.css');
+@import "../styles/mobile-hero-global.css";
 
 * {
   margin: 0;
