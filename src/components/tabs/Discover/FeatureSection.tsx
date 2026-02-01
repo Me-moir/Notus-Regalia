@@ -3,6 +3,15 @@ import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { allProjects } from '@/data/Discover-data';
 import styles from '@/styles/ui.module.css';
 
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 3 OPTIMIZATION: CUSTOM HOOKS IMPORTS
+// ═══════════════════════════════════════════════════════════════════
+import { useSwipeGesture } from '@/hooks/useSwipeGesture';
+import { useVisibilityTracking } from '@/hooks/useVisibilityTracking';
+import { useMouseTracking } from '@/hooks/useMouseTracking';
+import { useCarouselAutoAdvance } from '@/hooks/useCarouselAutoAdvance';
+import { useCardPositioning } from '@/hooks/useCardPositioning';
+
 interface FeatureSectionProps {
   activeCardIndex: number;
   setActiveCardIndex: (index: number) => void;
@@ -12,7 +21,6 @@ interface FeatureSectionProps {
 
 // ═══════════════════════════════════════════════════════════════════
 // PHASE 2 OPTIMIZATION: EXTRACTED STYLE CONSTANTS
-// Prevents recreation of style objects on every render
 // ═══════════════════════════════════════════════════════════════════
 const GRADIENT_STYLES = {
   iconGradient: {
@@ -62,7 +70,6 @@ const GRADIENT_STYLES = {
 
 // ═══════════════════════════════════════════════════════════════════
 // PHASE 2 OPTIMIZATION: THROTTLE UTILITY
-// Limits function execution rate for better performance
 // ═══════════════════════════════════════════════════════════════════
 const throttle = <T extends (...args: any[]) => any>(
   func: T,
@@ -80,7 +87,6 @@ const throttle = <T extends (...args: any[]) => any>(
 
 // ═══════════════════════════════════════════════════════════════════
 // PHASE 2 OPTIMIZATION: MEMOIZED PROJECT CARD COMPONENT
-// Only re-renders when props actually change
 // ═══════════════════════════════════════════════════════════════════
 interface ProjectCardProps {
   project: any;
@@ -103,6 +109,18 @@ const ProjectCard = memo(({
   onMouseLeave,
   cardRef
 }: ProjectCardProps) => {
+  // ═══════════════════════════════════════════════════════════════════
+  // PHASE 3 OPTIMIZATION: MEMOIZED CARD DIMENSIONS
+  // ═══════════════════════════════════════════════════════════════════
+  const cardDimensions = useMemo(() => ({
+    width: isMobile ? '280px' : '400px',
+    height: isMobile ? '380px' : '500px'
+  }), [isMobile]);
+
+  const cardPadding = useMemo(() => ({
+    padding: isMobile ? '18px' : '24px'
+  }), [isMobile]);
+
   return (
     <div
       ref={cardRef}
@@ -111,8 +129,7 @@ const ProjectCard = memo(({
       onMouseLeave={!isMobile && isActive ? () => onMouseLeave(index) : undefined}
       style={{ 
         pointerEvents: isActive ? 'auto' : 'none',
-        width: isMobile ? '280px' : '400px',
-        height: isMobile ? '380px' : '500px'
+        ...cardDimensions
       }}
     >
       <div className={styles.cardOuter}>
@@ -131,7 +148,7 @@ const ProjectCard = memo(({
             e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
           } : undefined}
         >
-          <div className={styles.cardInner} style={{ padding: isMobile ? '18px' : '24px' }}>
+          <div className={styles.cardInner} style={cardPadding}>
             <div className={`absolute rounded-lg bg-white/10 border border-white/20 flex items-center justify-center z-10 ${isMobile ? 'top-4 right-4 w-9 h-9' : 'top-6 right-6 w-12 h-12'}`}>
               <span className={`text-white/40 font-medium ${isMobile ? 'text-[9px]' : 'text-xs'}`}>LOGO</span>
             </div>
@@ -298,7 +315,6 @@ const ProjectCard = memo(({
     </div>
   );
 }, (prevProps, nextProps) => {
-  // Custom comparison for optimal memoization
   return (
     prevProps.isActive === nextProps.isActive &&
     prevProps.rotation.rotateX === nextProps.rotation.rotateX &&
@@ -317,33 +333,10 @@ const FeatureSection = memo(({
   isAnimating
 }: FeatureSectionProps) => {
   const [cardRotations, setCardRotations] = useState<Record<number, { rotateX: number; rotateY: number }>>({});
-  const [isSection3Visible, setIsSection3Visible] = useState(false);
-  const isSection3VisibleRef = useRef(false);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const leftPanelRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-
-  // ═══════════════════════════════════════════════════════════════════
-  // PHASE 2 OPTIMIZATION: CACHED DOM SELECTORS
-  // Prevents querySelector on every mouse move
-  // ═══════════════════════════════════════════════════════════════════
-  const cachedSelectorsRef = useRef<{
-    boxes: HTMLElement[];
-    icons: Map<HTMLElement, HTMLElement[]>;
-    lines: Map<HTMLElement, HTMLElement[]>;
-  } | null>(null);
-
-  // ─── SWIPE STATE (mobile only) ──────────────────────────────────────
-  const swipeRef = useRef({
-    startX: 0,
-    startY: 0,
-    currentX: 0,
-    isDragging: false,
-    didMove: false,
-    baseTranslateX: 0,
-  });
-  const [swipeOffset, setSwipeOffset] = useState(0);
 
   // Detect mobile with debounced resize handler
   useEffect(() => {
@@ -368,103 +361,104 @@ const FeatureSection = memo(({
     [activeCardIndex]
   );
 
-  // 🔥 Track visibility - CRITICAL for auto-scroll
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const rect = entry.boundingClientRect;
-        const viewportHeight = window.innerHeight;
-        
-        const visibleTop = Math.max(0, rect.top);
-        const visibleBottom = Math.min(viewportHeight, rect.bottom);
-        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-        
-        const sectionHeight = rect.height;
-        const visibilityPercentage = (visibleHeight / sectionHeight) * 100;
-        
-        const isVisible = visibilityPercentage >= 70;
-        
-        if (isVisible !== isSection3VisibleRef.current) {
-          setIsSection3Visible(isVisible);
-          isSection3VisibleRef.current = isVisible;
-          
-          if (!isVisible) {
-            setCardRotations({});
-          }
-        }
-      },
-      { 
-        threshold: [0, 0.5, 0.7, 1.0],
-        rootMargin: '0px'
+  // ═══════════════════════════════════════════════════════════════════
+  // PHASE 3 OPTIMIZATION: CUSTOM HOOKS USAGE
+  // ═══════════════════════════════════════════════════════════════════
+
+  // Visibility tracking
+  const { isVisible: isSection3Visible, isVisibleRef: isSection3VisibleRef } = useVisibilityTracking({
+    elementId: 'industries-carousel-section',
+    threshold: 70,
+    onVisibilityChange: (visible) => {
+      if (!visible) {
+        setCardRotations({});
       }
-    );
-
-    const section3 = document.getElementById('industries-carousel-section');
-    
-    if (section3) {
-      observer.observe(section3);
     }
+  });
 
-    return () => {
-      observer.disconnect();
-    };
+  // ═══════════════════════════════════════════════════════════════════
+  // PHASE 3 OPTIMIZATION: MEMOIZED CALLBACK - getMobileBaseX
+  // ═══════════════════════════════════════════════════════════════════
+  const getMobileBaseX = useCallback((cardIdx: number) => {
+    const cardWidth = 280;
+    const gap = 40;
+    const containerWidth = window.innerWidth - 32;
+    const centerPosition = containerWidth / 2;
+    const offset = (cardIdx - 1) * (cardWidth + gap);
+    return -offset + centerPosition - cardWidth / 2;
   }, []);
 
   // ═══════════════════════════════════════════════════════════════════
-  // PHASE 2 OPTIMIZATION: CACHED DOM SELECTOR MOUSE TRACKING
-  // Queries DOM once, then reuses cached elements
+  // PHASE 3 OPTIMIZATION: MEMOIZED CALLBACKS - Navigation
   // ═══════════════════════════════════════════════════════════════════
+  const goToCard = useCallback((cardIndex: number, manual: boolean = false) => {
+    const clampedIndex = Math.max(1, Math.min(cardIndex, allProjects.length));
+    setActiveCardIndex(clampedIndex);
+    
+    if (manual) {
+      resetManualInteraction();
+    }
+  }, [setActiveCardIndex]);
+
+  const goToNextCard = useCallback(() => {
+    const nextIndex = activeCardIndex >= allProjects.length ? 1 : activeCardIndex + 1;
+    goToCard(nextIndex, true);
+  }, [activeCardIndex, goToCard]);
+
+  // Swipe gesture handling
+  const { swipeOffset, handlers: swipeHandlers } = useSwipeGesture({
+    enabled: isMobile,
+    activeIndex: activeCardIndex,
+    maxIndex: allProjects.length,
+    onSwipe: (direction) => {
+      if (direction === 'left') {
+        goToCard(activeCardIndex + 1, true);
+      } else {
+        goToCard(activeCardIndex - 1, true);
+      }
+    },
+    getBaseTranslate: getMobileBaseX
+  });
+
+  // Auto-advance carousel
+  const { resetManualInteraction } = useCarouselAutoAdvance({
+    enabled: !isMobile,
+    isVisible: isSection3Visible,
+    activeIndex: activeCardIndex,
+    maxIndex: allProjects.length,
+    onAdvance: setActiveCardIndex
+  });
+
+  // Mouse tracking for left panel
+  useMouseTracking({
+    enabled: !isMobile,
+    panelRef: leftPanelRef,
+    boxSelector: `.${styles.notificationBox}`,
+    dependencies: [activeProject]
+  });
+
+  // Card positioning
+  useCardPositioning({
+    containerRef: cardsContainerRef,
+    cardsRef,
+    activeIndex: activeCardIndex,
+    isMobile,
+    swipeOffset
+  });
+
+  // Live drag translation (mobile)
   useEffect(() => {
-    const leftPanel = leftPanelRef.current;
-    if (!leftPanel || isMobile) return;
+    if (!isMobile || swipeOffset === 0) return;
+    const container = cardsContainerRef.current;
+    if (!container) return;
 
-    // Cache selectors ONCE
-    const boxes = Array.from(leftPanel.querySelectorAll(`.${styles.notificationBox}`)) as HTMLElement[];
-    const icons = new Map<HTMLElement, HTMLElement[]>();
-    const lines = new Map<HTMLElement, HTMLElement[]>();
-    
-    boxes.forEach(box => {
-      icons.set(box, Array.from(box.querySelectorAll('.box-icon-container')) as HTMLElement[]);
-      lines.set(box, Array.from(box.querySelectorAll('.box-divider-line')) as HTMLElement[]);
-    });
-    
-    cachedSelectorsRef.current = { boxes, icons, lines };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const cached = cachedSelectorsRef.current;
-      if (!cached) return;
-      
-      // Use cached selectors - NO DOM queries during animation!
-      cached.boxes.forEach((box) => {
-        const rect = box.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        box.style.setProperty('--mouse-x', `${x}px`);
-        box.style.setProperty('--mouse-y', `${y}px`);
-        
-        cached.icons.get(box)?.forEach(icon => {
-          icon.style.setProperty('--mouse-x', `${x}px`);
-          icon.style.setProperty('--mouse-y', `${y}px`);
-        });
-        
-        cached.lines.get(box)?.forEach(line => {
-          line.style.setProperty('--mouse-x', `${x}px`);
-          line.style.setProperty('--mouse-y', `${y}px`);
-        });
-      });
-    };
-
-    leftPanel.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      leftPanel.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [isMobile, activeProject]); // Re-cache when content changes
+    const baseX = getMobileBaseX(activeCardIndex);
+    container.style.transition = 'none';
+    container.style.transform = `translate3d(${baseX + swipeOffset}px, 0, 0)`;
+  }, [isMobile, swipeOffset, activeCardIndex, getMobileBaseX]);
 
   // ═══════════════════════════════════════════════════════════════════
-  // PHASE 2 OPTIMIZATION: THROTTLED CARD MOUSE MOVE
-  // Reduces processing from 60/sec to controlled rate
+  // PHASE 3 OPTIMIZATION: MEMOIZED CALLBACKS - Card Mouse Handlers
   // ═══════════════════════════════════════════════════════════════════
   const handleCardMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, cardIndex: number) => {
     if (isMobile) return;
@@ -507,11 +501,10 @@ const FeatureSection = memo(({
       ...prev,
       [cardIndex]: { rotateX, rotateY }
     }));
-  }, [activeCardIndex, isMobile]);
+  }, [activeCardIndex, isMobile, isSection3VisibleRef]);
 
-  // Throttled version of handleCardMouseMove
   const handleCardMouseMoveThrottled = useMemo(
-    () => throttle(handleCardMouseMove, 16), // ~60fps
+    () => throttle(handleCardMouseMove, 16),
     [handleCardMouseMove]
   );
 
@@ -526,223 +519,6 @@ const FeatureSection = memo(({
       [cardIndex]: { rotateX: 0, rotateY: 0 }
     }));
   }, [activeCardIndex, isMobile]);
-
-  const carouselTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [isManualInteraction, setIsManualInteraction] = useState(false);
-
-  const goToCard = useCallback((cardIndex: number, manual: boolean = false) => {
-    const clampedIndex = Math.max(1, Math.min(cardIndex, allProjects.length));
-    setActiveCardIndex(clampedIndex);
-    
-    if (manual) {
-      setIsManualInteraction(true);
-      if (carouselTimerRef.current) {
-        clearTimeout(carouselTimerRef.current);
-      }
-      carouselTimerRef.current = setTimeout(() => {
-        setIsManualInteraction(false);
-      }, 10000);
-    }
-  }, [setActiveCardIndex]);
-
-  const goToNextCard = useCallback(() => {
-    const nextIndex = activeCardIndex >= allProjects.length ? 1 : activeCardIndex + 1;
-    goToCard(nextIndex, true);
-  }, [activeCardIndex, goToCard]);
-
-  // 🔥 FIX: Auto-advance carousel - PROPERLY CHECKING VISIBILITY (DISABLED ON MOBILE)
-  useEffect(() => {
-    if (isMobile || !isSection3Visible) {
-      return;
-    }
-    
-    const autoAdvanceDelay = isManualInteraction ? 10000 : 5000;
-    
-    const timer = setTimeout(() => {
-      const next = activeCardIndex >= allProjects.length ? 1 : activeCardIndex + 1;
-      setActiveCardIndex(next);
-    }, autoAdvanceDelay);
-    
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [activeCardIndex, isManualInteraction, isSection3Visible, setActiveCardIndex, isMobile]);
-
-  useEffect(() => {
-    return () => {
-      if (carouselTimerRef.current) {
-        clearTimeout(carouselTimerRef.current);
-      }
-    };
-  }, []);
-
-  const cardPositionTimeoutRef = useRef<number | null>(null);
-  
-  useEffect(() => {
-    if (cardPositionTimeoutRef.current) {
-      cancelAnimationFrame(cardPositionTimeoutRef.current);
-    }
-
-    cardPositionTimeoutRef.current = requestAnimationFrame(() => {
-      const container = cardsContainerRef.current;
-      const cards = cardsRef.current.filter(Boolean);
-      
-      if (!container || cards.length === 0) return;
-
-      if (isMobile) {
-        if (swipeOffset !== 0) return;
-
-        const cardWidth = 280;
-        const gap = 40;
-        const containerWidth = window.innerWidth - 32;
-        const centerPosition = containerWidth / 2;
-        
-        const cardArrayIndex = activeCardIndex - 1;
-        const offsetToCard = cardArrayIndex * (cardWidth + gap);
-        const targetX = -offsetToCard + centerPosition - (cardWidth / 2);
-        
-        container.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        container.style.transform = `translate3d(${targetX}px, 0, 0)`;
-      } else {
-        const cardWidth = 400;
-        const gap = 80;
-        
-        const rightPadding = window.innerWidth >= 1024 ? 64 : 32;
-        const rightContainerWidth = (window.innerWidth * 0.5) - rightPadding;
-        const centerPosition = rightContainerWidth / 2;
-        
-        const cardArrayIndex = activeCardIndex - 1;
-        const offsetToCard = cardArrayIndex * (cardWidth + gap);
-        const targetX = -offsetToCard + centerPosition - (cardWidth / 2);
-        
-        container.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        container.style.transform = `translate3d(${targetX}px, 0, 0)`;
-      }
-      
-      cards.forEach((card, index) => {
-        if (!card) return;
-        
-        const cardNumber = index + 1;
-        let scale: number;
-        
-        if (cardNumber === activeCardIndex) {
-          scale = isMobile ? 1.05 : 1.1;
-        } else if (Math.abs(cardNumber - activeCardIndex) === 1) {
-          scale = isMobile ? 0.92 : 0.95;
-        } else {
-          scale = isMobile ? 0.82 : 0.85;
-        }
-        
-        card.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        card.style.transform = `scale(${scale})`;
-      });
-    });
-
-    return () => {
-      if (cardPositionTimeoutRef.current) {
-        cancelAnimationFrame(cardPositionTimeoutRef.current);
-      }
-    };
-  }, [activeCardIndex, isMobile, swipeOffset]);
-
-  // ─── MOBILE SWIPE HELPERS ────────────────────────────────────────────
-  const getMobileBaseX = useCallback((cardIdx: number) => {
-    const cardWidth = 280;
-    const gap = 40;
-    const containerWidth = window.innerWidth - 32;
-    const centerPosition = containerWidth / 2;
-    const offset = (cardIdx - 1) * (cardWidth + gap);
-    return -offset + centerPosition - cardWidth / 2;
-  }, []);
-
-  const handleSwipeStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isMobile) return;
-    const touch = e.touches[0];
-    swipeRef.current = {
-      startX: touch.clientX,
-      startY: touch.clientY,
-      currentX: touch.clientX,
-      isDragging: true,
-      didMove: false,
-      baseTranslateX: getMobileBaseX(activeCardIndex),
-    };
-  }, [isMobile, activeCardIndex, getMobileBaseX]);
-
-  const handleSwipeMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isMobile || !swipeRef.current.isDragging) return;
-    const touch = e.touches[0];
-    const dx = touch.clientX - swipeRef.current.startX;
-    const dy = touch.clientY - swipeRef.current.startY;
-
-    if (!swipeRef.current.didMove) {
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-      if (Math.abs(dy) > Math.abs(dx)) {
-        swipeRef.current.isDragging = false;
-        setSwipeOffset(0);
-        return;
-      }
-      swipeRef.current.didMove = true;
-      e.preventDefault();
-    }
-
-    e.preventDefault();
-    swipeRef.current.currentX = touch.clientX;
-
-    const atStart = activeCardIndex === 1 && dx > 0;
-    const atEnd   = activeCardIndex === allProjects.length && dx < 0;
-    const dampened = (atStart || atEnd) ? dx * 0.25 : dx;
-
-    setSwipeOffset(dampened);
-  }, [isMobile, activeCardIndex]);
-
-  const handleSwipeEnd = useCallback(() => {
-    if (!isMobile || !swipeRef.current.isDragging) return;
-    swipeRef.current.isDragging = false;
-
-    const dx = swipeRef.current.currentX - swipeRef.current.startX;
-    const THRESHOLD = 50;
-
-    if (dx < -THRESHOLD && activeCardIndex < allProjects.length) {
-      goToCard(activeCardIndex + 1, true);
-    } else if (dx > THRESHOLD && activeCardIndex > 1) {
-      goToCard(activeCardIndex - 1, true);
-    }
-    setSwipeOffset(0);
-  }, [isMobile, activeCardIndex, goToCard]);
-
-  useEffect(() => {
-    if (!isMobile || swipeOffset === 0) return;
-    const container = cardsContainerRef.current;
-    if (!container) return;
-
-    const baseX = swipeRef.current.baseTranslateX;
-    container.style.transition = 'none';
-    container.style.transform = `translate3d(${baseX + swipeOffset}px, 0, 0)`;
-  }, [isMobile, swipeOffset]);
-
-  useEffect(() => {
-    if (!isMobile) return;
-    
-    const handleTouchStart = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      swipeRef.current = {
-        startX: touch.clientX,
-        startY: touch.clientY,
-        currentX: touch.clientX,
-        isDragging: true,
-        didMove: false,
-        baseTranslateX: getMobileBaseX(activeCardIndex),
-      };
-    };
-    
-    const container = cardsContainerRef.current?.parentElement;
-    if (container) {
-      container.addEventListener('touchstart', handleTouchStart, { passive: true });
-      return () => {
-        container.removeEventListener('touchstart', handleTouchStart);
-      };
-    }
-  }, [isMobile, activeCardIndex, getMobileBaseX]);
 
   // ─── SHARED SUB-COMPONENTS (MEMOIZED) ───────────────────────────────────────────
 
@@ -1002,7 +778,6 @@ const FeatureSection = memo(({
           borderBottom: '1px dashed rgba(255, 255, 255, 0.2)'
         }}
       >
-        {/* Grain overlay */}
         <div 
           className="absolute inset-0 pointer-events-none opacity-[0.02]"
           style={{
@@ -1012,7 +787,6 @@ const FeatureSection = memo(({
           }}
         />
 
-        {/* ── SWIPE hint — own row, above cards, never overlaps ── */}
         <div className="flex justify-center mb-3 pointer-events-none">
           <div
             className="relative inline-flex items-center gap-2.5 rounded-full"
@@ -1025,7 +799,6 @@ const FeatureSection = memo(({
               boxShadow: '0 4px 28px rgba(0,0,0,0.4)',
             }}
           >
-            {/* pulsing glow border */}
             <div
               className="absolute inset-0 rounded-full pointer-events-none"
               style={{
@@ -1038,7 +811,6 @@ const FeatureSection = memo(({
               }}
             />
 
-            {/* left arrow */}
             <svg
               width="14" height="10" viewBox="0 0 14 10" fill="none"
               className="relative z-10"
@@ -1047,7 +819,6 @@ const FeatureSection = memo(({
               <path d="M0 5L5.5 0.5V4.5H14V5.5H5.5V9.5L0 5Z" fill="rgba(255,255,255,0.7)" />
             </svg>
 
-            {/* horizontal "SWIPE" text */}
             <span
               className="relative z-10 font-semibold tracking-widest uppercase"
               style={{
@@ -1060,7 +831,6 @@ const FeatureSection = memo(({
               SWIPE
             </span>
 
-            {/* right arrow */}
             <svg
               width="14" height="10" viewBox="0 0 14 10" fill="none"
               className="relative z-10"
@@ -1071,21 +841,16 @@ const FeatureSection = memo(({
           </div>
         </div>
 
-        {/* ── Cards row ── */}
         <div
           className="relative w-full overflow-hidden mb-6"
           style={{ height: '420px', touchAction: 'pan-y' }}
-          onTouchStart={handleSwipeStart}
-          onTouchMove={handleSwipeMove}
-          onTouchEnd={handleSwipeEnd}
-          onTouchCancel={handleSwipeEnd}
+          {...swipeHandlers}
         >
           <div className="absolute inset-0 flex items-center px-4">
             {CardsStrip}
           </div>
         </div>
 
-        {/* keyframes */}
         <style>{`
           @keyframes swipeHintGlow {
             0%, 100% { opacity: 0.4; }
@@ -1101,12 +866,10 @@ const FeatureSection = memo(({
           }
         `}</style>
 
-        {/* ── Info panel (bottom) ── */}
         <div 
           ref={leftPanelRef}
           className="relative px-4 pb-4"
         >
-          {/* Industry header */}
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Industry</p>
           
           <div className="vanish-crossfade-container mb-2">
@@ -1131,15 +894,11 @@ const FeatureSection = memo(({
             </p>
           </div>
 
-          {/* Problem & Value Prop boxes */}
           {ProblemBox}
           {ValuePropBox}
-
-          {/* Team + Next button */}
           {TeamSection}
         </div>
 
-        {/* ── Progress bar (bottom) ── */}
         <div className="mt-5">
           {ProgressBar}
         </div>
@@ -1147,7 +906,7 @@ const FeatureSection = memo(({
     );
   }
 
-  // ─── DESKTOP LAYOUT (adaptive height for short screens) ────────────────────────────
+  // ─── DESKTOP LAYOUT ────────────────────────────
   return (
     <section 
       id="industries-carousel-section"
@@ -1161,7 +920,6 @@ const FeatureSection = memo(({
         borderBottom: '1px dashed rgba(255, 255, 255, 0.2)'
       }}
     >
-      {/* Grain overlay */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{
@@ -1171,7 +929,6 @@ const FeatureSection = memo(({
         }}
       />
 
-      {/* Vertical divider line */}
       <div 
         className="absolute left-[50%] top-0 bottom-0 w-px pointer-events-none z-30"
         style={{
@@ -1179,7 +936,6 @@ const FeatureSection = memo(({
         }}
       />
 
-      {/* Left Panel */}
       <div 
         ref={leftPanelRef}
         className="absolute left-0 w-[50%] z-20 flex items-start pl-12 pr-8 py-6 lg:pl-20 lg:pr-12"
@@ -1222,7 +978,6 @@ const FeatureSection = memo(({
         </div>
       </div>
 
-      {/* Cards Container */}
       <div 
         className="absolute left-[50%] right-0 flex items-center z-10 overflow-hidden bg-transparent pr-8 lg:pr-16"
         style={{
@@ -1233,7 +988,6 @@ const FeatureSection = memo(({
         {CardsStrip}
       </div>
 
-      {/* Progress Bar */}
       <div className="absolute bottom-6 sm:bottom-8 z-20 lg:left-[50%] lg:right-0 left-0 right-0 px-8 lg:px-12">
         {ProgressBar}
       </div>
