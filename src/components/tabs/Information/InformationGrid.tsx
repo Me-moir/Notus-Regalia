@@ -11,6 +11,9 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
   return (
     <section 
       className="relative overflow-hidden bg-[#0a0a0a]"
+      style={{
+        paddingTop: 'env(safe-area-inset-top)'
+      }}
     >
       <style>{`
         @keyframes orbitBorder {
@@ -29,11 +32,11 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
         }}
       />
 
-      <div className="relative z-10 px-12 lg:px-20 py-16">
+      <div className="relative z-10 px-4 sm:px-8 lg:px-20 pt-24 pb-8 sm:pt-28 sm:pb-12 lg:pt-32 lg:pb-16">
         {/* Section Header */}
-        <div className="mb-12 text-center">
+        <div className="mb-6 sm:mb-10 lg:mb-12 text-center">
           <h2 
-            className="text-5xl lg:text-6xl font-bold mb-4"
+            className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-3 sm:mb-4"
             style={{
               background: 'linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #a3a3a3 100%)',
               WebkitBackgroundClip: 'text',
@@ -44,7 +47,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
           >
             Information Hub
           </h2>
-          <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto" />
+          <div className="w-24 sm:w-32 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto" />
         </div>
 
         {/* Grid Container with Complete Border Frame */}
@@ -55,7 +58,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
           }}
         >
           {/* 4x2 Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-0">
+          <div className="grid grid-cols-4 grid-rows-2 gap-0">
           {informationGrids.map((grid, index) => {
             const isActive = activeContent === grid.id;
             
@@ -63,7 +66,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
               <button
                 key={grid.id}
                 onClick={() => onContentChange(grid.id)}
-                className="relative backdrop-blur-sm p-8 transition-all group overflow-hidden text-left"
+                className="relative backdrop-blur-sm p-3 sm:p-5 lg:p-8 transition-all group overflow-hidden text-left"
                 style={{
                   background: 'linear-gradient(135deg, #0f0f0f 0%, #050505 100%)',
                   borderBottom: index < 4 ? '1px dashed rgba(255, 255, 255, 0.2)' : 'none',
@@ -112,7 +115,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 
                 {/* Icon */}
                 <div 
-                  className="mb-6 text-2xl transition-all duration-300 relative z-10"
+                  className="mb-2 sm:mb-4 lg:mb-6 text-base sm:text-xl lg:text-2xl transition-all duration-300 relative z-10"
                   style={{
                     color: isActive ? 'rgba(0, 255, 166, 0.9)' : 'rgba(255, 255, 255, 0.8)',
                     transform: isActive ? 'translateY(-4px)' : 'translateY(0)'
@@ -123,7 +126,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 
                 {/* Title */}
                 <h3 
-                  className="text-lg font-semibold mb-3 leading-tight transition-all duration-300 relative z-10"
+                  className="text-xs sm:text-sm lg:text-lg font-semibold mb-1 sm:mb-2 lg:mb-3 leading-tight transition-all duration-300 relative z-10"
                   style={{
                     color: isActive ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)',
                     transform: isActive ? 'translateY(-4px)' : 'translateY(0)'
@@ -134,7 +137,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 
                 {/* Description */}
                 <p 
-                  className="text-sm leading-relaxed transition-all duration-300 relative z-10"
+                  className="text-[10px] sm:text-xs lg:text-sm leading-relaxed transition-all duration-300 relative z-10"
                   style={{
                     color: isActive ? 'rgba(200, 200, 200, 1)' : 'rgba(163, 163, 163, 1)',
                     transform: isActive ? 'translateY(-4px)' : 'translateY(0)'

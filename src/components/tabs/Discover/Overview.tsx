@@ -40,7 +40,7 @@ const Overview = memo(() => {
     setTimeout(() => {
       setActiveContent(newContent);
       setIsTransitioning(false);
-    }, 400); // Increased timing to match transition duration
+    }, 400);
   };
 
   useEffect(() => {
@@ -347,14 +347,13 @@ const Overview = memo(() => {
         borderBottom: '1px dashed rgba(255, 255, 255, 0.2)'
       }}
     >
-      {/* Add keyframes for orbiting gradient animation */}
       <style>{`
         @keyframes orbitBorder {
           0% { background-position: 0% 0%; }
           100% { background-position: 200% 0%; }
         }
       `}</style>
-      {/* Grain overlay */}
+      
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{
@@ -367,9 +366,8 @@ const Overview = memo(() => {
       <div className="relative z-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2">
           
-          {/* LEFT SIDE - Mobile Responsive */}
+          {/* LEFT SIDE */}
           <div className="pt-8 md:pt-12 lg:pt-16 py-6 md:py-8 pr-0 lg:pr-8 lg:border-r lg:border-dashed lg:border-white/20">
-            {/* Large Title with Eye Icon - Mobile Responsive */}
             <div className="mb-4 md:mb-6 pb-4 md:pb-6 overflow-visible min-h-[60px] md:min-h-[100px]">
               <div 
                 className="flex items-center gap-2 md:gap-3"
@@ -392,7 +390,6 @@ const Overview = memo(() => {
                   {currentContent.title}
                 </h1>
                 
-                {/* Eye Icon Circle - Mobile Responsive */}
                 <div
                   ref={eyeIconRef}
                   className="relative flex-shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-full bg-gray-900/60 border border-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-800/80 transition-all group"
@@ -428,10 +425,8 @@ const Overview = memo(() => {
               </div>
             </div>
             
-            {/* Divider Line */}
             <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-3 md:mb-5" />
             
-            {/* Description - Mobile Responsive */}
             <div className="min-h-[120px] md:min-h-[180px]">
               <div
                 style={{ 
@@ -448,7 +443,6 @@ const Overview = memo(() => {
               </div>
             </div>
 
-            {/* Three Buttons - Mobile Responsive (Stack on very small screens) */}
             <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6">
               {/* About Button */}
               <button 
@@ -607,10 +601,8 @@ const Overview = memo(() => {
               </button>
             </div>
 
-            {/* Divider Line before Canvas */}
             <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-4 md:mb-6" />
 
-            {/* Canvas Area - Mobile Responsive */}
             <div ref={containerRef} className="relative w-full h-[280px] sm:h-[350px] md:h-[400px] lg:h-[480px]">
               <canvas 
                 ref={canvasRef} 
@@ -618,7 +610,6 @@ const Overview = memo(() => {
                 style={{ display: 'block' }}
               />
               
-              {/* Venture Tooltip */}
               {tooltip && (
                 <div 
                   className="fixed z-50 pointer-events-none"
@@ -635,7 +626,6 @@ const Overview = memo(() => {
                 </div>
               )}
               
-              {/* Eye Icon Tooltip */}
               {eyeTooltip && (
                 <div 
                   className="fixed pointer-events-none z-50"
@@ -654,19 +644,18 @@ const Overview = memo(() => {
             </div>
           </div>
 
-          {/* RIGHT SIDE - Mobile Responsive Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 mt-6 lg:mt-0">
+          {/* RIGHT SIDE - 2 Columns on Mobile, Smaller Sizing */}
+          <div className="grid grid-cols-2 gap-0 mt-6 lg:mt-0">
             {FeatureSections.map((feature, index) => (
               <div 
                 key={index}
-                className={`relative backdrop-blur-sm p-4 sm:p-6 md:p-8 transition-all group overflow-hidden
+                className={`relative backdrop-blur-sm p-3 sm:p-6 md:p-8 transition-all group overflow-hidden
                   border-l border-r border-white/20 border-dashed
                   ${index === 0 ? 'border-t' : ''} 
                   ${index === FeatureSections.length - 1 ? '' : 'border-b'}
-                  sm:border-dashed sm:border-white/20
-                  ${index >= FeatureSections.length - 2 ? 'sm:border-b-0' : 'sm:border-b'}
-                  ${index < 2 ? 'sm:border-t lg:border-t-0' : 'sm:border-t-0'}
-                  ${index % 2 === 0 ? 'sm:border-l lg:border-l-0 sm:border-r-0 lg:border-r-0' : 'sm:border-l sm:border-r lg:border-r'}
+                  ${index >= FeatureSections.length - 2 ? 'border-b-0 lg:border-b-0' : ''}
+                  ${index < 2 ? 'border-t lg:border-t-0' : ''}
+                  ${index % 2 === 0 ? 'border-l lg:border-l-0 border-r-0 lg:border-r-0' : 'border-l border-r lg:border-r'}
                 `}
                 style={{
                   background: 'linear-gradient(135deg, #0f0f0f 0%, #050505 100%)',
@@ -692,15 +681,15 @@ const Overview = memo(() => {
                   }}
                 />
                 
-                <div className="mb-3 md:mb-6 text-xl md:text-2xl text-white/80 transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
+                <div className="mb-2 md:mb-6 text-base md:text-2xl text-white/80 transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   <i className={`bi ${feature.icon}`}></i>
                 </div>
                 
-                <h3 className="text-base md:text-lg font-semibold text-white mb-2 md:mb-3 leading-tight transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
+                <h3 className="text-xs md:text-lg font-semibold text-white mb-1.5 md:mb-3 leading-tight transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   {feature.title}
                 </h3>
                 
-                <p className="text-xs md:text-sm text-gray-400 leading-relaxed transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
+                <p className="text-[10px] md:text-sm text-gray-400 leading-relaxed transition-transform duration-300 group-hover:-translate-y-2 relative z-10">
                   {feature.description}
                 </p>
               </div>

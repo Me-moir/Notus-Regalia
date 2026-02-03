@@ -9,10 +9,10 @@ interface ContentHeaderProps {
 
 const ContentHeader = memo(({ icon, title }: ContentHeaderProps) => {
   return (
-    <div className="mb-12">
-      <div className="flex items-center gap-4 mb-4">
+    <div className="mb-8 sm:mb-10 lg:mb-12">
+      <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
         <div 
-          className="text-4xl"
+          className="text-2xl sm:text-3xl lg:text-4xl"
           style={{
             background: 'linear-gradient(135deg, rgba(0, 255, 166, 0.9), rgba(59, 130, 246, 0.9))',
             WebkitBackgroundClip: 'text',
@@ -24,7 +24,7 @@ const ContentHeader = memo(({ icon, title }: ContentHeaderProps) => {
         </div>
         
         <h2 
-          className="text-4xl lg:text-5xl font-bold"
+          className="text-2xl sm:text-3xl lg:text-5xl font-bold"
           style={{
             background: 'linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #a3a3a3 100%)',
             WebkitBackgroundClip: 'text',

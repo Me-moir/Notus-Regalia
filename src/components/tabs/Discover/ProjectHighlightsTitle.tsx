@@ -6,12 +6,12 @@ const ProjectHighlightsTitle = () => {
   const iconRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="relative w-full" style={{ marginTop: '15vh', marginBottom: '5vh' }}>
-      {/* Title with gradient and icon */}
+    <section className="relative w-full px-4" style={{ marginTop: '10vh', marginBottom: '3vh' }}>
+      {/* Title with gradient and icon - Mobile Responsive */}
       <div className="text-center">
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-2 md:gap-3">
           <h2 
-            className="text-6xl lg:text-6xl font-bold"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold"
             style={{
               background: 'linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #a3a3a3 100%)',
               WebkitBackgroundClip: 'text',
@@ -23,10 +23,10 @@ const ProjectHighlightsTitle = () => {
             Portfolio Overview
           </h2>
           
-          {/* Stars Icon Circle - Clickable */}
+          {/* Puzzle Icon Circle - Clickable - Mobile Responsive */}
           <div
             ref={iconRef}
-            className="relative flex-shrink-0 w-12 h-12 rounded-full bg-gray-900/60 border border-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-800/80 transition-all group"
+            className="relative flex-shrink-0 w-9 h-9 md:w-12 md:h-12 rounded-full bg-gray-900/60 border border-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-800/80 transition-all group"
             onMouseEnter={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               setIconTooltip({ x: rect.left, y: rect.top + rect.height / 2 });
@@ -37,8 +37,7 @@ const ProjectHighlightsTitle = () => {
             }}
             onMouseLeave={() => setIconTooltip(null)}
             onClick={() => {
-              // Placeholder for future hyperlink
-              console.log('Stars icon clicked - Add hyperlink here');
+              console.log('Puzzle icon clicked - Add hyperlink here');
             }}
           >
             {/* Gradient border on hover */}
@@ -53,23 +52,23 @@ const ProjectHighlightsTitle = () => {
               }}
             />
             
-            {/* puzzle Icon */}
-            <i className="bi bi-puzzle text-white text-2xl relative z-10"></i>
+            {/* Puzzle Icon - Mobile Responsive */}
+            <i className="bi bi-puzzle text-white text-lg md:text-2xl relative z-10"></i>
           </div>
         </div>
       </div>
 
-      {/* Icon Tooltip */}
+      {/* Icon Tooltip - Mobile Responsive */}
       {iconTooltip && (
         <div 
           className="fixed pointer-events-none z-50"
           style={{
-            left: `${iconTooltip.x + 60}px`,
+            left: `${iconTooltip.x + 50}px`,
             top: `${iconTooltip.y}px`,
             transform: 'translateY(-50%)'
           }}
         >
-          <div className="bg-gray-900 text-white px-3 py-2 rounded-lg shadow-xl border border-white/20 text-sm whitespace-nowrap">
+          <div className="bg-gray-900 text-white px-2 md:px-3 py-1.5 md:py-2 rounded-lg shadow-xl border border-white/20 text-xs md:text-sm whitespace-nowrap">
             Featured projects
             <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-gray-900 border-l border-t border-white/20 rotate-45" />
           </div>
