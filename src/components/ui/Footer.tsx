@@ -12,19 +12,30 @@ const Footer = () => {
     const footer = footerRef.current;
     if (!footer) return;
 
+    let rafId: number | null = null;
+
     const handleMouseMove = (e: MouseEvent) => {
-      const links = footer.querySelectorAll('[data-glow]');
-      links.forEach((link) => {
-        const rect = link.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        (link as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
-        (link as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
+      // Use requestAnimationFrame to throttle updates
+      if (rafId) return;
+      
+      rafId = requestAnimationFrame(() => {
+        const links = footer.querySelectorAll('[data-glow]');
+        links.forEach((link) => {
+          const rect = link.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          (link as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
+          (link as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
+        });
+        rafId = null;
       });
     };
 
-    footer.addEventListener('mousemove', handleMouseMove);
-    return () => footer.removeEventListener('mousemove', handleMouseMove);
+    footer.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      footer.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const sections = [
@@ -63,7 +74,7 @@ const Footer = () => {
         borderTop: '1px dashed rgba(255, 255, 255, 0.2)'
       }}
     >
-      {/* Grain overlay */}
+      {/* Grain overlay - optimized with will-change */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{
@@ -106,7 +117,8 @@ const Footer = () => {
                         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                         style={{
                           background: 'radial-gradient(80px circle at var(--mouse-x) var(--mouse-y), rgba(0, 255, 166, 0.15), transparent 70%)',
-                          filter: 'blur(8px)'
+                          filter: 'blur(8px)',
+                          willChange: 'opacity'
                         }}
                       />
                     </a>
@@ -130,6 +142,7 @@ const Footer = () => {
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl"
               style={{
                 background: 'radial-gradient(circle, rgba(0, 255, 166, 0.2), rgba(236, 72, 153, 0.2), transparent 70%)',
+                willChange: 'opacity'
               }}
             />
             <Image 
@@ -138,6 +151,8 @@ const Footer = () => {
               width={256} 
               height={64} 
               className="h-12 sm:h-16 w-auto relative z-10 transition-transform duration-500 group-hover:scale-105"
+              priority={false}
+              loading="lazy"
             />
           </div>
           
@@ -174,7 +189,7 @@ const Footer = () => {
           {/* Divider Line with gradient */}
           <div className="w-48 sm:w-64 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
           
-          {/* Social Media Icons (Optional - add if needed) */}
+          {/* Social Media Icons */}
           <div className="flex items-center gap-4 sm:gap-6">
             {['bi-twitter-x', 'bi-github', 'bi-discord', 'bi-linkedin'].map((icon, idx) => (
               <a
@@ -193,7 +208,8 @@ const Footer = () => {
                     padding: '1px',
                     WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                     WebkitMaskComposite: 'xor',
-                    maskComposite: 'exclude'
+                    maskComposite: 'exclude',
+                    willChange: 'opacity'
                   }}
                 />
                 <i className={`bi ${icon} text-gray-400 group-hover:text-white transition-colors duration-300`}></i>

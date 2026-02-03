@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import LoadingScreen from './LoadingScreen';
 import Navbar from './Navbar';
 import MainContent from './MainContent';
@@ -7,17 +7,28 @@ import Footer from './Footer';
 
 type TabType = 'discover' | 'information' | 'affiliations' | 'ventures';
 
+const VALID_TABS: TabType[] = ['discover', 'information', 'affiliations', 'ventures'];
+
 const ClientWrapper = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('discover');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Memoize tab validation to avoid recreating the function
+  const isValidTab = useCallback((tab: string): tab is TabType => {
+    return VALID_TABS.includes(tab as TabType);
+  }, []);
+
   // Preload critical sections during loading screen
   useEffect(() => {
     if (isLoading) {
-      // Preload Discover tab sections
-      import('../tabs/Discover/HeroSection');
-      import('../tabs/Discover/Overview');
+      // Use Promise.all for parallel loading
+      Promise.all([
+        import('../tabs/Discover/HeroSection'),
+        import('../tabs/Discover/Overview'),
+      ]).then(() => {
+        console.log('✅ Critical sections preloaded');
+      });
       
       // Optionally preload fonts or critical assets
       if (typeof document !== 'undefined') {
@@ -36,13 +47,13 @@ const ClientWrapper = () => {
   useEffect(() => {
     if (!isLoading) {
       const params = new URLSearchParams(window.location.search);
-      const tabFromUrl = params.get('tab') as TabType;
+      const tabFromUrl = params.get('tab');
       
-      if (tabFromUrl && ['discover', 'information', 'affiliations', 'ventures'].includes(tabFromUrl)) {
+      if (tabFromUrl && isValidTab(tabFromUrl)) {
         setActiveTab(tabFromUrl);
       }
     }
-  }, [isLoading]);
+  }, [isLoading, isValidTab]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -54,8 +65,8 @@ const ClientWrapper = () => {
       }
 
       // Otherwise, handle main tab navigation
-      const tab = event.state?.tab as TabType;
-      if (tab && ['discover', 'information', 'affiliations', 'ventures'].includes(tab)) {
+      const tab = event.state?.tab;
+      if (tab && isValidTab(tab)) {
         setActiveTab(tab);
       } else {
         setActiveTab('discover');
@@ -64,10 +75,10 @@ const ClientWrapper = () => {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [isValidTab]);
 
-  // Handle tab change with history push
-  const handleTabChange = (tab: TabType) => {
+  // Memoize handleTabChange to prevent unnecessary re-renders in child components
+  const handleTabChange = useCallback((tab: TabType) => {
     if (tab === activeTab) return;
 
     setActiveTab(tab);
@@ -76,11 +87,17 @@ const ClientWrapper = () => {
     const url = new URL(window.location.href);
     url.searchParams.set('tab', tab);
     window.history.pushState({ tab }, '', url);
-  };
+  }, [activeTab]);
 
-  const handleLoadingComplete = () => {
+  // Memoize handleLoadingComplete
+  const handleLoadingComplete = useCallback(() => {
     setIsLoading(false);
-  };
+  }, []);
+
+  // Memoize setSidebarOpen to prevent unnecessary re-renders
+  const handleSetSidebarOpen = useCallback((open: boolean | ((prev: boolean) => boolean)) => {
+    setSidebarOpen(open);
+  }, []);
 
   if (isLoading) {
     return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
@@ -92,7 +109,7 @@ const ClientWrapper = () => {
         activeTab={activeTab} 
         setActiveTab={handleTabChange}
         sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
+        setSidebarOpen={handleSetSidebarOpen}
       />
       
       <main>
