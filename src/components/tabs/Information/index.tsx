@@ -28,6 +28,7 @@ const LoadingFallback = () => (
 const Information = memo(() => {
   const [activeContent, setActiveContent] = useState<InfoContentType>('statements');
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [contentHistory, setContentHistory] = useState<InfoContentType[]>(['statements']);
 
   // Preload all lazy components when Information page mounts
   useEffect(() => {
@@ -49,11 +50,67 @@ const Information = memo(() => {
     }
   }, []);
 
+  // Handle browser back/forward navigation
+  useEffect(() => {
+    // Don't initialize history state if one already exists
+    const currentState = window.history.state;
+    if (!currentState?.infoTab && !currentState?.tab) {
+      // Only set initial state if there's no existing state
+      const initialState = { tab: 'information', infoTab: activeContent };
+      window.history.replaceState(initialState, '');
+    }
+
+    const handlePopState = (event: PopStateEvent) => {
+      // Only handle if this is an info tab navigation (has infoTab in state)
+      if (event.state?.infoTab) {
+        const previousTab = event.state.infoTab;
+        
+        // Check if we're going back to a different info tab
+        if (previousTab !== activeContent) {
+          setIsTransitioning(true);
+          setActiveContent(previousTab);
+          
+          // Update history
+          setContentHistory(prev => {
+            const index = prev.indexOf(previousTab);
+            if (index !== -1) {
+              return prev.slice(0, index + 1);
+            }
+            return prev;
+          });
+          
+          setTimeout(() => {
+            setIsTransitioning(false);
+          }, 500);
+        }
+      } else if (event.state?.tab && !event.state?.infoTab) {
+        // This is a main tab navigation, not our responsibility
+        // The ClientWrapper will handle it
+        return;
+      } else if (!event.state) {
+        // Going back to a state before our history, let browser handle it
+        return;
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [activeContent]);
+
   const handleContentChange = (newContent: InfoContentType) => {
     if (newContent === activeContent) return;
     
     // Start transition immediately
     setIsTransitioning(true);
+    
+    // Add to history
+    setContentHistory(prev => [...prev, newContent]);
+    
+    // Push browser state with both tab and infoTab
+    window.history.pushState({ tab: 'information', infoTab: newContent }, '');
     
     // Change content immediately - CSS handles the smooth crossfade
     setActiveContent(newContent);

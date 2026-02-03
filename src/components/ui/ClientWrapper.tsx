@@ -47,6 +47,13 @@ const ClientWrapper = () => {
   // Handle browser back/forward buttons
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
+      // If the state has an infoTab property, it's from the Information component
+      // Let the Information component handle it, don't interfere
+      if (event.state?.infoTab) {
+        return;
+      }
+
+      // Otherwise, handle main tab navigation
       const tab = event.state?.tab as TabType;
       if (tab && ['discover', 'information', 'affiliations', 'ventures'].includes(tab)) {
         setActiveTab(tab);
