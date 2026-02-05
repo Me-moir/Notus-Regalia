@@ -28,12 +28,29 @@ const CORNER_POSITIONS: CornerPosition[] = [
   { bottom: 0, right: 0, borderR: true, borderB: true, delay: 1.5 },
 ];
 
-const InsideOurWorld = memo(() => {
+const About = memo(() => {
   const [activeContent, setActiveContent] = useState<WorldContentType>("enterprise");
+  const [displayContent, setDisplayContent] = useState<WorldContentType>("enterprise");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectorPosition, setSelectorPosition] = useState(0);
-  const buttonRefs = useRef({} as { [key: string]: HTMLButtonElement | null });
+  const [contentHeight, setContentHeight] = useState(0);
   const transitionTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Measure content height for mobile layout
+  useEffect(() => {
+    if (contentRef.current) {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setContentHeight(entry.contentRect.height);
+        }
+      });
+      
+      observer.observe(contentRef.current);
+      
+      return () => observer.disconnect();
+    }
+  }, [activeContent]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -46,30 +63,27 @@ const InsideOurWorld = memo(() => {
 
   // Memoize content change handler
   const handleContentChange = useCallback((newContent: WorldContentType) => {
-    if (newContent === activeContent) return;
+    if (newContent === displayContent) return;
     
     // Clear any existing timeout
     if (transitionTimeoutRef.current) {
       clearTimeout(transitionTimeoutRef.current);
     }
     
-    // Update selector position immediately for instant visual feedback
+    // Update selector position and grid display immediately for instant visual feedback
     const index = WORLD_GRID_ITEMS.findIndex(item => item.key === newContent);
     setSelectorPosition(index);
+    setDisplayContent(newContent);
     
-    // Start content transition
+    // Start fade out transition for right content panel
     setIsTransitioning(true);
-    setActiveContent(newContent);
     
-    // End transition after content fade completes
-    transitionTimeoutRef.current = setTimeout(() => setIsTransitioning(false), 350);
-  }, [activeContent]);
-
-  // Update selector position when active content changes
-  useEffect(() => {
-    const index = WORLD_GRID_ITEMS.findIndex(item => item.key === activeContent);
-    setSelectorPosition(index);
-  }, [activeContent]);
+    // Wait for fade out to complete, then update content and fade in
+    transitionTimeoutRef.current = setTimeout(() => {
+      setActiveContent(newContent);
+      setIsTransitioning(false);
+    }, 350);
+  }, [displayContent]);
 
   // Optimized mouse move handler with throttling
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -99,11 +113,13 @@ const InsideOurWorld = memo(() => {
     transition: 'opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
   }), [isTransitioning]);
 
-  // Memoize active content data
-  const activeContentData = useMemo(() => 
-    WORLD_CONTENT_DATA[activeContent], 
-    [activeContent]
-  );
+  const activeContentData = WORLD_CONTENT_DATA[activeContent];
+
+  // Calculate minimum height for grid on mobile
+  const gridMinHeight = useMemo(() => {
+    // On mobile, ensure grid is at least as tall as content
+    return Math.max(contentHeight + 100, 400); // Add padding and set minimum
+  }, [contentHeight]);
 
   return (
     <section 
@@ -147,9 +163,24 @@ const InsideOurWorld = memo(() => {
         .contain-layout {
           contain: layout style paint;
         }
+
+        /* Mobile-specific grid layout */
+        @media (max-width: 1023px) {
+          .mobile-grid-container {
+            display: grid;
+            grid-template-columns: 40% 60%;
+            min-height: var(--grid-min-height, 400px);
+          }
+        }
+
+        @media (max-width: 640px) {
+          .mobile-grid-container {
+            grid-template-columns: 35% 65%;
+          }
+        }
       `}</style>
 
-      {/* Optimized noise texture - use CSS instead of inline SVG when possible */}
+      {/* Optimized noise texture */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{
@@ -161,16 +192,74 @@ const InsideOurWorld = memo(() => {
 
       <div className="relative z-10">
         <div 
-          className="grid grid-cols-1 lg:grid-cols-10"
+          className="mobile-grid-container lg:grid lg:grid-cols-10"
           style={{
-            minHeight: '600px',
+            '--grid-min-height': `${gridMinHeight}px`,
+            minHeight: '400px',
             borderTop: '1px dashed rgba(255, 255, 255, 0.2)',
             borderBottom: '1px dashed rgba(255, 255, 255, 0.2)',
-          }}
+          } as React.CSSProperties}
         >
-          {/* Left Part - Content Area */}
-          <div className="lg:col-span-7 flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-8 md:py-12 contain-layout">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8">
+          {/* Left Part - Grid Navigation */}
+          <div className="lg:col-span-3 flex flex-col relative">
+            {/* Shared Active Selector */}
+            <div className="absolute pointer-events-none z-20 gpu-accelerated" style={selectorStyles}>
+              {/* Lighter background for active box */}
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                }}
+              />
+              
+              <div 
+                className="absolute inset-0 pointer-events-none grid-selector-border"
+                style={{
+                  padding: '1px',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(0, 255, 166, 0.8) 15%, rgba(255, 215, 0, 0.6) 30%, rgba(236, 72, 153, 0.6) 45%, rgba(147, 51, 234, 0.6) 60%, rgba(59, 130, 246, 0.5) 75%, transparent 90%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'orbitBorder 3s linear infinite',
+                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                  WebkitMaskComposite: 'xor',
+                  maskComposite: 'exclude',
+                }}
+              />
+
+              {/* Corner Indicators */}
+              {CORNER_POSITIONS.map((corner, idx) => (
+                <div 
+                  key={idx}
+                  className="absolute w-3 h-3 lg:w-4 lg:h-4 border-white pointer-events-none grid-selector-corners"
+                  style={{ 
+                    ...corner,
+                    borderLeftWidth: corner.borderL ? '2px' : 0,
+                    borderRightWidth: corner.borderR ? '2px' : 0,
+                    borderTopWidth: corner.borderT ? '2px' : 0,
+                    borderBottomWidth: corner.borderB ? '2px' : 0,
+                    animation: `cornerPulse 2s ease-in-out infinite ${corner.delay}s`,
+                  }}
+                />
+              ))}
+            </div>
+
+            {WORLD_GRID_ITEMS.map((item, index) => (
+              <GridButton
+                key={item.key}
+                item={item}
+                index={index}
+                isActive={displayContent === item.key}
+                onClick={handleContentChange}
+                onMouseMove={handleMouseMove}
+              />
+            ))}
+          </div>
+
+          {/* Right Part - Content Area */}
+          <div 
+            ref={contentRef}
+            className="lg:col-span-7 flex flex-col px-4 sm:px-6 lg:px-12 xl:px-20 py-6 sm:py-8 lg:py-12 contain-layout"
+          >
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-4xl font-bold mb-4 sm:mb-6 lg:mb-8">
               {TITLE_LETTERS.map((letter, i) => (
                 <span 
                   key={i} 
@@ -189,67 +278,17 @@ const InsideOurWorld = memo(() => {
               ))}
             </h2>
 
-            <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-6 md:mb-8" />
+            <div className="w-full h-px bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-4 sm:mb-6 lg:mb-8" />
 
             <div style={contentWrapperStyles}>
-              <h3 className="text-xl md:text-2xl lg:text-3xl font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-base sm:text-lg md:text-xl lg:text-3xl font-semibold text-white mb-3 sm:mb-4 flex items-center gap-2">
                 {activeContentData.title}
-                <i className="bi bi-arrow-up-right-square text-lg md:text-xl lg:text-2xl"></i>
+                <i className="bi bi-arrow-up-right-square text-sm sm:text-base md:text-lg lg:text-2xl"></i>
               </h3>
-              <p className="text-sm md:text-base text-gray-400 leading-relaxed mb-4">
-                {activeContentData.description}
-              </p>
-              <p className="text-sm md:text-base text-gray-400 leading-relaxed">
+              <p className="text-xs sm:text-sm md:text-base text-gray-400 leading-relaxed">
                 {activeContentData.description}
               </p>
             </div>
-          </div>
-
-          {/* Right Part - Grid Navigation */}
-          <div className="lg:col-span-3 flex flex-col relative">
-            {/* Shared Active Selector */}
-            <div className="absolute pointer-events-none z-20 gpu-accelerated" style={selectorStyles}>
-              <div 
-                className="absolute inset-0 pointer-events-none grid-selector-border"
-                style={{
-                  padding: '1px',
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(0, 255, 166, 0.8) 15%, rgba(255, 215, 0, 0.6) 30%, rgba(236, 72, 153, 0.6) 45%, rgba(147, 51, 234, 0.6) 60%, rgba(59, 130, 246, 0.5) 75%, transparent 90%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'orbitBorder 3s linear infinite',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude',
-                }}
-              />
-
-              {/* Corner Indicators */}
-              {CORNER_POSITIONS.map((corner, idx) => (
-                <div 
-                  key={idx}
-                  className="absolute w-4 h-4 border-white pointer-events-none grid-selector-corners"
-                  style={{ 
-                    ...corner,
-                    borderLeftWidth: corner.borderL ? '2px' : 0,
-                    borderRightWidth: corner.borderR ? '2px' : 0,
-                    borderTopWidth: corner.borderT ? '2px' : 0,
-                    borderBottomWidth: corner.borderB ? '2px' : 0,
-                    animation: `cornerPulse 2s ease-in-out infinite ${corner.delay}s`,
-                  }}
-                />
-              ))}
-            </div>
-
-            {WORLD_GRID_ITEMS.map((item, index) => (
-              <GridButton
-                key={item.key}
-                item={item}
-                index={index}
-                isActive={activeContent === item.key}
-                onClick={handleContentChange}
-                onMouseMove={handleMouseMove}
-                buttonRefs={buttonRefs}
-              />
-            ))}
           </div>
         </div>
       </div>
@@ -257,17 +296,15 @@ const InsideOurWorld = memo(() => {
   );
 });
 
-InsideOurWorld.displayName = 'InsideOurWorld';
+About.displayName = 'About';
 
-// Extracted and memoized GridButton component with performance optimizations
 const GridButton = memo<{
   item: { key: WorldContentType; title: string };
   index: number;
   isActive: boolean;
   onClick: (key: WorldContentType) => void;
   onMouseMove: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  buttonRefs: React.MutableRefObject<{ [key: string]: HTMLButtonElement | null }>;
-}>(({ item, index, isActive, onClick, onMouseMove, buttonRefs }) => {
+}>(({ item, index, isActive, onClick, onMouseMove }) => {
   const handleClick = useCallback(() => {
     onClick(item.key);
   }, [onClick, item.key]);
@@ -275,32 +312,40 @@ const GridButton = memo<{
   const buttonStyle = useMemo(() => ({
     background: 'transparent',
     borderTop: index === 0 ? 'none' : '1px dashed rgba(255, 255, 255, 0.2)',
-    borderLeft: '1px dashed rgba(255, 255, 255, 0.2)',
+    borderRight: '1px dashed rgba(255, 255, 255, 0.2)',
   }), [index]);
 
   const spanStyle = useMemo(() => ({
-    color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.5)',
-    transform: isActive ? 'translateX(4px)' : 'translateX(0)',
-    transition: 'color 0.2s ease-out, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    transform: isActive ? 'translateX(-4px)' : 'translateX(0)',
+    fontWeight: isActive ? '700' : '400',
+    textTransform: isActive ? 'uppercase' : 'none',
+    letterSpacing: isActive ? '0.05em' : '0',
+    background: isActive ? 'linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #a3a3a3 100%)' : 'transparent',
+    WebkitBackgroundClip: isActive ? 'text' : 'unset',
+    WebkitTextFillColor: isActive ? 'transparent' : 'rgba(255, 255, 255, 0.5)',
+    backgroundClip: isActive ? 'text' : 'unset',
+    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
   }), [isActive]);
 
-  const hoverGradientStyle = useMemo(() => ({
+  const hoverGradientStyle = {
     background: 'radial-gradient(200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
     padding: '1px',
     WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
     WebkitMaskComposite: 'xor',
     maskComposite: 'exclude',
-  }), []);
+  };
 
   return (
     <button
-      ref={(el) => { buttonRefs.current[item.key] = el; }}
       onClick={handleClick}
-      className="group relative flex-1 flex items-center justify-start px-6 md:px-8 transition-all duration-300 contain-layout"
+      className="group relative flex-1 flex items-center justify-end px-3 sm:px-4 md:px-6 lg:px-8 transition-all duration-300 contain-layout"
       style={buttonStyle}
       onMouseMove={onMouseMove}
     >
-      <span className="text-lg md:text-xl lg:text-2xl font-normal relative z-10" style={spanStyle}>
+      <span 
+        className="text-xs sm:text-sm md:text-base lg:text-xl xl:text-2xl font-normal relative z-10 text-right" 
+        style={spanStyle}
+      >
         {item.title}
       </span>
 
@@ -323,4 +368,4 @@ const GridButton = memo<{
 
 GridButton.displayName = 'GridButton';
 
-export default InsideOurWorld;
+export default About;

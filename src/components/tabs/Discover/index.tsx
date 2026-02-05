@@ -5,7 +5,7 @@ import { lazy, Suspense } from 'react';
 import HeroSection from './HeroSection';
 import BufferSection from './BufferSection';
 import Overview from './Overview';
-import InsideOurWorld from './InsideOurWorld';
+import InsideOurWorld from './About';
 import ProjectHighlightsTitle from './ProjectHighlightsTitle';
 import FeatureSection from './FeatureSection';
 

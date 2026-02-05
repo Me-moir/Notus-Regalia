@@ -265,4 +265,4 @@ export const WORLD_CONTENT_DATA: Record<'enterprise' | 'direction' | 'teams' | '
   }
 };
 
-export const WORLD_TITLE = 'Inside our World';
+export const WORLD_TITLE = 'About Us';
