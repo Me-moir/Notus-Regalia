@@ -42,16 +42,25 @@ export interface FeatureSection {
   description: string;
 }
 
+export interface SubSection {
+  key: string;
+  label: string;
+  description: string[];
+}
+
 export interface WorldContent {
   title: string;
-  description: string;
+  subsections: SubSection[];
+  buttonType: 'link' | 'tabs';
+  buttonText?: string;
+  buttonLink?: string;
 }
 
 export interface WorldGridItem {
-  key: 'enterprise' | 'direction' | 'teams' | 'governance' | 'affiliations' | 'reachout';
+  key: 'company' | 'direction' | 'teams' | 'governance' | 'affiliations' | 'reachout';
   title: string;
+  subtitle: string;
 }
-
 
 export const FeatureSections: FeatureSection[] = [
   {
@@ -227,42 +236,189 @@ export const allProjects: Project[] = [
   },
 ];
 
-
 // InsideOurWorld Content
 export const WORLD_GRID_ITEMS: WorldGridItem[] = [
-  { key: 'enterprise', title: 'Enterprise' },
-  { key: 'direction', title: 'Direction' },
-  { key: 'teams', title: 'Teams' },
-  { key: 'governance', title: 'Governance' },
-  { key: 'affiliations', title: 'Affiliations' },
-  { key: 'reachout', title: 'Reach Out' }
+  { key: 'company', title: 'Company', subtitle: 'About Us, Our Story, Growth Timeline' },
+  { key: 'direction', title: 'Direction', subtitle: 'Vision, Mission, Focus' },
+  { key: 'teams', title: 'Teams', subtitle: 'Core Executives, Venture Teams' },
+  { key: 'governance', title: 'Governance', subtitle: 'Structure, Principles' },
+  { key: 'affiliations', title: 'Affiliations', subtitle: 'Sponsors, Partners' },
+  { key: 'reachout', title: 'Reach Out', subtitle: 'Inquiry, Funding & Support, Partner With Us' }
 ];
 
-export const WORLD_CONTENT_DATA: Record<'enterprise' | 'direction' | 'teams' | 'governance' | 'affiliations' | 'reachout', WorldContent> = {
-  enterprise: {
-    title: 'Enterprise',
-    description: 'We build and scale ventures that drive meaningful innovation across industries. Our enterprise-focused approach combines strategic vision with operational excellence to create sustainable, high-impact businesses that transform markets and deliver lasting value.'
+export const WORLD_CONTENT_DATA: Record<'company' | 'direction' | 'teams' | 'governance' | 'affiliations' | 'reachout', WorldContent> = {
+  company: {
+    title: 'Company',
+    buttonType: 'tabs',
+    subsections: [
+      {
+        key: 'about',
+        label: 'About Us',
+        description: [
+          'Regalitica is a technology-focused collective dedicated to building intelligent systems, digital platforms, and future-oriented solutions.',
+          'We operate at the intersection of design, data, and engineering — creating products that are not only functional, but meaningful, scalable, and sustainable.',
+          'Our work is driven by a belief that technology should enhance human capability, not replace it. We approach every project with systems thinking, research-first methodology, and long-term impact in mind.',
+          'Regalitica exists for organizations and individuals who value depth over hype, structure over noise, and innovation with purpose.'
+        ]
+      },
+      {
+        key: 'our-story',
+        label: 'Our Story',
+        description: [
+          'Founded with a vision to bridge the gap between emerging technology and real-world impact, Regalitica began as a student-led initiative focused on solving complex challenges through innovative solutions.',
+          'What started as a small group of passionate builders has evolved into a multi-venture platform operating across diverse sectors including healthcare, fintech, cleantech, and education.',
+          'Our journey has been marked by a commitment to disciplined execution, strategic partnerships, and a relentless focus on creating value that extends beyond traditional metrics.',
+          'Today, we continue to build with the same foundational principles that guided our inception: innovation with integrity, impact with purpose, and growth with responsibility.'
+        ]
+      },
+      {
+        key: 'growth-timeline',
+        label: 'Growth Timeline',
+        description: [
+          'Our growth trajectory reflects our commitment to sustainable expansion and meaningful impact across multiple ventures and sectors.',
+          'From initial concept validation to full-scale operations, each milestone represents strategic decisions, lessons learned, and capabilities developed through hands-on execution.',
+          'Key milestones include establishing our venture-building framework, launching our first market-ready products, forming strategic partnerships, and expanding our team of specialized operators.',
+          'As we continue to scale, our focus remains on building infrastructure that compounds value across ventures while maintaining the quality and innovation that define our work.'
+        ]
+      }
+    ]
   },
   direction: {
     title: 'Direction',
-    description: 'Our strategic direction is guided by a commitment to innovation, sustainability, and long-term value creation. We identify emerging opportunities, leverage cutting-edge technologies, and forge strategic partnerships to stay ahead in an ever-evolving business landscape.'
+    buttonType: 'tabs',
+    subsections: [
+      {
+        key: 'vision',
+        label: 'Vision',
+        description: [
+          'To become a leading force in technological innovation, creating solutions that transform industries and improve lives globally.',
+          'We envision a future where technology seamlessly integrates with human needs, fostering sustainable growth and meaningful progress.',
+          'Our vision extends beyond profit — we aim to build a legacy of impact, innovation, and integrity that inspires the next generation of creators and entrepreneurs.'
+        ]
+      },
+      {
+        key: 'mission',
+        label: 'Mission',
+        description: [
+          'Our mission is to identify, develop, and scale ventures that solve real-world problems through innovative technology and strategic execution.',
+          'We are committed to building sustainable businesses that create value for stakeholders while maintaining the highest standards of ethics and excellence.',
+          'Through disciplined innovation and collaborative partnerships, we transform bold ideas into market-ready solutions that drive meaningful change.'
+        ]
+      },
+      {
+        key: 'focus',
+        label: 'Focus',
+        description: [
+          'We focus on emerging technologies with transformative potential: artificial intelligence, blockchain, clean technology, and digital platforms.',
+          'Our strategic focus areas include healthcare innovation, financial technology, sustainable solutions, and education technology — sectors where technology can create the most significant positive impact.',
+          'We prioritize ventures that demonstrate strong product-market fit, scalable business models, and alignment with our core values of innovation, sustainability, and social responsibility.'
+        ]
+      }
+    ]
   },
   teams: {
     title: 'Teams',
-    description: 'At the heart of Regalitica are talented, passionate teams dedicated to excellence. We bring together diverse expertise in technology, business strategy, design, and operations to build ventures that make a difference. Our collaborative culture fosters creativity and drives results.'
+    buttonType: 'tabs',
+    subsections: [
+      {
+        key: 'core-executives',
+        label: 'Core Executives',
+        description: [
+          'Our executive leadership brings together decades of experience in technology, business strategy, and venture development.',
+          'Led by visionary founders and seasoned operators, our core team provides strategic direction, oversees portfolio management, and ensures operational excellence across all ventures.',
+          'The executive team combines deep technical expertise with business acumen, creating a foundation for sustainable growth and long-term success.'
+        ]
+      },
+      {
+        key: 'venture-teams',
+        label: 'Venture Teams',
+        description: [
+          'Each venture is powered by dedicated teams of specialists — engineers, designers, product managers, and domain experts working in close collaboration.',
+          'Our venture teams operate with autonomy while leveraging shared resources and infrastructure, enabling rapid iteration and efficient execution.',
+          'We cultivate a culture of excellence, creativity, and accountability, attracting top talent passionate about building solutions that matter.'
+        ]
+      }
+    ]
   },
   governance: {
     title: 'Governance',
-    description: 'Our governance structure ensures transparency, accountability, and strategic alignment across all ventures. We operate with a clear framework that balances innovation with responsible management, maintaining the highest standards of ethical conduct and stakeholder value.'
+    buttonType: 'tabs',
+    subsections: [
+      {
+        key: 'structure',
+        label: 'Structure',
+        description: [
+          'Regalitica operates under a clear governance framework that balances centralized oversight with venture-level autonomy.',
+          'Our organizational structure includes a board of advisors, executive leadership, and venture teams, each with defined roles and responsibilities.',
+          'This structure ensures strategic alignment across all initiatives while enabling agility and innovation at the operational level.'
+        ]
+      },
+      {
+        key: 'principles',
+        label: 'Principles',
+        description: [
+          'Our governance principles are built on transparency, accountability, and ethical conduct. We maintain rigorous standards for decision-making and resource allocation.',
+          'We prioritize long-term value creation over short-term gains, ensuring that every decision aligns with our mission and benefits all stakeholders.',
+          'Integrity, innovation, and impact guide our operations — from how we select ventures to how we measure success and distribute outcomes.'
+        ]
+      }
+    ]
   },
   affiliations: {
     title: 'Affiliations',
-    description: 'We foster strategic partnerships and collaborations with leading organizations, academic institutions, and industry innovators. Our network of affiliations enables us to access cutting-edge research, share best practices, and create synergies that amplify our impact across all ventures.'
+    buttonType: 'tabs',
+    subsections: [
+      {
+        key: 'sponsors',
+        label: 'Sponsors',
+        description: [
+          'We partner with leading organizations and institutions that share our commitment to innovation and excellence.',
+          'Our sponsors provide strategic support, mentorship, and resources that accelerate venture development and market entry.',
+          'These partnerships enable us to access cutting-edge research, industry expertise, and networks that amplify our impact across sectors.'
+        ]
+      },
+      {
+        key: 'partners',
+        label: 'Partners',
+        description: [
+          'Our partner ecosystem includes technology providers, research institutions, industry leaders, and strategic investors.',
+          'Through these collaborations, we gain access to specialized knowledge, advanced tools, and market opportunities that enhance our competitive advantage.',
+          'We carefully select partners who align with our values and contribute meaningfully to our mission of creating transformative solutions.'
+        ]
+      }
+    ]
   },
   reachout: {
     title: 'Reach Out',
-    description: 'Connect with us to explore collaboration opportunities, learn more about our ventures, or discuss how we can work together. Our team is always open to engaging with visionaries, entrepreneurs, and organizations that share our commitment to innovation and excellence.'
+    buttonType: 'tabs',
+    subsections: [
+      {
+        key: 'inquiry',
+        label: 'Inquiry',
+        description: [
+          'Have questions about our ventures or want to learn more about what we do? We\'re here to help.',
+          'Whether you\'re interested in our technology, exploring collaboration opportunities, or simply curious about our work, we welcome your inquiries.',
+          'Contact us at inquiry@regalitica.com and our team will respond promptly to your questions.'
+        ]
+      },
+      {
+        key: 'funding-support',
+        label: 'Funding & Support',
+        description: [
+          'We\'re always interested in connecting with investors who share our vision for technology-driven innovation.',
+          'If you\'re looking to support ventures that combine strong fundamentals with transformative potential, we\'d love to discuss opportunities.',
+          'Reach out to funding@regalitica.com to explore investment opportunities and learn about our current portfolio.'
+        ]
+      },
+      {
+        key: 'partner-with-us',
+        label: 'Partner With Us',
+        description: [
+          'We seek strategic partners who can contribute expertise, resources, or market access to our ventures.',
+          'Partnership opportunities include technology integrations, research collaborations, go-to-market initiatives, and more.',
+          'Contact partnerships@regalitica.com to discuss how we can create value together.'
+        ]
+      }
+    ]
   }
 };
-
-export const WORLD_TITLE = 'About Us';

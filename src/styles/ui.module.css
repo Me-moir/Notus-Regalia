@@ -118,7 +118,7 @@
 .notititle {
   color: white;
   font-weight: 600;
-  font-size: 1rem;
+  /* font-size removed - now controlled by Tailwind classes in the component */
   line-height: 1.25rem;
   margin-top: 0;
   transition: color 0.5s ease-in-out;
@@ -126,7 +126,7 @@
 
 .notibody {
   color: rgb(163, 163, 163);
-  font-size: 0.875rem;
+  /* font-size removed - now controlled by Tailwind classes in the component */
   line-height: 1.25rem;
   margin: 0;
   display: -webkit-box;
@@ -876,5 +876,3 @@
   border-left: 1px dashed rgba(255, 255, 255, 0.2);
   border-right: 1px dashed rgba(255, 255, 255, 0.2);
 }
-
-

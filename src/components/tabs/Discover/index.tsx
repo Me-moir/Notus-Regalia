@@ -6,7 +6,6 @@ import HeroSection from './HeroSection';
 import BufferSection from './BufferSection';
 import Overview from './Overview';
 import InsideOurWorld from './About';
-import ProjectHighlightsTitle from './ProjectHighlightsTitle';
 import FeatureSection from './FeatureSection';
 
 // Lazy load: Load on-demand as user scrolls
@@ -40,8 +39,7 @@ const Discover = ({
       {/* Inside Our World Section */}
       <InsideOurWorld />
       
-      {/* Project Highlights Section */}
-      <ProjectHighlightsTitle />
+      {/* Feature Section - Interactive Cards */}
       <Suspense fallback={<div className="h-screen bg-gradient-to-b from-[#141414] via-[#0a0a0a] to-black" />}>
         <FeatureSection
           activeCardIndex={activeCardIndex}

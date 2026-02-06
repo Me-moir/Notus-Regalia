@@ -523,34 +523,60 @@ const FeatureSection = memo(({
   // ─── SHARED SUB-COMPONENTS (MEMOIZED) ───────────────────────────────────────────
 
   const ProblemBox = useMemo(() => (
-    <div className={styles.notificationBox + " mb-3"}>
+    <div className={styles.notificationBox + " mb-6"} style={{ minHeight: isMobile ? '140px' : '160px' }}>
       <div className={styles.boxInner}>
         <div className="relative flex flex-col">
-          <div className="relative box-icon-container mb-3 w-fit rounded-lg border border-gray-600 p-2">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className={`text-white font-semibold ${isMobile ? 'text-lg sm:text-xl' : 'text-xl lg:text-2xl'}`}>Problem Statement</h3>
             <div 
-              className={`absolute inset-0 rounded-lg opacity-0 ${styles.boxIconGradient}`}
-              style={GRADIENT_STYLES.iconGradient}
-            />
-            <svg className="w-4 h-4 text-neutral-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+              className="relative box-icon-container w-fit rounded-lg border border-gray-600 p-3"
+              onMouseMove={!isMobile ? (e) => {
+                const gradient = e.currentTarget.querySelector(`.${styles.boxIconGradient}`) as HTMLElement;
+                if (gradient) {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  gradient.style.setProperty('--mouse-x', `${x}px`);
+                  gradient.style.setProperty('--mouse-y', `${y}px`);
+                  gradient.style.opacity = '1';
+                }
+              } : undefined}
+              onMouseLeave={!isMobile ? (e) => {
+                const gradient = e.currentTarget.querySelector(`.${styles.boxIconGradient}`) as HTMLElement;
+                if (gradient) {
+                  gradient.style.opacity = '0';
+                }
+              } : undefined}
+            >
+              <div 
+                className={`absolute inset-0 rounded-lg opacity-0 ${styles.boxIconGradient}`}
+                style={{...GRADIENT_STYLES.iconGradient, transition: 'opacity 0.3s ease'}}
+              />
+              <svg className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-neutral-400 relative z-10`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
           </div>
           
-          <div className="relative w-full h-px mb-3 box-divider-line">
+          <div className="relative w-full h-px mb-4 box-divider-line">
             <div className="absolute inset-0 bg-white/10" />
             <div 
               className={`absolute inset-0 opacity-0 ${styles.boxLineGradient}`}
               style={GRADIENT_STYLES.lineGradient}
             />
           </div>
-          <h3 className={styles.notititle + " mb-5"}>Problem Statement</h3>
+          
           <div className="vanish-crossfade-container">
             <p 
               key={`problem-${textAnimationKey}`}
-              className={styles.notibody + " vanish-content"}
+              className={`vanish-content ${isMobile ? 'text-sm' : 'text-base lg:text-lg'}`}
               data-animating={isAnimating ? "true" : "false"}
               data-delay="2"
-              style={isMobile ? { minHeight: '5rem' } : {}}
+              style={{ 
+                minHeight: isMobile ? '5rem' : '5.5rem',
+                lineHeight: '2rem',
+                color: 'rgb(156, 163, 175)' // gray-400
+              }}
             >
               {activeProject.problem}
             </p>
@@ -561,34 +587,60 @@ const FeatureSection = memo(({
   ), [activeProject.problem, textAnimationKey, isAnimating, isMobile]);
 
   const ValuePropBox = useMemo(() => (
-    <div className={styles.notificationBox + " mb-3"}>
+    <div className={styles.notificationBox + " mb-6"} style={{ minHeight: isMobile ? '140px' : '160px' }}>
       <div className={styles.boxInner}>
         <div className="relative flex flex-col">
-          <div className="relative box-icon-container mb-3 w-fit rounded-lg border border-gray-600 p-2">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className={`text-white font-semibold ${isMobile ? 'text-lg sm:text-xl' : 'text-xl lg:text-2xl'}`}>Value Proposition</h3>
             <div 
-              className={`absolute inset-0 rounded-lg opacity-0 ${styles.boxIconGradient}`}
-              style={GRADIENT_STYLES.iconGradient}
-            />
-            <svg className="w-4 h-4 text-neutral-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
+              className="relative box-icon-container w-fit rounded-lg border border-gray-600 p-3"
+              onMouseMove={!isMobile ? (e) => {
+                const gradient = e.currentTarget.querySelector(`.${styles.boxIconGradient}`) as HTMLElement;
+                if (gradient) {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  gradient.style.setProperty('--mouse-x', `${x}px`);
+                  gradient.style.setProperty('--mouse-y', `${y}px`);
+                  gradient.style.opacity = '1';
+                }
+              } : undefined}
+              onMouseLeave={!isMobile ? (e) => {
+                const gradient = e.currentTarget.querySelector(`.${styles.boxIconGradient}`) as HTMLElement;
+                if (gradient) {
+                  gradient.style.opacity = '0';
+                }
+              } : undefined}
+            >
+              <div 
+                className={`absolute inset-0 rounded-lg opacity-0 ${styles.boxIconGradient}`}
+                style={{...GRADIENT_STYLES.iconGradient, transition: 'opacity 0.3s ease'}}
+              />
+              <svg className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} text-neutral-400 relative z-10`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
           </div>
           
-          <div className="relative w-full h-px mb-3 box-divider-line">
+          <div className="relative w-full h-px mb-4 box-divider-line">
             <div className="absolute inset-0 bg-white/10" />
             <div 
               className={`absolute inset-0 opacity-0 ${styles.boxLineGradient}`}
               style={GRADIENT_STYLES.lineGradient}
             />
           </div>
-          <h3 className={styles.notititle + " mb-5"}>Value Proposition</h3>
+          
           <div className="vanish-crossfade-container">
             <p 
               key={`value-prop-${textAnimationKey}`}
-              className={styles.notibody + " vanish-content"}
+              className={`vanish-content ${isMobile ? 'text-sm' : 'text-base lg:text-lg'}`}
               data-animating={isAnimating ? "true" : "false"}
               data-delay="3"
-              style={isMobile ? { minHeight: '5rem' } : {}}
+              style={{ 
+                minHeight: isMobile ? '5rem' : '5.5rem',
+                lineHeight: '2rem',
+                color: 'rgb(156, 163, 175)' // gray-400
+              }}
             >
               {activeProject.valueProposition}
             </p>
@@ -599,8 +651,8 @@ const FeatureSection = memo(({
   ), [activeProject.valueProposition, textAnimationKey, isAnimating, isMobile]);
 
   const TeamSection = useMemo(() => (
-    <div className={isMobile ? "pt-4 border-t border-white/10" : "pt-4 border-t border-white/10 mt-auto"}>
-      <p className="text-xs text-gray-500 uppercase tracking-wider mb-3">Project Team</p>
+    <div className={isMobile ? "absolute left-0 right-0 pt-8 border-t border-white/10 pb-4 px-4" : "absolute left-0 right-0 pt-10 border-t border-white/10"} style={{ bottom: isMobile ? '-100px' : '-160px' }}>
+      <p className={`${isMobile ? 'text-xs' : 'text-sm lg:text-base'} text-gray-500 uppercase tracking-wider mb-4`}>Project Team</p>
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center relative">
           {activeProject.team.map((member: any, idx: number) => (
@@ -612,8 +664,8 @@ const FeatureSection = memo(({
                 marginLeft: idx === 0 ? 0 : '-1.25rem'
               }}
             >
-              <div className={`w-12 h-12 rounded-full ${member.color} border-2 border-white/20 flex items-center justify-center ${isMobile ? '' : 'cursor-pointer hover:scale-110'} transition-all duration-300 shadow-lg`}>
-                <span className="text-white text-xs font-bold">
+              <div className={`${isMobile ? 'w-12 h-12' : 'w-14 h-14 lg:w-16 lg:h-16'} rounded-full ${member.color} border-2 border-white/20 flex items-center justify-center ${isMobile ? '' : 'cursor-pointer hover:scale-110'} transition-all duration-300 shadow-lg`}>
+                <span className={`text-white ${isMobile ? 'text-xs' : 'text-sm lg:text-base'} font-bold`}>
                   {idx === 0 ? 'TL' : `M${idx}`}
                 </span>
               </div>
@@ -755,7 +807,7 @@ const FeatureSection = memo(({
           );
         })}
       </div>
-      <div className="flex justify-between mt-2 text-xs text-gray-500">
+      <div className={`flex justify-between mt-2 ${isMobile ? 'text-xs' : 'text-sm'} text-gray-500`}>
         <span>
           {activeCardIndex === 0 ? 'Start' : activeCardIndex > allProjects.length ? allProjects.length : activeCardIndex} / {allProjects.length}
         </span>
@@ -772,8 +824,10 @@ const FeatureSection = memo(({
         className="relative overflow-hidden"
         style={{
           background: 'linear-gradient(to bottom, rgb(20, 20, 20) 0%, rgb(10, 10, 10) 50%, rgb(0, 0, 0) 100%)',
-          paddingTop: '6vh',
-          paddingBottom: '6vh',
+          height: '100vh',
+          minHeight: '1000px',
+          paddingTop: '8vh',
+          paddingBottom: '12vh',
           borderTop: '1px dashed rgba(255, 255, 255, 0.2)',
           borderBottom: '1px dashed rgba(255, 255, 255, 0.2)'
         }}
@@ -868,14 +922,15 @@ const FeatureSection = memo(({
 
         <div 
           ref={leftPanelRef}
-          className="relative px-4 pb-4"
+          className="relative px-4 pb-4 overflow-visible"
+          style={{ minHeight: '700px' }}
         >
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Industry</p>
+          <p className="text-sm text-gray-500 uppercase tracking-wider mb-3">Industry</p>
           
-          <div className="vanish-crossfade-container mb-2">
+          <div className="vanish-crossfade-container mb-3">
             <h2 
               key={`industry-name-${textAnimationKey}`}
-              className="text-2xl font-bold text-white vanish-content leading-tight"
+              className="text-3xl font-bold text-white vanish-content leading-tight"
               data-animating={isAnimating ? "true" : "false"}
               data-delay="0"
             >
@@ -883,12 +938,16 @@ const FeatureSection = memo(({
             </h2>
           </div>
           
-          <div className="vanish-crossfade-container mb-4">
+          <div className="vanish-crossfade-container mb-5">
             <p 
               key={`industry-desc-${textAnimationKey}`}
-              className="text-sm text-gray-400 leading-relaxed vanish-content line-clamp-2"
+              className="vanish-content line-clamp-2"
               data-animating={isAnimating ? "true" : "false"}
               data-delay="1"
+              style={{ 
+                lineHeight: '2rem',
+                color: 'rgb(156, 163, 175)' // gray-400
+              }}
             >
               {activeProject.industryDescription}
             </p>
@@ -913,7 +972,8 @@ const FeatureSection = memo(({
       className="relative overflow-hidden"
       style={{
         background: 'linear-gradient(to bottom, rgb(20, 20, 20) 0%, rgb(10, 10, 10) 50%, rgb(0, 0, 0) 100%)',
-        minHeight: 'max(100vh, 900px)',
+        height: '100vh',
+        minHeight: '1200px',
         paddingTop: '10vh',
         paddingBottom: '20vh',
         borderTop: '1px dashed rgba(255, 255, 255, 0.2)',
@@ -944,14 +1004,14 @@ const FeatureSection = memo(({
           bottom: '20vh'
         }}
       >
-        <div className="w-full flex flex-col h-full">
+        <div className="w-full flex flex-col h-full relative pb-52">
           <div className="flex-1 flex flex-col">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Industry</p>
+            <p className="text-sm lg:text-base text-gray-500 uppercase tracking-wider mb-3">Industry</p>
             
-            <div className="vanish-crossfade-container mb-3">
+            <div className="vanish-crossfade-container mb-4">
               <h2 
                 key={`industry-name-${textAnimationKey}`}
-                className="text-3xl lg:text-4xl font-bold text-white vanish-content leading-tight"
+                className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white vanish-content leading-tight"
                 data-animating={isAnimating ? "true" : "false"}
                 data-delay="0"
               >
@@ -959,12 +1019,18 @@ const FeatureSection = memo(({
               </h2>
             </div>
             
-            <div className="vanish-crossfade-container mb-5">
+            <div className="vanish-crossfade-container mb-6">
               <p 
                 key={`industry-desc-${textAnimationKey}`}
-                className="text-sm lg:text-base text-gray-400 leading-relaxed vanish-content line-clamp-3 min-h-[4.5rem] max-h-[4.5rem]"
+                className="vanish-content line-clamp-3"
                 data-animating={isAnimating ? "true" : "false"}
                 data-delay="1"
+                style={{ 
+                  minHeight: '6rem',
+                  maxHeight: '6rem',
+                  lineHeight: '2rem',
+                  color: 'rgb(156, 163, 175)' // gray-400
+                }}
               >
                 {activeProject.industryDescription}
               </p>

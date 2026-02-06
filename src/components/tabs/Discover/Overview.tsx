@@ -33,7 +33,7 @@ const Overview = memo(() => {
                 borderRadius: '1rem',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 padding: '0.25rem',
-                minHeight: '160px',
+                minHeight: '200px',
               }}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
@@ -64,18 +64,18 @@ const Overview = memo(() => {
                   flexDirection: 'column',
                   justifyContent: 'flex-start',
                   gap: 0,
-                  padding: '1rem',
+                  padding: '1.5rem',
                   borderRadius: '0.75rem',
                   background: 'linear-gradient(135deg, #0f0f0f 0%, #050505 100%)',
                   border: '0.75px solid rgba(255, 255, 255, 0.05)',
                 }}
               >
-                <div className="mb-3 text-lg md:text-xl text-white/80 transition-transform duration-300 group-hover:-translate-y-2">
+                <div className="mb-4 text-2xl md:text-3xl lg:text-4xl text-white/80 transition-transform duration-300 group-hover:-translate-y-2">
                   <i className={`bi ${feature.icon}`}></i>
                 </div>
                 
                 <h3 
-                  className="text-xs md:text-sm mb-2 leading-tight transition-transform duration-300 group-hover:-translate-y-2"
+                  className="text-base md:text-lg lg:text-xl mb-3 leading-tight transition-transform duration-300 group-hover:-translate-y-2"
                   style={{
                     color: 'white',
                     fontWeight: 600,
@@ -86,10 +86,10 @@ const Overview = memo(() => {
                 </h3>
                 
                 <p 
-                  className="text-[10px] md:text-xs transition-transform duration-300 group-hover:-translate-y-2"
+                  className="text-sm md:text-base lg:text-lg transition-transform duration-300 group-hover:-translate-y-2"
                   style={{
                     color: 'rgb(163, 163, 163)',
-                    lineHeight: '1.2rem',
+                    lineHeight: '2rem',
                     margin: 0,
                   }}
                 >
@@ -106,7 +106,7 @@ const Overview = memo(() => {
               borderRadius: '1rem',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               padding: '0.25rem',
-              minHeight: '160px',
+              minHeight: '200px',
             }}
             onMouseMove={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
@@ -140,7 +140,7 @@ const Overview = memo(() => {
             >
               <div className="flex items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
                 <h3 
-                  className="text-base md:text-xl font-semibold transition-all duration-300 group-hover:scale-110"
+                  className="text-xl md:text-2xl lg:text-3xl font-semibold transition-all duration-300 group-hover:scale-110"
                   style={{
                     background: 'linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #a3a3a3 100%)',
                     WebkitBackgroundClip: 'text',
@@ -151,7 +151,7 @@ const Overview = memo(() => {
                   Learn More
                 </h3>
                 <i 
-                  className="bi bi-arrow-up-right-square text-base md:text-xl transition-all duration-300 group-hover:scale-110"
+                  className="bi bi-arrow-up-right-square text-xl md:text-2xl lg:text-3xl transition-all duration-300 group-hover:scale-110"
                   style={{
                     background: 'linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #a3a3a3 100%)',
                     WebkitBackgroundClip: 'text',
