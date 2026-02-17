@@ -269,9 +269,237 @@ const NAVBAR_CSS = `
 }
 
 @media (max-width: 640px) {
+  .nav-center,
+  .nav-divider.desktop-only,
+  .search-trigger { display: none; }
   .tab-sep, .tab-arrow-btn { display: none; }
   .tab-label-btn { padding: 5px 10px; font-size: 0.75rem; }
 }
+
+/* ─── Mobile burger button ─── */
+.mobile-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--content-faint);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.mobile-burger:hover {
+  color: var(--content-primary);
+  background: var(--hover-bg);
+}
+@media (max-width: 640px) {
+  .mobile-burger { display: inline-flex; }
+}
+
+/* ─── Mobile sidebar overlay ─── */
+.mob-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.mob-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── Mobile sidebar panel ─── */
+.mob-sidebar {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(320px, 85vw);
+  z-index: 91;
+  background: var(--surface-secondary);
+  border-left: 1px solid var(--border-color);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.mob-sidebar.open {
+  transform: translateX(0);
+}
+
+/* ─── Mobile sidebar header ─── */
+.mob-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.mob-header-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--content-primary);
+  letter-spacing: -0.01em;
+}
+.mob-close {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--content-faint);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+.mob-close:hover {
+  color: var(--content-primary);
+  background: var(--hover-bg-strong);
+}
+
+/* ─── Mobile search bar ─── */
+.mob-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.12s ease;
+  flex-shrink: 0;
+}
+.mob-search:hover {
+  background: var(--hover-bg-strong);
+}
+.mob-search i {
+  color: var(--content-faint);
+  font-size: 0.85rem;
+}
+.mob-search span {
+  color: var(--content-faint);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ─── Mobile tab items ─── */
+.mob-nav-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  flex: 1;
+}
+.mob-tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  background: transparent;
+  color: var(--content-faint);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease;
+  user-select: none;
+}
+.mob-tab-btn:hover {
+  color: var(--content-primary);
+  background: var(--hover-bg);
+}
+.mob-tab-btn.is-active {
+  color: var(--content-primary);
+  font-weight: 600;
+  background: var(--hover-bg-strong);
+}
+.mob-tab-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mob-tab-left i {
+  font-size: 0.85rem;
+  width: 20px;
+  text-align: center;
+}
+.mob-tab-chevron {
+  font-size: 0.6rem;
+  transition: transform 0.2s ease;
+  color: var(--content-faint);
+}
+.mob-tab-chevron.open {
+  transform: rotate(90deg);
+}
+
+/* ─── Mobile subtab items ─── */
+.mob-subtabs {
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+.mob-subtabs.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+.mob-subtabs.expanded {
+  max-height: 300px;
+  opacity: 1;
+}
+.mob-subtab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 20px 11px 50px;
+  border: none;
+  background: transparent;
+  color: var(--content-faint);
+  font-size: 0.84rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease;
+  user-select: none;
+}
+.mob-subtab-btn:hover {
+  color: var(--content-primary);
+  background: var(--hover-bg);
+}
+.mob-subtab-btn.is-active {
+  color: var(--content-primary);
+  font-weight: 600;
+  position: relative;
+}
+.mob-subtab-btn.is-active::before {
+  content: '';
+  position: absolute;
+  left: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0,255,166,0.8);
+}
+
+
 
 /* ─── Subtab breadcrumb ─── */
 .sub-parent {
@@ -413,9 +641,12 @@ const Navbar = ({
   const [isMobile, setIsMobile] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [expandedTab, setExpandedTab] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileExpandedTab, setMobileExpandedTab] = useState<string | null>(null);
   const navContainerRef = useRef<HTMLDivElement>(null);
   const rafIdRef = useRef<number | null>(null);
   const autoCloseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchRef = useRef<{ startX: number; startY: number } | null>(null);
 
   // ── Mobile check (debounced) ──────────────────────────────────────────
   useEffect(() => {
@@ -505,6 +736,66 @@ const Navbar = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [setActiveTab, onSubtabClick]);
 
+  // ── Mobile sidebar ────────────────────────────────────────────────────
+  const openMobile  = useCallback(() => setMobileOpen(true), []);
+  const closeMobile = useCallback(() => {
+    setMobileOpen(false);
+    setMobileExpandedTab(null);
+  }, []);
+
+  const toggleMobileTab = useCallback((tabId: string) => {
+    setMobileExpandedTab(prev => prev === tabId ? null : tabId);
+  }, []);
+
+  const handleMobileTabClick = useCallback((tabId: string) => {
+    setActiveTab(tabId);
+    setMobileOpen(false);
+    setMobileExpandedTab(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [setActiveTab]);
+
+  const handleMobileSubtabClick = useCallback((parentTabId: string, sub: SubtabItem) => {
+    setActiveTab(parentTabId);
+    onSubtabClick?.(parentTabId, sub.id);
+    setMobileOpen(false);
+    setMobileExpandedTab(null);
+    if (sub.sectionId) {
+      requestAnimationFrame(() => {
+        document.getElementById(sub.sectionId!)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [setActiveTab, onSubtabClick]);
+
+  const handleMobileSearch = useCallback(() => {
+    setMobileOpen(false);
+    setSearchOpen(true);
+  }, []);
+
+  // ── Swipe-to-close on mobile sidebar ─────────────────────────────────
+  const onSidebarTouchStart = useCallback((e: React.TouchEvent) => {
+    touchRef.current = { startX: e.touches[0].clientX, startY: e.touches[0].clientY };
+  }, []);
+
+  const onSidebarTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!touchRef.current) return;
+    const dx = e.changedTouches[0].clientX - touchRef.current.startX;
+    const dy = Math.abs(e.changedTouches[0].clientY - touchRef.current.startY);
+    touchRef.current = null;
+    if (dx > 60 && dy < dx) closeMobile();
+  }, [closeMobile]);
+
+  // Lock body scroll when mobile sidebar is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
   // ── Precompute active-tab set once per render ─────────────────────────
   const activeSet = useMemo(() => {
     const set = new Set<string>();
@@ -553,7 +844,7 @@ const Navbar = ({
             {!isMobile && <div className="logo-text">Your<span>Brand</span></div>}
           </div>
 
-          <div className="nav-divider" style={{ height: '28px', alignSelf: 'center' }} />
+          <div className="nav-divider desktop-only" style={{ height: '28px', alignSelf: 'center' }} />
 
           {/* CENTER */}
           <div className="nav-center">
@@ -623,7 +914,7 @@ const Navbar = ({
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-3 flex-shrink-0 ml-auto">
             <ThemeToggle />
             <div className="nav-divider" style={{ height: '28px', alignSelf: 'center' }} />
             <button className="search-trigger" onClick={openSearch}>
@@ -631,10 +922,85 @@ const Navbar = ({
               {!isMobile && <span>Search</span>}
               {!isMobile && <span className="search-shortcut">⌘K</span>}
             </button>
+            {/* Burger (mobile only) */}
+            <button className="mobile-burger" onClick={openMobile} aria-label="Open menu">
+              <i className="bi bi-list" />
+            </button>
           </div>
 
         </div>
       </nav>
+
+      {/* ═══ MOBILE SIDEBAR ═══ */}
+      <div className={`mob-overlay${mobileOpen ? ' open' : ''}`} onClick={closeMobile} />
+      <div
+        className={`mob-sidebar${mobileOpen ? ' open' : ''}`}
+        onTouchStart={onSidebarTouchStart}
+        onTouchEnd={onSidebarTouchEnd}
+      >
+        {/* Header */}
+        <div className="mob-header">
+          <span className="mob-header-title">Menu</span>
+          <ThemeToggle />
+          <button className="mob-close" onClick={closeMobile} aria-label="Close menu">
+            <i className="bi bi-x-lg" />
+          </button>
+        </div>
+
+        {/* Search */}
+        <div className="mob-search" onClick={handleMobileSearch}>
+          <i className="bi bi-search" />
+          <span>Search…</span>
+        </div>
+
+        {/* Nav list */}
+        <div className="mob-nav-list">
+          {NAV_ITEMS.map(item => {
+            const active = activeSet.has(item.id);
+            const isTabExpanded = mobileExpandedTab === item.id;
+            const hasSubtabs = item.subtabs && item.subtabs.length > 0;
+
+            return (
+              <div key={item.id}>
+                <button
+                  className={`mob-tab-btn${active ? ' is-active' : ''}`}
+                  onClick={() => hasSubtabs ? toggleMobileTab(item.id) : handleMobileTabClick(item.id)}
+                >
+                  <span className="mob-tab-left">
+                    <i className={`bi ${item.icon}`} />
+                    {item.label}
+                  </span>
+                  {hasSubtabs && (
+                    <i className={`bi bi-chevron-right mob-tab-chevron${isTabExpanded ? ' open' : ''}`} />
+                  )}
+                </button>
+
+                {hasSubtabs && (
+                  <div className={`mob-subtabs ${isTabExpanded ? 'expanded' : 'collapsed'}`}>
+                    {/* Top-level tab item */}
+                    <button
+                      className={`mob-subtab-btn${active && !activeSubtab ? ' is-active' : ''}`}
+                      onClick={() => handleMobileTabClick(item.id)}
+                    >
+                      All {item.label}
+                    </button>
+                    {item.subtabs!.map(sub => (
+                      <button
+                        key={sub.id}
+                        className={`mob-subtab-btn${activeSubtab === sub.id ? ' is-active' : ''}`}
+                        onClick={() => handleMobileSubtabClick(item.id, sub)}
+                      >
+                        {sub.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
     </>
   );
 };
