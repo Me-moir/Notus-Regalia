@@ -1,8 +1,8 @@
-# Regalitica
+# Notosphere
 
-**Regalitica** is a modern web application built with **Next.js**, **TypeScript**, and **Tailwind CSS**, enhanced with **Framer Motion**, **GSAP**, and **Spline 3D** for rich, interactive UI experiences.  
+**Notosphere** is a modern web application built with **Next.js**, **TypeScript**, and **Tailwind CSS**, enhanced with **Framer Motion**, **GSAP**, and **Spline 3D** for rich, interactive UI experiences.  
 
-This project serves as the frontend for the Regalitica platform, focusing on performance, scalability, and a polished user experience.
+This project serves as the frontend for the Notosphere platform, focusing on performance, scalability, and a polished user experience.
 
 ---
 

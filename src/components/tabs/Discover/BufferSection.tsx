@@ -14,7 +14,7 @@ const BufferSection = memo(() => {
       <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
         <div className="text-center">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold inline">
-            {'What\'s in Regalitica? '.split('').map((letter, i) => (
+            {'What\'s in Notosphere? '.split('').map((letter, i) => (
               <span 
                 key={i} 
                 className={styles.premiumBtnLetter}

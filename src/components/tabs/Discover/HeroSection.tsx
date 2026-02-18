@@ -1,186 +1,370 @@
 "use client";
-import { useEffect, useState, memo } from 'react';
-import Prism from '@/components/ui/Prism';
-import { ContainerTextFlip } from "@/components/ui/container-text-flip";
+import { memo, useCallback } from 'react';
+import Threads from './Threads';
 
-// Memoize the logo data to prevent recreating on each render
-const LOGOS = [
-  { src: "/assets/nextjs.png", alt: "Next.js" },
-  { src: "/assets/react.png", alt: "React" },
-  { src: "/assets/framer.png", alt: "Framer Motion" },
-  { src: "/assets/gsap.png", alt: "GSAP" },
-  { src: "/assets/spline.png", alt: "Spline" },
-  { src: "/assets/tailwind.png", alt: "Tailwind CSS" },
-  { src: "/assets/aceternity.png", alt: "Aceternity UI" },
-] as const;
-
-// Extract Logo component for better performance
-const Logo = memo<{ src: string; alt: string }>(({ src, alt }) => (
-  <img 
-    src={src} 
-    alt={alt} 
-    className="grayscale hover:grayscale-0 transition-all duration-300 h-4 sm:h-5 md:h-7 lg:h-9 hover:scale-110 flex-shrink-0" 
-    style={{ width: 'auto', objectFit: 'contain' }}
-    loading="lazy"
-    decoding="async"
-  />
-));
-Logo.displayName = 'Logo';
 
 const HeroSection = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
   }, []);
 
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: 'var(--surface-primary)' }}>
+    <section
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      style={{ background: 'var(--surface-primary)' }}
+    >
       <style jsx>{`
         @media (max-width: 768px) {
           section {
-            min-height: 0 !important;
-            height: fit-content !important;
-            padding-top: 8rem;
-            padding-bottom: 1rem;
+            min-height: 100svh !important;
+            height: 100svh !important;
+            padding: 0;
           }
         }
 
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        
-        @keyframes liquidFlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+        @media (max-width: 768px) {
+          .heroBtn {
+            padding: 0.6rem 1.25rem;
+            font-size: 0.8rem;
+          }
         }
 
-        /* Use transform and opacity for better performance */
-        .animate-shimmer {
-          animation: shimmer 3s infinite;
-          will-change: transform;
+        .heroBtn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.625rem 1.5rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+          background-color: var(--button-bg);
+          box-shadow: var(--button-shadow);
+          border: solid 1px var(--button-border);
+          border-radius: 8px;
+          cursor: pointer;
+          color: var(--content-secondary);
+          transition: all 0.3s ease;
         }
 
-        .animate-liquid {
-          animation: liquidFlow 8s ease infinite;
-          will-change: background-position;
+        @media (min-width: 1024px) {
+          .heroBtn {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+          }
         }
 
-        /* Optimize for GPU acceleration */
-        .gpu-accelerated {
-          transform: translateZ(0);
-          backface-visibility: hidden;
-          perspective: 1000px;
+        .heroBtn::before {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          border-radius: 10px;
+          padding: 1px;
+          background: radial-gradient(
+            200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(0, 255, 166, 0.8),
+            rgba(255, 215, 0, 0.6),
+            rgba(236, 72, 153, 0.6),
+            rgba(147, 51, 234, 0.6),
+            rgba(59, 130, 246, 0.5),
+            transparent 70%
+          );
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+          z-index: 0;
         }
+
+        .heroBtn:hover::before {
+          opacity: 1;
+        }
+
+        .hero-title {
+          background-image: linear-gradient(135deg, #e2e8f0, #94a3b8, #cbd5e1, #64748b);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        :global(.light) .hero-title {
+          background-image: none;
+          -webkit-background-clip: unset;
+          background-clip: unset;
+          -webkit-text-fill-color: unset;
+          color: #1e293b;
+        }
+
+        :global(.light) .hero-grid-base {
+          background-image:
+            linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px) !important;
+        }
+
+        :global(.light) .hero-grid-fade {
+          background-image:
+            linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px) !important;
+        }
+
+        :global(.light) .hero-mobile-overlay {
+          background: linear-gradient(to top, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.4) 40%, transparent 70%) !important;
+        }
+
+        :global(.light) .hero-mobile-overlay .hero-mobile-status {
+          color: rgba(0,0,0,0.4) !important;
+        }
+
+        :global(.light) .hero-mobile-overlay .hero-mobile-subtitle {
+          color: rgba(0,0,0,0.5) !important;
+        }
+
+        :global(.light) .hero-mobile-overlay {
+          background: linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.3) 35%, transparent 55%) !important;
+        }
+
+        :global(.light) .hero-scroll-hint span {
+          color: rgba(0,0,0,0.3) !important;
+        }
+
+        :global(.light) .hero-scroll-hint svg path {
+          stroke: rgba(0,0,0,0.3) !important;
+        }
+
+        @keyframes scrollBounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(6px); }
+        }
+
+        .hero-scroll-hint {
+          animation: scrollBounce 1.8s ease-in-out infinite;
+        }
+
       `}</style>
-      
-      {/* Prism Background - use pointer-events-none to prevent interaction overhead */}
-      <div 
-        className="gpu-accelerated" 
-        style={{ 
-          width: '100%', 
-          height: '100%', 
-          position: 'absolute', 
-          top: 0, 
-          left: 0,
-          pointerEvents: 'none'
-        }}
+
+      {/* Faint grid background — right side, on top of threads */}
+      <div
+        className="absolute top-0 right-0 w-1/2 h-full pointer-events-none hidden md:block"
+        style={{ zIndex: 4 }}
       >
-        <Prism
-          animationType="hover"
-          timeScale={1}
-          height={3}
-          baseWidth={5}
-          scale={2.5}
-          hueShift={0}
-          colorFrequency={1}
-          noise={0}
-          glow={1}
+        {/* Base grid */}
+        <div
+          className="absolute inset-0 hero-grid-base"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+          }}
+        />
+        {/* Random fade patches — use transparent masks instead of black overlays */}
+        <div
+          className="absolute inset-0 hero-grid-fade"
+          style={{
+            maskImage: `
+              radial-gradient(ellipse at 15% 20%, transparent 0%, white 50%),
+              radial-gradient(ellipse at 75% 10%, transparent 0%, white 40%),
+              radial-gradient(ellipse at 40% 60%, transparent 0%, white 55%),
+              radial-gradient(ellipse at 85% 75%, transparent 0%, white 45%),
+              radial-gradient(ellipse at 25% 85%, transparent 0%, white 50%),
+              radial-gradient(ellipse at 60% 35%, transparent 0%, white 40%)
+            `,
+            maskComposite: 'intersect',
+            WebkitMaskImage: `
+              radial-gradient(ellipse at 15% 20%, transparent 0%, white 50%),
+              radial-gradient(ellipse at 75% 10%, transparent 0%, white 40%),
+              radial-gradient(ellipse at 40% 60%, transparent 0%, white 55%),
+              radial-gradient(ellipse at 85% 75%, transparent 0%, white 45%),
+              radial-gradient(ellipse at 25% 85%, transparent 0%, white 50%),
+              radial-gradient(ellipse at 60% 35%, transparent 0%, white 40%)
+            `,
+            WebkitMaskComposite: 'source-in',
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+          }}
         />
       </div>
-      
-      {/* Text Overlay */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto text-center px-3 sm:px-4 md:px-6 lg:px-12 mt-8 sm:mt-12 md:mt-16">
-        <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mb-3 sm:mb-4 md:mb-5 max-w-4xl mx-auto drop-shadow-lg font-bold leading-tight overflow-visible">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-x-2 px-2 sm:px-3 md:px-6 overflow-visible">
-            <span className="whitespace-nowrap bg-clip-text text-transparent" style={{ backgroundImage: 'var(--text-gradient-hero)' }}>
-              We build systems that build
-            </span>
-            {isMounted && (
-              <span 
-                className="inline-flex justify-center sm:justify-start items-center w-full sm:w-auto overflow-visible" 
-                style={{ 
-                  minWidth: 'auto', 
-                  maxWidth: '100%', 
-                  minHeight: '1.5em', 
-                  paddingTop: '0.1em', 
-                  paddingBottom: '0.1em' 
-                }}
-              >
-                <div className="overflow-visible w-full">
-                  <ContainerTextFlip 
-                    words={["Companies", "Possibilities", "Dominance"]} 
-                    className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl overflow-visible" 
-                  />
-                </div>
-              </span>
-            )}
-          </div>
-        </div>
-        
-        <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl max-w-3xl mx-auto drop-shadow-lg leading-relaxed mb-4 sm:mb-6 md:mb-8 px-2" style={{ color: 'var(--content-tertiary)' }}>
-          <strong className="font-bold" style={{ color: 'var(--content-secondary)' }}>Regalitica</strong> is a holding and venture-building entity focused on developing early-stage systems.
-        </p>
 
-        <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-24 mb-0 pb-0 flex items-center justify-center px-2 sm:px-3">
-          {/* Liquid Glass Container */}
-          <div className="relative group w-full max-w-5xl">
-            {/* Glass Effect - use will-change sparingly */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/5 to-transparent rounded-2xl sm:rounded-3xl blur-xl"></div>
-            
-            {/* Main Glass Container */}
-            <div 
-              className="relative backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden transition-all duration-700 gpu-accelerated"
-              style={{
-                background: 'var(--hover-bg)',
-                border: '1px solid var(--border-color)',
-                boxShadow: '0 8px 32px 0 rgba(255, 255, 255, 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)',
-              }}
+      {/* Threads Background — renders on top of terminal */}
+      <div
+        className="absolute inset-0"
+        style={{ width: '100%', height: '100%', zIndex: 2, pointerEvents: 'auto' }}
+      >
+        <Threads
+          amplitude={3.5}
+          distance={0.3}
+          enableMouseInteraction
+        />
+      </div>
+
+      {/* Glass Morphism Left Panel */}
+      <div
+        className="absolute top-0 left-0 w-1/2 h-full hidden md:flex items-center pointer-events-none"
+        style={{
+          background: 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(37,99,235,0.05) 50%, rgba(29,78,216,0.03) 100%)',
+          backdropFilter: 'blur(10px) saturate(1.3)',
+          WebkitBackdropFilter: 'blur(10px) saturate(1.3)',
+          borderRight: '1px dashed var(--border-color)',
+          zIndex: 3,
+        }}
+      >
+        {/* Subtle top-left glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at 20% 15%, rgba(96,165,250,0.07) 0%, transparent 60%)',
+          }}
+        />
+        {/* Subtle bottom reflection */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to top, rgba(255,255,255,0.02), transparent)',
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 w-full px-8 lg:px-14 xl:px-20 flex flex-col gap-8">
+          {/* Status Bar */}
+          <div
+            className="inline-flex items-center gap-2.5 pointer-events-auto status-pill"
+            style={{
+              padding: '6px 16px',
+              borderRadius: '999px',
+              border: '1px solid rgba(34,197,94,0.15)',
+              background: 'rgba(34,197,94,0.06)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              width: 'fit-content',
+            }}
+          >
+            <span
+              className="inline-block w-2 h-2 rounded-full"
+              style={{ background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.5)' }}
+            />
+            <span
+              className="text-xs lg:text-sm font-mono tracking-widest uppercase"
+              style={{ color: 'var(--content-tertiary)' }}
             >
-              {/* Shimmer Effect - optimize with will-change on hover only */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                <div 
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"
-                  style={{
-                    backgroundSize: '200% 100%',
-                  }}
-                ></div>
-              </div>
+              All threads operational
+            </span>
+          </div>
 
-              {/* Liquid Gradient Border Animation - limit will-change scope */}
-              <div 
-                className="absolute inset-0 opacity-50 group-hover:opacity-75 transition-opacity duration-700 rounded-2xl sm:rounded-3xl animate-liquid pointer-events-none"
-                style={{
-                  background: 'linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1), rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1))',
-                  backgroundSize: '400% 400%',
-                }}
-              ></div>
+          {/* Main Title */}
+          <h1
+            className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight hero-title"
+          >
+            Weaving continuity beyond individuality.
+          </h1>
 
-              {/* Logos Container - Single Row Centered */}
-              <div className="relative flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8 px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-4 md:py-5">
-                {LOGOS.map((logo) => (
-                  <Logo key={logo.alt} src={logo.src} alt={logo.alt} />
-                ))}
-              </div>
+          {/* Subtitle */}
+          <p
+            className="text-base lg:text-lg xl:text-xl leading-relaxed max-w-xl"
+            style={{ color: 'var(--content-tertiary)' }}
+          >
+            Notosphere exists to weave the threads that bind intelligence into a unified continuum. We design the systems through which humanity transitions beyond fragmentation and into its next form.
+          </p>
 
-              {/* Bottom Reflection */}
-              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white/5 to-transparent pointer-events-none"></div>
-            </div>
+          {/* Buttons */}
+          <div className="flex items-center gap-4 mt-2 pointer-events-auto">
+            <button
+              className="heroBtn"
+              onMouseMove={handleMouseMove}
+            >
+              View Portfolio
+            </button>
+            <button
+              className="heroBtn"
+              onMouseMove={handleMouseMove}
+            >
+              Convergence Index
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Content Overlay */}
+      <div
+        className="relative z-10 flex md:hidden flex-col justify-between w-full h-full px-5 pb-8 pt-24 pointer-events-none hero-mobile-overlay"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 35%, transparent 55%)',
+        }}
+      >
+        <div className="flex flex-col gap-5 w-full">
+          {/* Status Bar */}
+          <div
+            className="inline-flex items-center gap-2 pointer-events-auto status-pill"
+            style={{
+              padding: '5px 14px',
+              borderRadius: '999px',
+              border: '1px solid rgba(34,197,94,0.2)',
+              background: 'rgba(34,197,94,0.08)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              width: 'fit-content',
+            }}
+          >
+            <span
+              className="inline-block w-1.5 h-1.5 rounded-full"
+              style={{ background: '#22c55e', boxShadow: '0 0 6px rgba(34,197,94,0.5)' }}
+            />
+            <span
+              className="text-[0.65rem] font-mono tracking-widest uppercase hero-mobile-status"
+              style={{ color: 'rgba(255,255,255,0.5)' }}
+            >
+              All threads operational
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-3xl sm:text-4xl font-bold leading-tight hero-title">
+            Weaving continuity beyond individuality.
+          </h1>
+
+          {/* Subtitle */}
+          <p
+            className="text-sm sm:text-base leading-relaxed hero-mobile-subtitle"
+            style={{ color: 'rgba(255,255,255,0.55)' }}
+          >
+            Notosphere exists to weave the threads that bind intelligence into a unified continuum.
+          </p>
+
+          {/* Buttons */}
+          <div className="flex items-center gap-3 mt-1 pointer-events-auto">
+            <button className="heroBtn" onMouseMove={handleMouseMove}>
+              View Portfolio
+            </button>
+            <button className="heroBtn" onMouseMove={handleMouseMove}>
+              Convergence Index
+            </button>
+          </div>
+        </div>
+
+        {/* Scroll Down Indicator */}
+        <div className="flex items-center gap-3 pointer-events-auto hero-scroll-hint self-start">
+          <div className="hero-scroll-arrow">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+              <path d="M4 6L8 10L12 6" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <span
+            className="text-xs font-mono tracking-[0.15em] uppercase"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+          >
+            Scroll to explore
+          </span>
+        </div>
+      </div>
+
+
     </section>
   );
 };

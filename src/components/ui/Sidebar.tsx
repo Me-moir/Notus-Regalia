@@ -437,7 +437,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         <div className="p-6" style={{ borderBottom: '1px solid var(--border-color)' }}>
           <Image 
             src={logoImage} 
-            alt="Regalitica" 
+            alt="Notosphere" 
             width={200} 
             height={56} 
             className="h-14 w-auto mx-auto" 

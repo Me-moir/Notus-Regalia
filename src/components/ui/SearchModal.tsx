@@ -274,7 +274,7 @@ const SearchModal = ({ isOpen, onClose, onNavigate }: SearchModalProps) => {
                   <div className="search-accordion">
                     <div className="search-accordion-header" onClick={() => setFrequentOpen(v => !v)}>
                       <i className={`bi bi-chevron-right chevron${frequentOpen ? ' open' : ''}`} />
-                      Frequently Visited
+                      Trending Sections
                     </div>
                     <div className={`search-accordion-items ${frequentOpen ? 'expanded' : 'collapsed'}`}>
                       {filteredFrequent.map(item => (

@@ -22,7 +22,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   // Initialize from localStorage / system preference
   useEffect(() => {
-    const stored = localStorage.getItem('regalitica-theme') as Theme | null;
+    const stored = localStorage.getItem('notosphere-theme') as Theme | null;
     if (stored === 'light' || stored === 'dark') {
       setTheme(stored);
     } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
@@ -36,7 +36,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
     root.setAttribute('data-theme', theme);
-    localStorage.setItem('regalitica-theme', theme);
+    localStorage.setItem('notosphere-theme', theme);
   }, [theme]);
 
   const toggleTheme = useCallback(() => {

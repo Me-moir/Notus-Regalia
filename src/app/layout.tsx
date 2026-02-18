@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Regalitica",
+  title: "Notosphere",
   description: "Building Systems, Ventures, and Future Companies",
 };
 

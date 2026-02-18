@@ -144,7 +144,7 @@ const Footer = () => {
             />
             <Image 
               src={logoImage} 
-              alt="Regalitica" 
+              alt="Notosphere" 
               width={256} 
               height={64} 
               className="h-12 sm:h-16 w-auto relative z-10 transition-transform duration-500 group-hover:scale-105"
@@ -163,7 +163,7 @@ const Footer = () => {
               backgroundClip: 'text'
             }}
           >
-            NOUMENA GROUP
+            NOTOSPHERE GROUP
           </h3>
           
           {/* Tagline */}

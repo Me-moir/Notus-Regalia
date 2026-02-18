@@ -841,7 +841,8 @@ const Navbar = ({
                 <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z"/>
               </svg>
             </div>
-            {!isMobile && <div className="logo-text">Your<span>Brand</span></div>}
+            {!isMobile && <div className="logo-text">Noto<span>sphere</span></div>}
+            {isMobile && <div className="logo-text" style={{ fontSize: '0.85rem' }}>Noto<span>sphere</span></div>}
           </div>
 
           <div className="nav-divider desktop-only" style={{ height: '28px', alignSelf: 'center' }} />

@@ -98,7 +98,7 @@ export const FeatureSections: FeatureSection[] = [
     icon: 'bi-mortarboard',
     title: 'Founder-Operator Model',
     description:
-      'Regalitica functions as a founder-operator platform. While student-founded, ventures are governed with institutional discipline and long-term ownership principles.'
+      'Notosphere functions as a founder-operator platform. While student-founded, ventures are governed with institutional discipline and long-term ownership principles.'
   },
   {
     icon: 'bi-leaf',
@@ -256,17 +256,17 @@ export const WORLD_CONTENT_DATA: Record<'company' | 'direction' | 'teams' | 'gov
         key: 'about',
         label: 'About',
         description: [
-          'Regalitica is a technology-focused collective dedicated to building intelligent systems, digital platforms, and future-oriented solutions.',
+          'Notosphere is a technology-focused collective dedicated to building intelligent systems, digital platforms, and future-oriented solutions.',
           'We operate at the intersection of design, data, and engineering — creating products that are not only functional, but meaningful, scalable, and sustainable.',
           'Our work is driven by a belief that technology should enhance human capability, not replace it. We approach every project with systems thinking, research-first methodology, and long-term impact in mind.',
-          'Regalitica exists for organizations and individuals who value depth over hype, structure over noise, and innovation with purpose.'
+          'Notosphere exists for organizations and individuals who value depth over hype, structure over noise, and innovation with purpose.'
         ]
       },
       {
         key: 'our-story',
         label: 'Our Story',
         description: [
-          'Founded with a vision to bridge the gap between emerging technology and real-world impact, Regalitica began as a student-led initiative focused on solving complex challenges through innovative solutions.',
+          'Founded with a vision to bridge the gap between emerging technology and real-world impact, Notosphere began as a student-led initiative focused on solving complex challenges through innovative solutions.',
           'What started as a small group of passionate builders has evolved into a multi-venture platform operating across diverse sectors including healthcare, fintech, cleantech, and education.',
           'Our journey has been marked by a commitment to disciplined execution, strategic partnerships, and a relentless focus on creating value that extends beyond traditional metrics.',
           'Today, we continue to build with the same foundational principles that guided our inception: innovation with integrity, impact with purpose, and growth with responsibility.'
@@ -325,7 +325,7 @@ export const WORLD_CONTENT_DATA: Record<'company' | 'direction' | 'teams' | 'gov
         key: 'core-executives',
         label: 'Core Executives',
         description: [
-            'Meet the visionaries and operators driving Regalitica forward.'
+            'Meet the visionaries and operators driving Notosphere forward.'
         ]
       },
       {
@@ -391,7 +391,7 @@ export const WORLD_CONTENT_DATA: Record<'company' | 'direction' | 'teams' | 'gov
         key: 'structure',
         label: 'Structure',
         description: [
-          'Regalitica operates under a clear governance framework that balances centralized oversight with venture-level autonomy.',
+          'Notosphere operates under a clear governance framework that balances centralized oversight with venture-level autonomy.',
           'Our organizational structure includes a board of advisors, executive leadership, and venture teams, each with defined roles and responsibilities.',
           'This structure ensures strategic alignment across all initiatives while enabling agility and innovation at the operational level.'
         ]
@@ -505,7 +505,7 @@ export const WORLD_CONTENT_DATA: Record<'company' | 'direction' | 'teams' | 'gov
         description: [
           'Have questions about our ventures or want to learn more about what we do? We\'re here to help.',
           'Whether you\'re interested in our technology, exploring collaboration opportunities, or simply curious about our work, we welcome your inquiries.',
-          'Contact us at inquiry@regalitica.com and our team will respond promptly to your questions.'
+          'Contact us at inquiry@notosphere.com and our team will respond promptly to your questions.'
         ]
       },
       {
@@ -514,7 +514,7 @@ export const WORLD_CONTENT_DATA: Record<'company' | 'direction' | 'teams' | 'gov
         description: [
           'We\'re always interested in connecting with investors who share our vision for technology-driven innovation.',
           'If you\'re looking to support ventures that combine strong fundamentals with transformative potential, we\'d love to discuss opportunities.',
-          'Reach out to funding@regalitica.com to explore investment opportunities and learn about our current portfolio.'
+          'Reach out to funding@notosphere.com to explore investment opportunities and learn about our current portfolio.'
         ]
       },
       {
@@ -523,7 +523,7 @@ export const WORLD_CONTENT_DATA: Record<'company' | 'direction' | 'teams' | 'gov
         description: [
           'We seek strategic partners who can contribute expertise, resources, or market access to our ventures.',
           'Partnership opportunities include technology integrations, research collaborations, go-to-market initiatives, and more.',
-          'Contact partnerships@regalitica.com to discuss how we can create value together.'
+          'Contact partnerships@notosphere.com to discuss how we can create value together.'
         ]
       }
     ]

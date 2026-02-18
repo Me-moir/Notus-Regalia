@@ -31,7 +31,7 @@ const Discover = ({
       {/* Home - Hero Section */}
       <HeroSection />
       
-      {/* Buffer Section - "What's in Regalitica?" */}
+      {/* Buffer Section - "What's in Notosphere?" */}
       <BufferSection />
       
       {/* Overview Section - 4x2 Grid */}
