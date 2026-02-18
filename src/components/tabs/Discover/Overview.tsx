@@ -23,6 +23,43 @@ const Overview = memo(() => {
       />
 
       <div className="relative z-10 px-3 sm:px-4 md:px-6 lg:px-12 xl:px-20 py-8 md:py-12 lg:py-16">
+        {/* "What's in Regalitica?" header */}
+        <div className="text-center mb-6 md:mb-10 lg:mb-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold inline">
+            {'What\'s in Notosphere? '.split('').map((letter, i) => (
+              <span 
+                key={i} 
+                className={styles.premiumBtnLetter}
+                style={{ 
+                  animationDelay: `${i * 0.08}s`,
+                  background: 'var(--text-gradient)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  display: 'inline-block',
+                }}
+              >
+                {letter === ' ' ? '\u00A0' : letter}
+              </span>
+            ))}
+          </h2>
+          <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl inline">
+            {'Everything. Structured.'.split('').map((letter, i) => (
+              <span 
+                key={i} 
+                className={styles.premiumBtnLetter}
+                style={{ 
+                  animationDelay: `${(i + 21) * 0.08}s`,
+                  color: 'var(--content-faint)',
+                  display: 'inline-block',
+                }}
+              >
+                {letter === ' ' ? '\u00A0' : letter}
+              </span>
+            ))}
+          </span>
+        </div>
+
         {/* 2 columns on mobile, 3 columns on desktop */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
           {FeatureSections.map((feature, index) => (

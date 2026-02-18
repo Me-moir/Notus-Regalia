@@ -1,5 +1,5 @@
 "use client";
-import { lazy, Suspense, useState, memo, useEffect } from 'react';
+import { lazy, Suspense, useState, memo, useEffect, useRef } from 'react';
 import type { InfoContentType } from '@/data/information-data';
 import InformationGrid from './InformationGrid';
 
@@ -14,6 +14,7 @@ const Terms = lazy(() => import('./Terms'));
 const Privacy = lazy(() => import('./Privacy'));
 const UsePolicy = lazy(() => import('./UsePolicy'));
 const Disclaimer = lazy(() => import('./Disclaimer'));
+const Report = lazy(() => import('./Report'));
 
 // Loading fallback with matching background
 const LoadingFallback = () => (
@@ -29,6 +30,7 @@ const Information = memo(() => {
   const [activeContent, setActiveContent] = useState<InfoContentType>('statements');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [contentHistory, setContentHistory] = useState<InfoContentType[]>(['statements']);
+  const contentSectionRef = useRef<HTMLDivElement>(null);
 
   // Preload all lazy components when Information page mounts
   useEffect(() => {
@@ -41,6 +43,7 @@ const Information = memo(() => {
       import('./Privacy');
       import('./UsePolicy');
       import('./Disclaimer');
+      import('./Report');
     };
 
     if ('requestIdleCallback' in window) {
@@ -115,6 +118,11 @@ const Information = memo(() => {
     // Change content immediately - CSS handles the smooth crossfade
     setActiveContent(newContent);
     
+    // Scroll to the content section
+    setTimeout(() => {
+      contentSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+
     // End transition state after animation completes
     setTimeout(() => {
       setIsTransitioning(false);
@@ -130,6 +138,7 @@ const Information = memo(() => {
       
       {/* Single persistent background wrapper */}
       <div 
+        ref={contentSectionRef}
         className="relative overflow-hidden mb-20"
         style={{
           background: 'var(--gradient-section)',
@@ -252,6 +261,21 @@ const Information = memo(() => {
           }}>
             <Suspense fallback={<LoadingFallback />}>
               <Disclaimer isTransitioning={isTransitioning} />
+            </Suspense>
+          </div>
+
+          {/* Report */}
+          <div style={{
+            position: activeContent === 'report' ? 'relative' : 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            opacity: activeContent === 'report' ? 1 : 0,
+            pointerEvents: activeContent === 'report' ? 'auto' : 'none',
+            transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}>
+            <Suspense fallback={<LoadingFallback />}>
+              <Report isTransitioning={isTransitioning} />
             </Suspense>
           </div>
         </div>

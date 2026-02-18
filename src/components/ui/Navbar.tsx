@@ -652,6 +652,9 @@ const Navbar = ({
   const navContainerRef = useRef<HTMLDivElement>(null);
   const rafIdRef = useRef<number | null>(null);
   const autoCloseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tabClickCloseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tabClickOpenRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoExpandedRef = useRef(false);
   const touchRef = useRef<{ startX: number; startY: number } | null>(null);
 
   // ── Mobile check (debounced) ──────────────────────────────────────────
@@ -687,27 +690,66 @@ const Navbar = ({
 
   // ── Expansion helpers ─────────────────────────────────────────────────
   const toggleExpand = useCallback((tabId: string) => {
+    if (tabClickCloseRef.current) { clearTimeout(tabClickCloseRef.current); tabClickCloseRef.current = null; }
+    if (tabClickOpenRef.current) { clearTimeout(tabClickOpenRef.current); tabClickOpenRef.current = null; }
     setExpandedTab(prev => prev === tabId ? null : tabId);
   }, []);
 
   const closeExpand = useCallback(() => {
+    if (tabClickCloseRef.current) { clearTimeout(tabClickCloseRef.current); tabClickCloseRef.current = null; }
+    if (tabClickOpenRef.current) { clearTimeout(tabClickOpenRef.current); tabClickOpenRef.current = null; }
     setExpandedTab(null);
   }, []);
 
-  // Auto-close after 10 s
+  // Auto-close after 10s — only for manual expansions (not auto-expand from tab click)
   useEffect(() => {
     if (autoCloseRef.current) clearTimeout(autoCloseRef.current);
-    if (expandedTab) {
+    if (expandedTab && !autoExpandedRef.current) {
       autoCloseRef.current = setTimeout(() => setExpandedTab(null), 10_000);
     }
-    return () => { if (autoCloseRef.current) clearTimeout(autoCloseRef.current); };
+    // Reset the flag after the effect runs
+    if (!expandedTab) autoExpandedRef.current = false;
+    return () => {
+      if (autoCloseRef.current) clearTimeout(autoCloseRef.current);
+    };
   }, [expandedTab]);
+
+  // Clean up all timers on unmount
+  useEffect(() => {
+    return () => {
+      if (tabClickCloseRef.current) clearTimeout(tabClickCloseRef.current);
+      if (tabClickOpenRef.current) clearTimeout(tabClickOpenRef.current);
+    };
+  }, []);
 
   // ── Navigation ────────────────────────────────────────────────────────
   const handleTabClick = useCallback((tabId: string) => {
+    const isNewTab = tabId !== activeTab;
     setActiveTab(tabId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [setActiveTab]);
+
+    // Briefly expand subtabs after 3s delay when switching to a new tab
+    if (isNewTab) {
+      // Cancel any pending open/close from a previous tab click
+      if (tabClickOpenRef.current) { clearTimeout(tabClickOpenRef.current); tabClickOpenRef.current = null; }
+      if (tabClickCloseRef.current) { clearTimeout(tabClickCloseRef.current); tabClickCloseRef.current = null; }
+
+      const navItem = NAV_ITEMS.find(item => item.id === tabId);
+      if (navItem?.subtabs && navItem.subtabs.length > 0) {
+        // 3s delay before expanding — gives user time to switch away if misclicked
+        tabClickOpenRef.current = setTimeout(() => {
+          tabClickOpenRef.current = null;
+          autoExpandedRef.current = true;
+          setExpandedTab(tabId);
+          // Auto-close after 3s of being expanded
+          tabClickCloseRef.current = setTimeout(() => {
+            setExpandedTab(prev => prev === tabId ? null : prev);
+            tabClickCloseRef.current = null;
+          }, 3000);
+        }, 3000);
+      }
+    }
+  }, [setActiveTab, activeTab]);
 
   const handleSubtabClick = useCallback((parentTabId: string, sub: SubtabItem) => {
     setActiveTab(parentTabId);

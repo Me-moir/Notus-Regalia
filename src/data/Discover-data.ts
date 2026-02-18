@@ -12,19 +12,6 @@ export interface Industry {
   team: TeamMember[];
 }
 
-export interface Project {
-  title: string;
-  industryName: string;
-  industryDescription: string;
-  description: string;
-  problem: string;
-  valueProposition: string;
-  team: TeamMember[];
-  domains: string[];
-  features: string[];
-  timeline: { stage: string; date: string; status: 'complete' | 'current' | 'future' }[];
-}
-
 export interface OverviewSection {
   title: string;
   description: string[];
@@ -158,81 +145,6 @@ export const industries: Industry[] = [
       { name: 'Prof. Ahmed Hassan', role: 'Chief Educator', color: 'bg-[#DC143C]' },
       { name: 'Jessica Park', role: 'AI/ML Engineer', color: 'bg-violet-500' },
       { name: 'Carlos Rivera', role: 'Content Director', color: 'bg-fuchsia-500' },
-    ],
-  },
-];
-
-export const allProjects: Project[] = [
-  {
-    title: 'AI Telemedicine Platform',
-    industryName: 'Healthcare',
-    industryDescription: industries[0].description,
-    description: 'An AI-powered diagnostic assistant for remote healthcare delivery in underserved areas.',
-    problem: industries[0].problem,
-    valueProposition: industries[0].valueProposition,
-    team: industries[0].team,
-    domains: ['AI', 'SaaS', 'HealthTech'],
-    features: ['Offline Mode', 'AI Diagnostics', 'Real-time Sync', 'HIPAA Compliant', 'Multi-language', 'Cloud Backup'],
-    timeline: [
-      { stage: 'Concept', date: 'Jan 2024', status: 'complete' },
-      { stage: 'Development', date: 'Mar 2024', status: 'complete' },
-      { stage: 'Private Beta', date: 'Nov 2024', status: 'current' },
-      { stage: 'Live', date: 'Q1 2025', status: 'future' },
-      { stage: 'Scale', date: 'Q3 2025', status: 'future' },
-    ],
-  },
-  {
-    title: 'Micro-Lending Blockchain',
-    industryName: 'FinTech',
-    industryDescription: industries[1].description,
-    description: 'Blockchain-based microfinancing with AI credit scoring for emerging markets.',
-    problem: industries[1].problem,
-    valueProposition: industries[1].valueProposition,
-    team: industries[1].team,
-    domains: ['Blockchain', 'DeFi', 'Web3'],
-    features: ['Smart Contracts', 'AI Credit Score', 'Multi-currency', 'KYC Integration', 'Mobile First', 'Low Fees'],
-    timeline: [
-      { stage: 'Concept', date: 'Feb 2024', status: 'complete' },
-      { stage: 'Development', date: 'May 2024', status: 'complete' },
-      { stage: 'Beta', date: 'Dec 2024', status: 'current' },
-      { stage: 'Launch', date: 'Q2 2025', status: 'future' },
-      { stage: 'Expand', date: 'Q4 2025', status: 'future' },
-    ],
-  },
-  {
-    title: 'Smart Carbon Capture',
-    industryName: 'CleanTech',
-    industryDescription: industries[2].description,
-    description: 'IoT-enabled carbon capture system with real-time analytics and credit generation.',
-    problem: industries[2].problem,
-    valueProposition: industries[2].valueProposition,
-    team: industries[2].team,
-    domains: ['IoT', 'CleanTech', 'AI'],
-    features: ['Real-time Monitor', 'Carbon Credits', 'Predictive AI', 'Dashboard', 'API Access', 'Compliance'],
-    timeline: [
-      { stage: 'Research', date: 'Mar 2024', status: 'complete' },
-      { stage: 'Prototype', date: 'Jul 2024', status: 'complete' },
-      { stage: 'Pilot', date: 'Jan 2025', status: 'current' },
-      { stage: 'Deploy', date: 'Q3 2025', status: 'future' },
-      { stage: 'Scale', date: 'Q1 2026', status: 'future' },
-    ],
-  },
-  {
-    title: 'Adaptive STEM Learning',
-    industryName: 'EdTech',
-    industryDescription: industries[3].description,
-    description: 'AI tutor platform with personalized learning paths for global STEM education.',
-    problem: industries[3].problem,
-    valueProposition: industries[3].valueProposition,
-    team: industries[3].team,
-    domains: ['EdTech', 'AI', 'Mobile'],
-    features: ['Adaptive Learning', 'Progress Track', 'Gamification', 'Offline Mode', 'Teacher Tools', 'Analytics'],
-    timeline: [
-      { stage: 'Design', date: 'Apr 2024', status: 'complete' },
-      { stage: 'Build', date: 'Aug 2024', status: 'complete' },
-      { stage: 'Testing', date: 'Feb 2025', status: 'current' },
-      { stage: 'Release', date: 'Q2 2025', status: 'future' },
-      { stage: 'Global', date: 'Q4 2025', status: 'future' },
     ],
   },
 ];

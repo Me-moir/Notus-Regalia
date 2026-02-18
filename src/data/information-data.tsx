@@ -15,7 +15,8 @@ export type InfoContentType =
   | 'licenses' 
   | 'terms' 
   | 'policies' 
-  | 'disclaimer';
+  | 'disclaimer'
+  | 'report';
 
 export interface ContentData {
   title: string;
@@ -76,6 +77,12 @@ export const informationGrids: InformationGrid[] = [
     icon: 'bi-exclamation-triangle',
     title: 'Disclaimer',
     description: 'Legal disclaimers and limitations'
+  },
+  {
+    id: 'report',
+    icon: 'bi-flag',
+    title: 'Report',
+    description: 'Report problems and contact our legal team'
   }
 ];
 
@@ -334,6 +341,41 @@ export const contentData: Record<string, ContentData> = {
         content: [
           'We reserve the right to modify or discontinue any aspect of our services without notice. We are not liable for any modifications or interruptions.',
           'Information on this website is subject to change without notice. Please check back regularly for updates.'
+        ]
+      }
+    ]
+  },
+  'report': {
+    title: 'Report a Problem',
+    icon: 'bi-flag',
+    sections: [
+      {
+        heading: 'Report an Issue',
+        content: [
+          'If you have encountered a problem with our website, services, or content, please let us know. We take all reports seriously and will investigate promptly.',
+          'When submitting a report, please include as much detail as possible, including the nature of the issue, any relevant URLs, screenshots, and the date and time the issue occurred.'
+        ]
+      },
+      {
+        heading: 'Contact Our Legal Team',
+        content: [
+          'For legal inquiries, intellectual property concerns, DMCA takedown requests, or regulatory matters, please contact our legal department at legal@notosphere.com.',
+          'Our legal team is available to address concerns related to compliance, data protection, contractual disputes, and any other legal matters pertaining to Notosphere and its ventures.'
+        ]
+      },
+      {
+        heading: 'Report Categories',
+        content: [
+          'Security Vulnerabilities — If you have identified a security vulnerability, please report it responsibly. Do not disclose the vulnerability publicly before it has been addressed.',
+          'Content Issues — Report inaccurate, misleading, or inappropriate content found on our platform. Include the specific URL and a description of the concern.',
+          'Abuse & Misconduct — Report any suspected misuse of our services, harassment, fraud, or violations of our Terms of Service or Acceptable Use Policy.'
+        ]
+      },
+      {
+        heading: 'What Happens After You Report',
+        content: [
+          'All reports are reviewed by our team within 48 business hours. You will receive an acknowledgment of your report along with a reference number for tracking purposes.',
+          'We may follow up with you for additional information. Reports are handled confidentially and in accordance with applicable laws and our privacy policies.'
         ]
       }
     ]

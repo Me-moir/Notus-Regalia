@@ -72,7 +72,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 style={{
                   background: 'var(--gradient-card)',
                   borderBottom: index < 4 ? '1px dashed var(--border-dashed)' : 'none',
-                  borderRight: (index === 0 || index === 1 || index === 2 || index === 4 || index === 5) ? '1px dashed var(--border-dashed)' : 'none',
+                  borderRight: (index === 0 || index === 1 || index === 2 || index === 4 || index === 5 || index === 6) ? '1px dashed var(--border-dashed)' : 'none',
                 }}
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
