@@ -36,11 +36,12 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Discover',
     icon: 'bi-rocket-takeoff',
     subtabs: [
-      { id: 'discover-hero',     label: 'Home',     sectionId: 'section-hero' },
-      { id: 'discover-about',    label: 'About',    sectionId: 'section-about' },
-      { id: 'discover-features', label: 'Features', sectionId: 'section-features' },
-      { id: 'discover-team',     label: 'Team',     sectionId: 'section-team' },
-      { id: 'discover-contact',  label: 'Contact',  sectionId: 'section-contact' },
+      { id: 'discover-overview',      label: 'Overview',      sectionId: 'section-overview' },
+      { id: 'discover-about',         label: 'About',         sectionId: 'section-about' },
+      { id: 'discover-direction',     label: 'Direction',     sectionId: 'section-direction' },
+      { id: 'discover-team',          label: 'Team',          sectionId: 'section-team' },
+      { id: 'discover-governance',    label: 'Governance',    sectionId: 'section-governance' },
+      { id: 'discover-affiliations',  label: 'Affiliations',  sectionId: 'section-affiliations' },
     ],
   },
   {
@@ -48,10 +49,13 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Information',
     icon: 'bi-pin',
     subtabs: [
-      { id: 'info-docs',      label: 'Docs' },
-      { id: 'info-faq',       label: 'FAQ' },
-      { id: 'info-blog',      label: 'Blog' },
-      { id: 'info-changelog', label: 'Changelog' },
+      { id: 'info-releases',      label: 'Releases' },
+      { id: 'info-media',         label: 'Media' },
+      { id: 'info-attributions',  label: 'Attributions' },
+      { id: 'info-licenses',      label: 'Licenses' },
+      { id: 'info-terms',         label: 'Terms' },
+      { id: 'info-policies',      label: 'Policies' },
+      { id: 'info-disclaimer',    label: 'Disclaimer' },
     ],
   },
   {
@@ -139,7 +143,9 @@ const NAVBAR_CSS = `
 .glass-navbar:hover::before { opacity: 1; }
 
 /* ─── Logo ─── */
-.logo-mark { display:flex; align-items:center; gap:12px; text-decoration:none; user-select:none; }
+.logo-mark { display:flex; align-items:center; gap:12px; text-decoration:none; user-select:none; transition: transform 0.25s cubic-bezier(0.34,1.18,0.64,1); }
+.logo-mark:hover { transform: scale(1.08); }
+.logo-mark:active { transform: scale(1.02); }
 .logo-icon {
   width:38px; height:38px; border-radius:10px;
   background: linear-gradient(135deg,#1a1a1a 0%,#0d0d0d 60%,#111 100%);
@@ -834,8 +840,13 @@ const Navbar = ({
       <nav ref={navContainerRef} className="glass-navbar">
         <div className="w-full flex items-center" style={barStyle}>
 
-          {/* Logo */}
-          <div className="logo-mark flex-shrink-0">
+          {/* Logo — clickable, navigates to Landing page */}
+          <button
+            className="logo-mark flex-shrink-0"
+            onClick={() => { handleTabClick('home'); closeExpand(); }}
+            style={{ cursor: 'pointer', border: 'none', background: 'transparent', padding: 0 }}
+            aria-label="Go to home page"
+          >
             <div className="logo-icon">
               <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z"/>
@@ -843,7 +854,7 @@ const Navbar = ({
             </div>
             {!isMobile && <div className="logo-text">Noto<span>sphere</span></div>}
             {isMobile && <div className="logo-text" style={{ fontSize: '0.85rem' }}>Noto<span>sphere</span></div>}
-          </div>
+          </button>
 
           <div className="nav-divider desktop-only" style={{ height: '28px', alignSelf: 'center' }} />
 

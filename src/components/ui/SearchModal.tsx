@@ -18,19 +18,19 @@ interface SectionItem {
 }
 
 const FREQUENT: SectionItem[] = [
-  { label: 'Home',        tabId: 'discover',    subtabId: 'discover-hero',     icon: 'bi-house' },
-  { label: 'About',       tabId: 'discover',    subtabId: 'discover-about',    icon: 'bi-info-circle' },
-  { label: 'Features',    tabId: 'discover',    subtabId: 'discover-features', icon: 'bi-stars' },
-  { label: 'Team',        tabId: 'discover',    subtabId: 'discover-team',     icon: 'bi-people' },
-  { label: 'Information', tabId: 'information',                                icon: 'bi-pin' },
+  { label: 'Home',         tabId: 'home',                                          icon: 'bi-house' },
+  { label: 'Overview',     tabId: 'discover',    subtabId: 'discover-overview',     icon: 'bi-grid' },
+  { label: 'About',        tabId: 'discover',    subtabId: 'discover-about',        icon: 'bi-info-circle' },
+  { label: 'Team',         tabId: 'discover',    subtabId: 'discover-team',         icon: 'bi-people' },
+  { label: 'Information',  tabId: 'information',                                    icon: 'bi-pin' },
 ];
 
 const SUGGESTED: SectionItem[] = [
-  { label: 'Contact',   tabId: 'discover',    subtabId: 'discover-contact', icon: 'bi-envelope' },
-  { label: 'Ventures',  tabId: 'ventures',                                  icon: 'bi-crosshair' },
-  { label: 'Docs',      tabId: 'information', subtabId: 'info-docs',        icon: 'bi-file-earmark-text' },
-  { label: 'FAQ',       tabId: 'information', subtabId: 'info-faq',         icon: 'bi-question-circle' },
-  { label: 'Changelog', tabId: 'information', subtabId: 'info-changelog',   icon: 'bi-clock-history' },
+  { label: 'Direction',     tabId: 'discover',    subtabId: 'discover-direction',     icon: 'bi-compass' },
+  { label: 'Governance',    tabId: 'discover',    subtabId: 'discover-governance',    icon: 'bi-bank' },
+  { label: 'Affiliations',  tabId: 'discover',    subtabId: 'discover-affiliations',  icon: 'bi-diagram-3' },
+  { label: 'Ventures',      tabId: 'ventures',                                        icon: 'bi-crosshair' },
+  { label: 'Releases',      tabId: 'information', subtabId: 'info-releases',           icon: 'bi-megaphone' },
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════

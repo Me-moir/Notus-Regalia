@@ -58,10 +58,11 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
             border: '1px dashed var(--border-dashed)'
           }}
         >
-          {/* 4x2 Grid */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-0">
+          {/* Grid: 4 cols on first row, 3 cols on second row */}
+          <div className="grid grid-cols-4 gap-0">
           {informationGrids.map((grid, index) => {
             const isActive = activeContent === grid.id;
+            const isLastRow = index >= 4;
             
             return (
               <button
@@ -71,7 +72,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 style={{
                   background: 'var(--gradient-card)',
                   borderBottom: index < 4 ? '1px dashed var(--border-dashed)' : 'none',
-                  borderRight: (index + 1) % 4 !== 0 ? '1px dashed var(--border-dashed)' : 'none'
+                  borderRight: (index === 0 || index === 1 || index === 2 || index === 4 || index === 5) ? '1px dashed var(--border-dashed)' : 'none',
                 }}
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();

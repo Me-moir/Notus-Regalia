@@ -5,13 +5,13 @@ import Navbar from './Navbar';
 import MainContent from './MainContent';
 import Footer from './Footer';
 
-type TabType = 'discover' | 'information' | 'affiliations' | 'ventures';
+type TabType = 'home' | 'discover' | 'information' | 'affiliations' | 'ventures';
 
-const VALID_TABS: TabType[] = ['discover', 'information', 'affiliations', 'ventures'];
+const VALID_TABS: TabType[] = ['home', 'discover', 'information', 'affiliations', 'ventures'];
 
 const ClientWrapper = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabType>('discover');
+  const [activeTab, setActiveTab] = useState<TabType>('home');
 
   const isValidTab = useCallback((tab: string): tab is TabType => {
     return VALID_TABS.includes(tab as TabType);
@@ -52,7 +52,7 @@ const ClientWrapper = () => {
       if (tab && isValidTab(tab)) {
         setActiveTab(tab);
       } else {
-        setActiveTab('discover');
+        setActiveTab('home');
       }
     };
 
@@ -64,7 +64,11 @@ const ClientWrapper = () => {
     if (tab === activeTab) return;
     setActiveTab(tab);
     const url = new URL(window.location.href);
-    url.searchParams.set('tab', tab);
+    if (tab === 'home') {
+      url.searchParams.delete('tab');
+    } else {
+      url.searchParams.set('tab', tab);
+    }
     window.history.pushState({ tab }, '', url);
   }, [activeTab]);
 

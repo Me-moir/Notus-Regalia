@@ -224,32 +224,18 @@ const Information = memo(() => {
             </Suspense>
           </div>
 
-          {/* Privacy */}
+          {/* Policies (Privacy + Use Policy combined) */}
           <div style={{
-            position: activeContent === 'privacy' ? 'relative' : 'absolute',
+            position: activeContent === 'policies' ? 'relative' : 'absolute',
             top: 0,
             left: 0,
             right: 0,
-            opacity: activeContent === 'privacy' ? 1 : 0,
-            pointerEvents: activeContent === 'privacy' ? 'auto' : 'none',
+            opacity: activeContent === 'policies' ? 1 : 0,
+            pointerEvents: activeContent === 'policies' ? 'auto' : 'none',
             transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           }}>
             <Suspense fallback={<LoadingFallback />}>
               <Privacy isTransitioning={isTransitioning} />
-            </Suspense>
-          </div>
-
-          {/* Acceptable Use */}
-          <div style={{
-            position: activeContent === 'acceptable-use' ? 'relative' : 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            opacity: activeContent === 'acceptable-use' ? 1 : 0,
-            pointerEvents: activeContent === 'acceptable-use' ? 'auto' : 'none',
-            transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}>
-            <Suspense fallback={<LoadingFallback />}>
               <UsePolicy isTransitioning={isTransitioning} />
             </Suspense>
           </div>

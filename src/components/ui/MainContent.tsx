@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
 // Lazy load tab components for code splitting
+const LandingTab = lazy(() => import('@/components/tabs/Landing'));
 const DiscoverTab = lazy(() => import('@/components/tabs/Discover'));
 const VenturesTab = lazy(() => import('@/components/tabs/Ventures'));
 const InformationTab = lazy(() => import('@/components/tabs/Information'));
@@ -22,26 +23,7 @@ const TabLoadingFallback = () => (
 
 const MainContent = ({ activeTab }: MainContentProps) => {
   const [displayedTab, setDisplayedTab] = useState(activeTab);
-  const [activeCardIndex, setActiveCardIndex] = useState(1);
-  const [textAnimationKey, setTextAnimationKey] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const prevCardIndexRef = useRef(1);
   const mainContentRef = useRef<HTMLDivElement>(null);
-
-  // Handle vanish animation when activeCardIndex changes
-  useEffect(() => {
-    if (activeCardIndex !== prevCardIndexRef.current) {
-      setTextAnimationKey(prev => prev + 1);
-      setIsAnimating(true);
-      prevCardIndexRef.current = activeCardIndex;
-      
-      const timer = setTimeout(() => {
-        setIsAnimating(false);
-      }, 500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [activeCardIndex]);
 
   // Handle tab transitions with smooth animation
   useEffect(() => {
@@ -55,8 +37,8 @@ const MainContent = ({ activeTab }: MainContentProps) => {
 
   // 🎯 HYPER-FOCUSED: Mouse tracking ONLY on specific elements that need it
   useEffect(() => {
-    // Only run on 'discover' tab (DiscoverTab with interactive elements)
-    if (displayedTab !== 'discover') return;
+    // Only run on 'home' tab (LandingTab with interactive elements)
+    if (displayedTab !== 'home') return;
 
     const listeners: Array<{ element: Element; handler: EventListener }> = [];
     let rafId: number | null = null;
@@ -154,15 +136,10 @@ const MainContent = ({ activeTab }: MainContentProps) => {
 
   const renderContent = () => {
     switch (displayedTab) {
+      case 'home':
+        return <LandingTab />;
       case 'discover':
-        return (
-          <DiscoverTab
-            activeCardIndex={activeCardIndex}
-            setActiveCardIndex={setActiveCardIndex}
-            textAnimationKey={textAnimationKey}
-            isAnimating={isAnimating}
-          />
-        );
+        return <DiscoverTab />;
       case 'ventures':
         return <VenturesTab />;
       case 'information':

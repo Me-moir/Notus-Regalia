@@ -14,8 +14,7 @@ export type InfoContentType =
   | 'attributions' 
   | 'licenses' 
   | 'terms' 
-  | 'privacy' 
-  | 'acceptable-use' 
+  | 'policies' 
   | 'disclaimer';
 
 export interface ContentData {
@@ -39,14 +38,14 @@ export const informationGrids: InformationGrid[] = [
   {
     id: 'statements',
     icon: 'bi-megaphone',
-    title: 'Statements & Notices',
-    description: 'Official announcements and important notices'
+    title: 'Releases',
+    description: 'Statements, announcements, and important notices'
   },
   {
     id: 'news',
     icon: 'bi-newspaper',
-    title: 'News & Media',
-    description: 'Latest updates and media coverage'
+    title: 'Media',
+    description: 'Latest news and media coverage'
   },
   {
     id: 'attributions',
@@ -63,20 +62,14 @@ export const informationGrids: InformationGrid[] = [
   {
     id: 'terms',
     icon: 'bi-file-earmark-ruled',
-    title: 'Terms & Conditions',
+    title: 'Terms',
     description: 'Terms of service and usage agreements'
   },
   {
-    id: 'privacy',
+    id: 'policies',
     icon: 'bi-shield-check',
-    title: 'Privacy & Cookie Policy',
-    description: 'Data protection and privacy practices'
-  },
-  {
-    id: 'acceptable-use',
-    icon: 'bi-check-circle',
-    title: 'Acceptable Use Policy',
-    description: 'Guidelines for proper platform usage'
+    title: 'Policies',
+    description: 'Privacy, cookie, and acceptable use policies'
   },
   {
     id: 'disclaimer',
@@ -156,7 +149,7 @@ export const statements: Statement[] = [
 ];
 
 // Content Data for each Information Hub section
-export const contentData: Record<InfoContentType, ContentData> = {
+export const contentData: Record<string, ContentData> = {
   'statements': {
     title: 'Statements & Notices',
     icon: 'bi-megaphone',

@@ -232,7 +232,7 @@ const HeroSection = () => {
         />
 
         {/* Content */}
-        <div className="relative z-10 w-full px-8 lg:px-14 xl:px-20 flex flex-col gap-8">
+        <div className="relative z-10 w-full px-8 lg:px-14 xl:px-20 flex flex-col gap-8" style={{ marginTop: '5vh' }}>
           {/* Status Bar */}
           <div
             className="inline-flex items-center gap-2.5 pointer-events-auto status-pill"

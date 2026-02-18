@@ -167,28 +167,28 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   const sidebarSections: SidebarSection[] = [
     {
-      title: 'Home',
+      title: 'Overview',
       items: []
     },
     {
-      title: 'Who we are',
-      items: ['About us', 'The Organization', 'Vision', 'Ventures', 'Approach']
+      title: 'About',
+      items: []
     },
     {
-      title: 'What we do',
-      items: ["The Fool's Sandbox Program"]
+      title: 'Direction',
+      items: []
     },
     {
-      title: 'Official Affiliates',
-      items: ['Partners', 'Sponsors', 'Licenses']
+      title: 'Team',
+      items: []
     },
     {
-      title: 'Reach Out',
-      items: ['Contact', 'Support', 'Feedback']
+      title: 'Governance',
+      items: []
     },
     {
-      title: 'Community',
-      items: ['Contribute', 'Build With Us', 'Become a Fool']
+      title: 'Affiliations',
+      items: []
     }
   ];
 
