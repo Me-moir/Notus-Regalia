@@ -11,9 +11,9 @@ interface ContentSectionProps {
 const ContentSection = memo(({ content, isTransitioning = false }: ContentSectionProps) => {
   return (
     <div className="px-4 sm:px-8 lg:px-20 py-8 sm:py-12 lg:py-16">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* id used by Information.tsx autoscroll to land exactly at the title */}
-        <div id="info-section-title">
+        <div>
           <ContentHeader
             icon={content.icon}
             title={content.title}

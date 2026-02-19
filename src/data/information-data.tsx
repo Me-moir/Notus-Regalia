@@ -204,15 +204,7 @@ export const contentData: Record<string, ContentData> = {
       {
         heading: 'Acknowledgments',
         content: [
-          'We acknowledge and express gratitude to all contributors, partners, and open-source projects that have supported our journey.',
-          'This section recognizes the individuals and organizations whose work and collaboration have been instrumental to our success.'
-        ]
-      },
-      {
-        heading: 'Third-Party Resources',
-        content: [
-          'We utilize various third-party libraries, frameworks, and resources in our projects. Full attribution details are provided for transparency.',
-          'Icons provided by Bootstrap Icons. Animations and effects built with modern web technologies and best practices.'
+          'We acknowledge and extend our gratitude to the creators and organizations behind the resources that made our projects possible.'
         ]
       }
     ]

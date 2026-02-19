@@ -245,14 +245,7 @@ const InformationHero = memo(() => {
         </motion.div>
       </div>
 
-      {/* Bottom fade */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to bottom, transparent, var(--surface-primary))',
-          zIndex: 11,
-        }}
-      />
+      {/* Bottom fade removed to avoid unwanted white gradient */}
     </section>
   );
 });

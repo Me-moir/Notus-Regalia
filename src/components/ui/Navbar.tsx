@@ -318,7 +318,7 @@ const NAVBAR_CSS = `
 .mob-subtab-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 11px 20px 11px 50px; border: none; background: transparent; color: var(--content-faint); font-size: 0.84rem; font-weight: 400; cursor: pointer; transition: color 0.12s ease, background 0.12s ease; user-select: none; }
 .mob-subtab-btn:hover { color: var(--content-primary); background: var(--hover-bg); }
 .mob-subtab-btn.is-active { color: var(--content-primary); font-weight: 600; position: relative; }
-.mob-subtab-btn.is-active::before { content: ''; position: absolute; left: 36px; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; border-radius: 50%; background: rgba(0,255,166,0.8); }
+.mob-subtab-btn.is-active::before { content: ''; position: absolute; left: 36px; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.8); }
 
 /* ══════════════════════════════════════════════════════════════════════════
    INFO HUB EXTENSION
@@ -342,8 +342,6 @@ const NAVBAR_CSS = `
   pointer-events: auto;
 }
 .info-hub-clip { overflow: hidden; min-height: 0; }
-
-
 
 /* ── BIG CARD GRID ── */
 .info-hub-expanded {
@@ -374,12 +372,14 @@ const NAVBAR_CSS = `
 }
 .info-hub-card:last-child { border-right: none; }
 .info-hub-card:hover:not(.card-active) { background: rgba(255,255,255,0.025); }
-.info-hub-card.card-active { background: rgba(0,255,166,0.05); }
+  /* Active card: subtle neutral/lightened background (no purple grid) */
+  .info-hub-card.card-active { background: rgba(255,255,255,0.03); }
 
 /* Radial spotlight on hover (non-active) */
 .card-hover-spot {
   position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(180px circle at var(--cx,50%) var(--cy,50%), rgba(0,255,166,0.07), transparent 70%);
+  /* hover spotlight uses a neutral subtle highlight instead of purple */
+  background: radial-gradient(180px circle at var(--cx,50%) var(--cy,50%), rgba(255,255,255,0.04), transparent 70%);
   opacity: 0; transition: opacity 0.18s ease; z-index: 1;
 }
 .info-hub-card:not(.card-active):hover .card-hover-spot { opacity: 1; }
@@ -394,7 +394,7 @@ const NAVBAR_CSS = `
   transition: color 0.18s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1);
 }
 .info-hub-card.card-active .info-hub-card-icon {
-  color: rgba(0,255,166,0.9);
+  color: #ffffff;
   transform: translateY(-3px);
 }
 
@@ -404,7 +404,7 @@ const NAVBAR_CSS = `
   transition: color 0.18s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1);
 }
 .info-hub-card.card-active .info-hub-card-title {
-  color: var(--content-primary);
+  color: #ffffff;
   transform: translateY(-3px);
 }
 
@@ -414,7 +414,7 @@ const NAVBAR_CSS = `
   transition: color 0.18s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1);
 }
 .info-hub-card.card-active .info-hub-card-desc {
-  color: var(--content-secondary);
+  color: #ffffff;
   transform: translateY(-3px);
 }
 
@@ -435,14 +435,18 @@ const NAVBAR_CSS = `
 .info-hub-slim-inner {
   display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; height: 48px;
   border-top: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
 }
 .info-hub-slim-inner::-webkit-scrollbar { display: none; }
 
+/* ── Info Hub label — wider to distinguish as non-active ── */
 .info-slim-label {
   display: flex; align-items: center; gap: 7px;
-  padding: 0 18px 0 22px; flex-shrink: 0;
+  padding: 0 40px 0 40px; flex-shrink: 0;
   border-right: 1px solid var(--border-color);
+  min-width: 210px;
 }
+  
 .info-slim-label span {
   font-size: 0.67rem; font-weight: 700; letter-spacing: 0.15em;
   text-transform: uppercase; color: var(--content-muted); white-space: nowrap;
@@ -456,14 +460,34 @@ const NAVBAR_CSS = `
   transition: color 0.14s ease, background 0.14s ease;
   border-right: 1px solid var(--border-color); letter-spacing: 0.01em;
 }
-.info-slim-tab:last-of-type { border-right: none; }
 .info-slim-tab:hover { color: var(--content-primary); background: rgba(255,255,255,0.04); }
-.info-slim-tab.slim-active { color: rgba(0,255,166,0.95); background: rgba(0,255,166,0.05); }
+.info-slim-tab.slim-active { color: #ffffff; background: rgba(255,255,255,0.03); }
 .info-slim-tab.slim-active::after {
   content: ''; position: absolute; bottom: 0; left: 14px; right: 14px;
   height: 2px; border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(0,255,166,0.9), rgba(255,215,0,0.5), transparent);
+  /* Use the full site gradient colors for the underline */
+  background: linear-gradient(90deg, transparent 0%, rgba(0,255,166,0.8) 15%, rgba(255,215,0,0.6) 30%, rgba(236,72,153,0.6) 45%, rgba(147,51,234,0.6) 60%, rgba(59,130,246,0.5) 75%, transparent 90%);
   background-size: 200% 100%; animation: orbitBorder 2.5s linear infinite;
+}
+
+/* ── Slim expand arrow button ── */
+.info-slim-expand {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 18px; border: none; background: transparent;
+  color: var(--content-muted); cursor: pointer; flex-shrink: 0;
+  transition: color 0.14s ease, background 0.14s ease, transform 0.2s ease;
+  border-left: 1px solid var(--border-color);
+  margin-left: auto;
+}
+.info-slim-expand:hover {
+  color: var(--content-primary);
+  background: rgba(255,255,255,0.03);
+}
+.info-slim-expand i {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.info-slim-expand:hover i {
+  transform: translateY(-2px);
 }
 
 @media (max-width: 640px) {
@@ -472,8 +496,9 @@ const NAVBAR_CSS = `
   .info-hub-card-icon { font-size: 1.2rem; }
   .info-hub-card-desc { display: none; }
   .info-hub-expanded.state-visible { max-height: 380px; }
-  .info-slim-label { padding: 0 12px 0 14px; }
+  .info-slim-label { padding: 0 14px 0 14px; min-width: auto; }
   .info-slim-tab { padding: 0 13px; font-size: 0.74rem; }
+  .info-slim-expand { padding: 0 14px; }
 }
 `;
 
@@ -511,6 +536,7 @@ const Navbar = ({
     if (isInfoActive) setHubExpanded(true);
   }, [isInfoActive]);
 
+  // Collapse card grid when scrolling down
   useEffect(() => {
     if (!isInfoActive) return;
     lastScrollYRef.current = window.scrollY;
@@ -531,6 +557,21 @@ const Navbar = ({
       if (scrollRafRef.current !== null) cancelAnimationFrame(scrollRafRef.current);
     };
   }, [isInfoActive]);
+
+  // Click outside collapses the expanded card grid
+  useEffect(() => {
+    if (!isInfoActive || !hubExpanded) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        navContainerRef.current &&
+        !navContainerRef.current.contains(e.target as Node)
+      ) {
+        setHubExpanded(false);
+      }
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [isInfoActive, hubExpanded]);
 
   useEffect(() => {
     let t: ReturnType<typeof setTimeout>;
@@ -619,10 +660,10 @@ const Navbar = ({
     }
   }, [setActiveTab, onSubtabClick]);
 
-const handleInfoCardClick = useCallback((content: InfoContentType) => {
-  onInfoContentChange?.(content);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}, [onInfoContentChange]);
+  const handleInfoCardClick = useCallback((content: InfoContentType) => {
+    onInfoContentChange?.(content);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [onInfoContentChange]);
 
   const handleInfoArrowClick = useCallback(() => {
     if (isInfoActive) {
@@ -773,7 +814,7 @@ const handleInfoCardClick = useCallback((content: InfoContentType) => {
                           style={{
                             fontSize: '0.62rem',
                             color: isInfoItem && isInfoActive && !hubExpanded
-                              ? 'rgba(0,255,166,0.7)'
+                              ? 'rgba(255,255,255,0.75)'
                               : 'var(--content-secondary)',
                             transition: 'color 0.2s ease',
                           }}
@@ -832,8 +873,6 @@ const handleInfoCardClick = useCallback((content: InfoContentType) => {
         <div className={`info-hub-outer${isInfoActive ? ' hub-visible' : ''}`}>
           <div className="info-hub-clip">
 
-
-
             {/* BIG CARD GRID */}
             <div className={`info-hub-expanded${hubExpanded ? ' state-visible' : ' state-hidden'}`}>
               <div className="info-hub-grid">
@@ -851,7 +890,6 @@ const handleInfoCardClick = useCallback((content: InfoContentType) => {
                         e.currentTarget.style.setProperty('--cy', `${e.clientY - r.top}px`);
                       }}
                     >
-                      {/* No edge spans — gradient outline animation removed */}
                       <span className="card-hover-spot" aria-hidden />
                       <span className="card-content">
                         <i className={`bi ${grid.icon} info-hub-card-icon`} />
@@ -867,10 +905,14 @@ const handleInfoCardClick = useCallback((content: InfoContentType) => {
             {/* SLIM TAB ROW */}
             <div className={`info-hub-slim${!hubExpanded ? ' state-visible' : ' state-hidden'}`}>
               <div className="info-hub-slim-inner">
-                <div className="info-slim-label">
-                  <i className="bi bi-pin" style={{ fontSize: '0.7rem', color: 'rgba(0,255,166,0.55)' }} />
+
+                {/* Wider label box to distinguish it as non-interactive */}
+                <div className="info-slim-label" style={{ color: 'var(--content-muted)' }}>
+                  <i className="bi bi-pin" style={{ fontSize: '0.7rem', color: 'currentColor' }} />
                   <span>Info Hub</span>
                 </div>
+
+                {/* Tab buttons */}
                 {informationGrids.map((grid) => {
                   const isActive = activeInfoContent === grid.id;
                   return (
@@ -884,6 +926,17 @@ const handleInfoCardClick = useCallback((content: InfoContentType) => {
                     </button>
                   );
                 })}
+
+                {/* Expand arrow — rightmost, expands the card grid */}
+                <button
+                  className="info-slim-expand"
+                  onClick={() => setHubExpanded(true)}
+                  aria-label="Expand Info Hub"
+                  title="Expand Info Hub"
+                >
+                  <i className="bi bi-chevron-down" style={{ fontSize: '0.68rem' }} />
+                </button>
+
               </div>
             </div>
 

@@ -63,7 +63,6 @@ const Information = memo(({ activeContent, onContentChange }: InformationProps) 
       <InformationHero />
 
       <div
-        id="info-content-section"
         className="relative overflow-hidden mb-20"
         style={{
           background:   'var(--gradient-section)',

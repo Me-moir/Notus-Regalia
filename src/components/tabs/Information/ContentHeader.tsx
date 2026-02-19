@@ -17,7 +17,7 @@ const ContentHeader = memo(({ icon, title, isTransitioning = false }: ContentHea
         transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
-      <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+<div className="flex items-center justify-center gap-3 sm:gap-4 mb-3 sm:mb-4">
         <div
           className="text-2xl sm:text-3xl lg:text-4xl"
           style={{
