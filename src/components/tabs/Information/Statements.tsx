@@ -4,7 +4,7 @@ import { statements, type Statement } from '@/data/information-data';
 import styles from '@/styles/ui.module.css';
 import ContentHeader from './ContentHeader';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 interface StatementsProps {
   isTransitioning?: boolean;
@@ -47,7 +47,7 @@ const StatementAccordionItem = memo(({ statement, isOpen, onToggle }: StatementA
           aria-expanded={isOpen}
         >
           <div className="flex items-start justify-between gap-4 mb-3">
-            <h3 className="flex-1 line-clamp-2 pr-4 font-semibold text-sm sm:text-base leading-tight transition-colors duration-300" style={{ color: 'var(--content-secondary)' }}
+            <h3 className="flex-1 line-clamp-2 pr-4 font-semibold text-base sm:text-lg lg:text-xl leading-tight transition-colors duration-300" style={{ color: 'var(--content-secondary)' }}
               onMouseEnter={(e) => e.currentTarget.style.color = 'var(--content-primary)'}
               onMouseLeave={(e) => e.currentTarget.style.color = 'var(--content-secondary)'}
             >
@@ -101,7 +101,7 @@ const StatementAccordionItem = memo(({ statement, isOpen, onToggle }: StatementA
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs sm:text-sm font-medium" style={{ color: 'var(--content-muted)' }}>{statement.date}</span>
+            <span className="text-sm sm:text-base font-medium" style={{ color: 'var(--content-muted)' }}>{statement.date}</span>
             <span style={{ color: 'var(--content-tertiary)' }}>•</span>
             <div className="flex flex-wrap gap-2">
               {statement.tags.slice(0, 3).map((tag, idx) => (
@@ -127,7 +127,7 @@ const StatementAccordionItem = memo(({ statement, isOpen, onToggle }: StatementA
           }`}
         >
           <div className="pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-            <p className="text-xs sm:text-sm leading-relaxed line-clamp-5" style={{ color: 'var(--content-muted)' }}>
+            <p className="text-sm sm:text-base lg:text-lg leading-relaxed line-clamp-5" style={{ color: 'var(--content-muted)' }}>
               {statement.content}
             </p>
           </div>
@@ -143,26 +143,6 @@ const Statements = memo(({ isTransitioning = false }: StatementsProps) => {
   const [openStatementId, setOpenStatementId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const searchInputRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const searchInput = searchInputRef.current;
-    if (!searchInput) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const currentInput = searchInputRef.current;
-      if (!currentInput) return;
-      const rect = currentInput.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      currentInput.style.setProperty('--mouse-x', `${x}px`);
-      currentInput.style.setProperty('--mouse-y', `${y}px`);
-    };
-
-    searchInput.addEventListener('mousemove', handleMouseMove);
-    return () => searchInput.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   const handleToggle = (statementId: string) => {
     setOpenStatementId(prev => prev === statementId ? null : statementId);
@@ -170,12 +150,13 @@ const Statements = memo(({ isTransitioning = false }: StatementsProps) => {
 
   const filteredStatements = useMemo(() => {
     if (!searchQuery.trim()) return statements;
-    
+
     const query = searchQuery.toLowerCase();
-    return statements.filter((statement) => 
+    return statements.filter((statement) =>
       statement.title.toLowerCase().includes(query) ||
       statement.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      statement.content.toLowerCase().includes(query)
+      statement.content.toLowerCase().includes(query) ||
+      statement.date.toLowerCase().includes(query)
     );
   }, [searchQuery]);
 
@@ -204,35 +185,23 @@ const Statements = memo(({ isTransitioning = false }: StatementsProps) => {
         />
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6 sm:mb-8">
-          <div ref={searchInputRef} className="relative flex-1 sm:max-w-md">
+          <div className="relative flex-1 sm:max-w-md">
             <div 
-              className="relative h-12 sm:h-14 rounded-lg overflow-hidden transition duration-200 group"
+              className="relative h-11 sm:h-12 rounded-[10px] overflow-hidden transition-all duration-200 group"
               style={{
-                backgroundColor: 'var(--button-bg)',
-                boxShadow: 'var(--button-shadow)',
-                border: 'solid 1px var(--button-border)'
+                background: 'transparent',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 var(--glass-inset-top)',
               }}
             >
-              <div 
-                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{
-                  background: 'radial-gradient(150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(34, 197, 94, 0.6), rgba(255, 215, 0, 0.5), rgba(236, 72, 153, 0.5), rgba(147, 51, 234, 0.5), rgba(59, 130, 246, 0.4), transparent 70%)',
-                  padding: '1px',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude',
-                  zIndex: 10
-                }}
-              />
               <div className="relative h-full flex items-center">
-                <i className="bi bi-search absolute left-3 sm:left-4 text-base sm:text-lg pointer-events-none z-10" style={{ color: 'var(--content-muted)' }}></i>
+                <i className="bi bi-search absolute left-3 sm:left-4 text-sm pointer-events-none z-10" style={{ color: 'var(--content-faint)' }}></i>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search statements..."
-                  className="w-full h-full pl-10 sm:pl-12 pr-3 sm:pr-4 bg-transparent border-none text-sm sm:text-base focus:outline-none focus:ring-0 relative z-50"
-                  style={{ color: 'var(--content-secondary)' }}
+                  placeholder="Search statements or year..."
+                  className="w-full h-full pl-10 sm:pl-11 pr-3 sm:pr-4 bg-transparent border-none text-sm sm:text-base font-medium focus:outline-none focus:ring-0"
+                  style={{ color: 'var(--content-faint)' }}
                 />
               </div>
             </div>
@@ -243,90 +212,47 @@ const Statements = memo(({ isTransitioning = false }: StatementsProps) => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all overflow-hidden group"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
                 style={{
-                  backgroundColor: 'var(--button-bg)',
-                  border: '1px solid var(--button-border)',
                   color: 'var(--content-muted)',
-                  boxShadow: 'var(--button-shadow)'
+                  border: '1px solid var(--border-color)',
                 }}
                 aria-label="Previous page"
               >
-                <div 
-                  className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
-                    padding: '1px',
-                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    WebkitMaskComposite: 'xor',
-                    maskComposite: 'exclude',
-                  }}
-                />
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
+                <i className="bi bi-chevron-left" />
               </button>
 
-              <div className="flex items-center gap-1.5">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`relative min-w-[32px] sm:min-w-[36px] h-8 sm:h-9 px-2.5 sm:px-3 flex items-center justify-center rounded-lg font-medium text-xs sm:text-sm transition-all overflow-hidden`}
-                    style={{
-                      backgroundColor: 'var(--button-bg)',
-                      border: currentPage === page ? 'none' : '1px solid var(--button-border)',
-                      color: currentPage === page ? 'var(--content-primary)' : 'var(--content-muted)',
-                      boxShadow: 'var(--button-shadow)'
-                    }}
-                  >
-                    {currentPage === page && (
-                      <div 
-                        className="absolute inset-0 rounded-lg pointer-events-none"
-                        style={{
-                          background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
-                          padding: '1px',
-                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                          WebkitMaskComposite: 'xor',
-                          maskComposite: 'exclude',
-                        }}
-                      />
-                    )}
-                    <span className="relative z-10">{page}</span>
-                  </button>
-                ))}
-              </div>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className="w-8 h-8 rounded-lg text-xs font-medium transition-all"
+                  style={{
+                    background: currentPage === page ? 'var(--content-primary)' : 'transparent',
+                    color: currentPage === page ? 'var(--surface-primary)' : 'var(--content-muted)',
+                    border: currentPage === page ? 'none' : '1px solid var(--border-color)',
+                  }}
+                >
+                  {page}
+                </button>
+              ))}
 
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all overflow-hidden group"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
                 style={{
-                  backgroundColor: 'var(--button-bg)',
-                  border: '1px solid var(--button-border)',
                   color: 'var(--content-muted)',
-                  boxShadow: 'var(--button-shadow)'
+                  border: '1px solid var(--border-color)',
                 }}
                 aria-label="Next page"
               >
-                <div 
-                  className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(150px circle at 50% 50%, rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%)',
-                    padding: '1px',
-                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    WebkitMaskComposite: 'xor',
-                    maskComposite: 'exclude',
-                  }}
-                />
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <i className="bi bi-chevron-right" />
               </button>
             </div>
 
             {filteredStatements.length > 0 && (
-              <div className="text-xs sm:text-sm" style={{ color: 'var(--content-muted)' }}>
+              <div className="text-sm sm:text-base" style={{ color: 'var(--content-muted)' }}>
                 Showing {startIndex + 1}-{Math.min(endIndex, filteredStatements.length)} of {filteredStatements.length} statement{filteredStatements.length !== 1 ? 's' : ''}
               </div>
             )}
@@ -334,7 +260,7 @@ const Statements = memo(({ isTransitioning = false }: StatementsProps) => {
         </div>
 
         {searchQuery && (
-          <div className="mb-4 text-xs sm:text-sm" style={{ color: 'var(--content-muted)' }}>
+          <div className="mb-4 text-sm sm:text-base" style={{ color: 'var(--content-muted)' }}>
             Found {filteredStatements.length} statement{filteredStatements.length !== 1 ? 's' : ''}
           </div>
         )}
@@ -363,8 +289,8 @@ const Statements = memo(({ isTransitioning = false }: StatementsProps) => {
                     <i className="bi bi-cup-hot text-2xl sm:text-3xl" style={{ color: 'var(--content-muted)' }}></i>
                   </div>
                   <div className="text-center">
-                    <p className="text-base sm:text-lg font-medium mb-2" style={{ color: 'var(--content-secondary)' }}>No statements found</p>
-                    <p className="text-xs sm:text-sm" style={{ color: 'var(--content-muted)' }}>Try adjusting your search terms or browse all statements</p>
+                    <p className="text-lg sm:text-xl font-medium mb-2" style={{ color: 'var(--content-secondary)' }}>No statements found</p>
+                    <p className="text-sm sm:text-base" style={{ color: 'var(--content-muted)' }}>Try adjusting your search terms or browse all statements</p>
                   </div>
                 </div>
               </div>

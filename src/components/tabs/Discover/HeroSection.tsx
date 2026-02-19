@@ -14,7 +14,11 @@ const HeroSection = () => {
   return (
     <section
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ background: 'var(--surface-primary)' }}
+      style={{
+        background: 'var(--surface-primary)',
+        // Prevent layout/paint from propagating up the tree on scroll
+        contain: 'layout paint',
+      }}
     >
       <style jsx>{`
         @media (max-width: 768px) {
@@ -149,7 +153,12 @@ const HeroSection = () => {
       {/* Faint grid background — right side, on top of threads */}
       <div
         className="absolute top-0 right-0 w-1/2 h-full pointer-events-none hidden md:block"
-        style={{ zIndex: 4 }}
+        style={{
+          zIndex: 4,
+          // Promote to own compositor layer so it doesn't trigger repaints
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+        }}
       >
         {/* Base grid */}
         <div
@@ -193,15 +202,25 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* Threads Background — renders on top of terminal */}
+      {/* Threads Background — pointer events none to avoid interfering with scroll */}
       <div
         className="absolute inset-0"
-        style={{ width: '100%', height: '100%', zIndex: 2, pointerEvents: 'auto' }}
+        style={{
+          width: '100%',
+          height: '100%',
+          zIndex: 2,
+          // Disable pointer events so scroll isn't blocked/intercepted by the canvas
+          pointerEvents: 'none',
+          // Own compositor layer — prevents the canvas from triggering repaints on other layers
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+        }}
       >
         <Threads
           amplitude={3.5}
           distance={0.3}
-          enableMouseInteraction
+          // Disable mouse interaction — re-enable if you need it, but it adds scroll overhead
+          enableMouseInteraction={false}
         />
       </div>
 
@@ -210,10 +229,14 @@ const HeroSection = () => {
         className="absolute top-0 left-0 w-1/2 h-full hidden md:flex items-center pointer-events-none"
         style={{
           background: 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(37,99,235,0.05) 50%, rgba(29,78,216,0.03) 100%)',
-          backdropFilter: 'blur(10px) saturate(1.3)',
-          WebkitBackdropFilter: 'blur(10px) saturate(1.3)',
+          // Reduced blur from 10px → 5px and removed saturate() — single biggest perf win
+          backdropFilter: 'blur(5px)',
+          WebkitBackdropFilter: 'blur(5px)',
           borderRight: '1px dashed var(--border-color)',
           zIndex: 3,
+          // Promote to compositor layer so blur doesn't repaint siblings on scroll
+          transform: 'translateZ(0)',
+          willChange: 'transform',
         }}
       >
         {/* Subtle top-left glow */}
@@ -296,6 +319,9 @@ const HeroSection = () => {
         className="relative z-10 flex md:hidden flex-col justify-between w-full h-full px-5 pb-8 pt-24 pointer-events-none hero-mobile-overlay"
         style={{
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 35%, transparent 55%)',
+          // Promote mobile overlay to its own layer too
+          transform: 'translateZ(0)',
+          willChange: 'transform',
         }}
       >
         <div className="flex flex-col gap-5 w-full">

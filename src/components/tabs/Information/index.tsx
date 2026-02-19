@@ -13,7 +13,7 @@ const Licenses = lazy(() => import('./Licenses'));
 const Terms = lazy(() => import('./Terms'));
 const Privacy = lazy(() => import('./Privacy'));
 const UsePolicy = lazy(() => import('./UsePolicy'));
-const Disclaimer = lazy(() => import('./Disclaimer'));
+const Documents = lazy(() => import('./Documents'));
 const Report = lazy(() => import('./Report'));
 
 // Loading fallback with matching background
@@ -42,7 +42,7 @@ const Information = memo(() => {
       import('./Terms');
       import('./Privacy');
       import('./UsePolicy');
-      import('./Disclaimer');
+      import('./Documents');
       import('./Report');
     };
 
@@ -249,18 +249,18 @@ const Information = memo(() => {
             </Suspense>
           </div>
 
-          {/* Disclaimer */}
+          {/* Documents */}
           <div style={{
-            position: activeContent === 'disclaimer' ? 'relative' : 'absolute',
+            position: activeContent === 'documents' ? 'relative' : 'absolute',
             top: 0,
             left: 0,
             right: 0,
-            opacity: activeContent === 'disclaimer' ? 1 : 0,
-            pointerEvents: activeContent === 'disclaimer' ? 'auto' : 'none',
+            opacity: activeContent === 'documents' ? 1 : 0,
+            pointerEvents: activeContent === 'documents' ? 'auto' : 'none',
             transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           }}>
             <Suspense fallback={<LoadingFallback />}>
-              <Disclaimer isTransitioning={isTransitioning} />
+              <Documents isTransitioning={isTransitioning} />
             </Suspense>
           </div>
 

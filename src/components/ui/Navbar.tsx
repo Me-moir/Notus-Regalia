@@ -602,7 +602,8 @@ const NAVBAR_CSS = `
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 18px;
+  padding: 9px 28px;
+  min-width: 160px;
   border-radius: 10px;
   border: none;
   background: transparent;

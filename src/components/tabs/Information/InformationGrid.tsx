@@ -117,7 +117,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 
                 {/* Icon */}
                 <div 
-                  className="mb-2 sm:mb-4 lg:mb-6 text-base sm:text-xl lg:text-2xl transition-all duration-300 relative z-10"
+                  className="mb-2 sm:mb-4 lg:mb-6 text-lg sm:text-2xl lg:text-3xl transition-all duration-300 relative z-10"
                   style={{
                     color: isActive ? 'rgba(0, 255, 166, 0.9)' : 'var(--content-secondary)',
                     transform: isActive ? 'translateY(-4px)' : 'translateY(0)'
@@ -128,7 +128,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 
                 {/* Title */}
                 <h3 
-                  className="text-xs sm:text-sm lg:text-lg font-semibold mb-1 sm:mb-2 lg:mb-3 leading-tight transition-all duration-300 relative z-10"
+                  className="text-sm sm:text-base lg:text-xl font-semibold mb-1 sm:mb-2 lg:mb-3 leading-tight transition-all duration-300 relative z-10"
                   style={{
                     color: isActive ? 'var(--content-primary)' : 'var(--content-secondary)',
                     transform: isActive ? 'translateY(-4px)' : 'translateY(0)'
@@ -139,7 +139,7 @@ const InformationGrid = memo(({ onContentChange, activeContent }: InformationGri
                 
                 {/* Description */}
                 <p 
-                  className="text-[10px] sm:text-xs lg:text-sm leading-relaxed transition-all duration-300 relative z-10"
+                  className="text-xs sm:text-sm lg:text-base leading-relaxed transition-all duration-300 relative z-10"
                   style={{
                     color: isActive ? 'var(--content-secondary)' : 'var(--content-muted)',
                     transform: isActive ? 'translateY(-4px)' : 'translateY(0)'

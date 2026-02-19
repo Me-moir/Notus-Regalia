@@ -15,7 +15,7 @@ export type InfoContentType =
   | 'licenses' 
   | 'terms' 
   | 'policies' 
-  | 'disclaimer'
+  | 'documents'
   | 'report';
 
 export interface ContentData {
@@ -73,10 +73,10 @@ export const informationGrids: InformationGrid[] = [
     description: 'Privacy, cookie, and acceptable use policies'
   },
   {
-    id: 'disclaimer',
-    icon: 'bi-exclamation-triangle',
-    title: 'Disclaimer',
-    description: 'Legal disclaimers and limitations'
+    id: 'documents',
+    icon: 'bi-folder2-open',
+    title: 'Documents',
+    description: 'Official legal documents and filings'
   },
   {
     id: 'report',
@@ -314,33 +314,6 @@ export const contentData: Record<string, ContentData> = {
         content: [
           'Violations of this policy may result in immediate termination of access, removal of content, and legal action if necessary.',
           'We reserve the right to investigate suspected violations and cooperate with law enforcement authorities when appropriate.'
-        ]
-      }
-    ]
-  },
-  'disclaimer': {
-    title: 'Disclaimer',
-    icon: 'bi-exclamation-triangle',
-    sections: [
-      {
-        heading: 'General Disclaimer',
-        content: [
-          'The information provided on this website is for general informational purposes only. While we strive for accuracy, we make no warranties about the completeness or reliability of information.',
-          'Content on this site should not be considered professional advice. Users should consult with appropriate professionals for specific guidance.'
-        ]
-      },
-      {
-        heading: 'External Links',
-        content: [
-          'Our website may contain links to external sites. We are not responsible for the content, privacy practices, or availability of third-party websites.',
-          'The inclusion of any link does not imply endorsement by Notosphere. Users access external sites at their own risk.'
-        ]
-      },
-      {
-        heading: 'Changes and Updates',
-        content: [
-          'We reserve the right to modify or discontinue any aspect of our services without notice. We are not liable for any modifications or interruptions.',
-          'Information on this website is subject to change without notice. Please check back regularly for updates.'
         ]
       }
     ]

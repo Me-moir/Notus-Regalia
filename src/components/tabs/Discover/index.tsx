@@ -1,6 +1,7 @@
 "use client";
 import { memo } from 'react';
 import Overview from './Overview';
+import AboutHeader from './AboutHeader';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Empty placeholder section — reused for future pages
@@ -45,8 +46,8 @@ PlaceholderSection.displayName = 'PlaceholderSection';
 const Discover = () => {
   return (
     <div style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      {/* Navbar spacer */}
-      <div style={{ height: '72px' }} className="sm:block" />
+      {/* About Header */}
+      <AboutHeader />
 
       {/* Overview Section */}
       <div id="section-overview">

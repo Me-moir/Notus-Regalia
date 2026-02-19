@@ -116,7 +116,8 @@ const Overview = memo(() => {
                   style={{
                     color: 'var(--content-primary)',
                     fontWeight: 600,
-                    margin: 0,
+                    marginTop: 0,
+                    marginBottom: '0.5rem',
                   }}
                 >
                   {feature.title}

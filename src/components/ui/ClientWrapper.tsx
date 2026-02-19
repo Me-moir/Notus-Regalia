@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import LoadingScreen from './LoadingScreen';
+import { useState, useEffect, useCallback } from 'react';
 import Navbar from './Navbar';
 import MainContent from './MainContent';
 import Footer from './Footer';
@@ -10,7 +9,6 @@ type TabType = 'home' | 'discover' | 'information' | 'affiliations' | 'ventures'
 const VALID_TABS: TabType[] = ['home', 'discover', 'information', 'affiliations', 'ventures'];
 
 const ClientWrapper = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('home');
 
   const isValidTab = useCallback((tab: string): tab is TabType => {
@@ -18,32 +16,12 @@ const ClientWrapper = () => {
   }, []);
 
   useEffect(() => {
-    if (isLoading) {
-      Promise.all([
-        import('../tabs/Discover/HeroSection'),
-        import('../tabs/Discover/Overview'),
-      ]).then(() => {
-        console.log('✅ Critical sections preloaded');
-      });
-      
-      if (typeof document !== 'undefined') {
-        document.fonts.ready.then(() => {
-          console.log('✅ Fonts loaded');
-        });
-      }
+    const params = new URLSearchParams(window.location.search);
+    const tabFromUrl = params.get('tab');
+    if (tabFromUrl && isValidTab(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
     }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      const params = new URLSearchParams(window.location.search);
-      const tabFromUrl = params.get('tab');
-      
-      if (tabFromUrl && isValidTab(tabFromUrl)) {
-        setActiveTab(tabFromUrl);
-      }
-    }
-  }, [isLoading, isValidTab]);
+  }, [isValidTab]);
 
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
@@ -71,14 +49,6 @@ const ClientWrapper = () => {
     }
     window.history.pushState({ tab }, '', url);
   }, [activeTab]);
-
-  const handleLoadingComplete = useCallback(() => {
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) {
-    return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
-  }
 
   return (
     <div className="min-h-screen theme-transition" style={{ background: 'var(--surface-primary)', color: 'var(--content-primary)' }}>

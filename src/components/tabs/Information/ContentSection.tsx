@@ -23,7 +23,7 @@ const ContentSection = memo(({ content, isTransitioning = false }: ContentSectio
           {content.sections.map((section, index) => (
             <div key={index} className="space-y-3 sm:space-y-4">
               {section.heading && (
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold" style={{ color: 'var(--content-primary)' }}>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold" style={{ color: 'var(--content-primary)' }}>
                   {section.heading}
                 </h3>
               )}
@@ -32,7 +32,7 @@ const ContentSection = memo(({ content, isTransitioning = false }: ContentSectio
                 {section.content.map((paragraph, pIndex) => (
                   <p 
                     key={pIndex}
-                    className="text-sm sm:text-base leading-relaxed" style={{ color: 'var(--content-muted)' }}
+                    className="text-base sm:text-lg lg:text-xl leading-relaxed" style={{ color: 'var(--content-muted)' }}
                   >
                     {paragraph}
                   </p>
@@ -49,7 +49,7 @@ const ContentSection = memo(({ content, isTransitioning = false }: ContentSectio
 
         {/* Footer note */}
         <div className="mt-8 sm:mt-12 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--border-color)' }}>
-          <p className="text-xs sm:text-sm text-center" style={{ color: 'var(--content-muted)' }}>
+          <p className="text-sm sm:text-base text-center" style={{ color: 'var(--content-muted)' }}>
             Last updated: January 2026 • For questions or concerns, please contact our legal team
           </p>
         </div>
