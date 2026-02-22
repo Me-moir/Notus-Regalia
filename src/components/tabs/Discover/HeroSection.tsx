@@ -148,6 +148,127 @@ const HeroSection = () => {
           animation: scrollBounce 1.8s ease-in-out infinite;
         }
 
+        /* --- FUTURISTIC HUD PILLBOX (GOLD) --- */
+        .hud-pill {
+          position: relative;
+          overflow: hidden;
+          padding: 6px 18px 6px 14px;
+          border-radius: 999px;
+          border: 1px solid rgba(234, 179, 8, 0.3);
+          background: linear-gradient(90deg, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.02) 100%);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-left: 3px solid #eab308;
+          box-shadow: 0 0 20px rgba(234, 179, 8, 0.08) inset;
+        }
+
+        .hud-pill::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+          transform: skewX(-20deg);
+          animation: hudGlare 4s infinite linear;
+        }
+
+        @keyframes hudGlare {
+          0% { left: -100%; }
+          20% { left: 200%; }
+          100% { left: 200%; }
+        }
+
+        .hud-dot-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 12px;
+          height: 12px;
+        }
+
+        .hud-dot-core {
+          width: 4px;
+          height: 4px;
+          background-color: #eab308;
+          border-radius: 50%;
+          box-shadow: 0 0 8px #eab308, 0 0 12px #eab308;
+          z-index: 2;
+        }
+
+        .hud-dot-ring {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border: 1px solid rgba(234, 179, 8, 0.6);
+          border-radius: 50%;
+          animation: radarPulse 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
+          z-index: 1;
+        }
+
+        @keyframes radarPulse {
+          0% { transform: scale(0.5); opacity: 1; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .hud-text {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          color: #facc15;
+          text-shadow: 0 0 8px rgba(234, 179, 8, 0.35);
+          letter-spacing: 0.08em;
+        }
+
+        .hud-prefix {
+          color: #cbd5e1;
+          opacity: 0.85;
+          margin-right: 0.45rem;
+          animation: dataFlicker 6s infinite;
+        }
+
+        @keyframes dataFlicker {
+          0%, 96%, 98%, 100% { opacity: 0.85; }
+          97%, 99% { opacity: 0.25; }
+        }
+
+        @media (max-width: 640px) {
+          .hud-pill { padding: 4px 10px; }
+          .hud-text { font-size: 0.65rem; }
+          .hud-dot-wrapper { width: 8px; height: 8px; }
+        }
+
+        /* Light mode variant: dark background but retain gold border accents */
+        :global(.light) .hud-pill {
+          background: rgba(0,0,0,0.9) !important;
+          border: 1px solid rgba(234,179,8,0.22) !important;
+          border-left: 3px solid #eab308 !important;
+          box-shadow: 0 0 18px rgba(234,179,8,0.06) inset !important;
+        }
+
+        :global(.light) .hud-pill::after {
+          background: linear-gradient(90deg, transparent, rgba(234,179,8,0.08), transparent) !important;
+        }
+
+        :global(.light) .hud-text {
+          color: #fff9e6 !important;
+          text-shadow: 0 0 6px rgba(234,179,8,0.08) !important;
+        }
+
+        :global(.light) .hud-prefix {
+          color: rgba(236, 239, 241, 0.9) !important;
+          opacity: 1 !important;
+        }
+
+        :global(.light) .hud-dot-core {
+          background-color: #eab308 !important;
+          box-shadow: 0 0 8px #eab308, 0 0 12px #eab308 !important;
+        }
+
+        :global(.light) .hud-dot-ring {
+          border-color: rgba(234,179,8,0.6) !important;
+        }
+
       `}</style>
 
       {/* Faint grid background — right side, on top of threads */}
@@ -202,15 +323,15 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* Threads Background — pointer events none to avoid interfering with scroll */}
+      {/* Threads Background — allow pointer events so canvas can receive mouse input */}
       <div
         className="absolute inset-0"
         style={{
           width: '100%',
           height: '100%',
           zIndex: 2,
-          // Disable pointer events so scroll isn't blocked/intercepted by the canvas
-          pointerEvents: 'none',
+          // Allow pointer events so the WebGL canvas can receive mouse events
+          pointerEvents: 'auto',
           // Own compositor layer — prevents the canvas from triggering repaints on other layers
           transform: 'translateZ(0)',
           willChange: 'transform',
@@ -219,8 +340,8 @@ const HeroSection = () => {
         <Threads
           amplitude={3.5}
           distance={0.3}
-          // Disable mouse interaction — re-enable if you need it, but it adds scroll overhead
-          enableMouseInteraction={false}
+          // Re-enable mouse interaction for the threads background
+          enableMouseInteraction={true}
         />
       </div>
 
@@ -256,28 +377,14 @@ const HeroSection = () => {
 
         {/* Content */}
         <div className="relative z-10 w-full px-8 lg:px-14 xl:px-20 flex flex-col gap-8" style={{ marginTop: '5vh' }}>
-          {/* Status Bar */}
-          <div
-            className="inline-flex items-center gap-2.5 pointer-events-auto status-pill"
-            style={{
-              padding: '6px 16px',
-              borderRadius: '999px',
-              border: '1px solid rgba(34,197,94,0.15)',
-              background: 'rgba(34,197,94,0.06)',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              width: 'fit-content',
-            }}
-          >
-            <span
-              className="inline-block w-2 h-2 rounded-full"
-              style={{ background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.5)' }}
-            />
-            <span
-              className="text-xs lg:text-sm font-mono tracking-widest uppercase"
-              style={{ color: 'var(--content-tertiary)' }}
-            >
-              All threads operational
+          {/* HUD Pill (Gold) - replaces status bar */}
+          <div className="inline-flex items-center gap-2.5 pointer-events-auto hud-pill w-fit">
+            <div className="hud-dot-wrapper" style={{ width: '10px', height: '10px' }}>
+              <div className="hud-dot-core" style={{ width: '4px', height: '4px' }} />
+              <div className="hud-dot-ring" />
+            </div>
+            <span className="text-xs lg:text-sm font-mono tracking-widest uppercase hud-text">
+              <span className="hud-prefix">[SYS]</span> ALL THREADS FUNCTIONAL
             </span>
           </div>
 
@@ -325,28 +432,14 @@ const HeroSection = () => {
         }}
       >
         <div className="flex flex-col gap-5 w-full">
-          {/* Status Bar */}
-          <div
-            className="inline-flex items-center gap-2 pointer-events-auto status-pill"
-            style={{
-              padding: '5px 14px',
-              borderRadius: '999px',
-              border: '1px solid rgba(34,197,94,0.2)',
-              background: 'rgba(34,197,94,0.08)',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              width: 'fit-content',
-            }}
-          >
-            <span
-              className="inline-block w-1.5 h-1.5 rounded-full"
-              style={{ background: '#22c55e', boxShadow: '0 0 6px rgba(34,197,94,0.5)' }}
-            />
-            <span
-              className="text-[0.65rem] font-mono tracking-widest uppercase hero-mobile-status"
-              style={{ color: 'rgba(255,255,255,0.5)' }}
-            >
-              All threads operational
+          {/* Mobile HUD Pill (Gold) */}
+          <div className="inline-flex items-center gap-2 pointer-events-auto hud-pill w-fit" style={{ padding: '4px 12px 4px 10px' }}>
+            <div className="hud-dot-wrapper" style={{ width: '8px', height: '8px' }}>
+              <div className="hud-dot-core" style={{ width: '3px', height: '3px' }} />
+              <div className="hud-dot-ring" />
+            </div>
+            <span className="text-[0.65rem] hud-text">
+              <span className="hud-prefix">[SYS]</span> ALL THREADS FUNCTIONAL
             </span>
           </div>
 
