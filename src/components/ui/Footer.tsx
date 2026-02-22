@@ -364,48 +364,80 @@ const Footer = () => {
         @media (max-width: 540px)  { .contact-grid { grid-template-columns: 1fr; gap: 0.75rem; } }
 
         /* ══ CONTACT CARDS ══ */
+
+        /* 1px padding exposes ::before as the border strip */
         .contact-card-border {
           position: relative;
           padding: 1px;
-          border-radius: 10px;
+          border-radius: 16px;
           width: 100%;
+          /* Dim static fallback so card is always outlined */
+          background: rgba(255,255,255,0.08);
         }
+
+        /* Mouse-tracked radial rainbow — only the 1px border strip is visible
+           (same mask technique as .logo-badge-wrapper in the footer) */
+        .contact-card-border::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 16px;
+          padding: 1px;
+          background: radial-gradient(
+            320px circle at var(--cx, 50%) var(--cy, 50%),
+            rgba(0,255,166,0.9),
+            rgba(255,215,0,0.75),
+            rgba(236,72,153,0.75),
+            rgba(147,51,234,0.7),
+            rgba(59,130,246,0.6),
+            transparent 70%
+          );
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+        }
+        .contact-card-border:hover::before { opacity: 1; }
 
         .contact-card {
           display: flex;
           flex-direction: column;
-          border-radius: 10px;
+          border-radius: 15px;
           overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.07);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top);
-          transition: box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-          background: transparent;
+          border: none;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.13), inset 0 1px 0 var(--glass-inset-top);
+          transition: box-shadow 0.35s ease, background 0.35s ease;
+          background: #0e0e14;
           width: 100%;
           cursor: pointer;
           font-family: inherit;
           text-align: left;
         }
-        .contact-card:hover {
-          box-shadow: 0 4px 14px rgba(0,0,0,0.26), inset 0 1px 0 var(--glass-inset-top);
-          background: var(--hover-bg-strong);
-          border-color: rgba(255,255,255,0.12);
+        .contact-card-border:hover .contact-card {
+          box-shadow: 0 6px 18px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top);
+          background: #161620;
         }
 
         .contact-card-body {
           display: flex;
           flex-direction: column;
-          gap: 0.625rem;
-          padding: 1rem 1rem 1rem;
+          gap: 1.5rem;
+          padding: 2.25rem 2.25rem 2.25rem;
           flex: 1;
         }
+        @media (max-width: 900px) {
+          .contact-card-body { padding: 1.75rem; gap: 1.25rem; }
+        }
         @media (max-width: 540px) {
-          .contact-card-body { padding: 0.875rem; gap: 0.5rem; }
+          .contact-card-body { padding: 1.5rem; gap: 1.125rem; }
         }
 
         .contact-card-top {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.75rem;
         }
 
         .contact-card-top .icon-wrap {
@@ -413,73 +445,73 @@ const Footer = () => {
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          font-size: 0.85rem;
+          font-size: 1.05rem;
           color: var(--content-faint);
-          transition: color 0.15s ease;
-          width: 14px;
+          transition: color 0.2s ease;
+          width: 20px;
         }
-        .contact-card:hover .contact-card-top .icon-wrap { color: var(--content-secondary); }
+        .contact-card-border:hover .contact-card-top .icon-wrap { color: var(--content-secondary); }
 
         .c-label {
-          font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+          font-size: clamp(0.875rem, 1.8vw, 1rem);
           text-transform: uppercase;
-          letter-spacing: 0.2em;
+          letter-spacing: 0;
           color: var(--content-faint);
           line-height: 1.2;
-          transition: color 0.15s ease;
+          transition: color 0.2s ease;
           white-space: nowrap;
           font-weight: 600;
         }
-        .contact-card:hover .c-label { color: var(--content-secondary); }
+        .contact-card-border:hover .c-label { color: var(--content-secondary); }
 
         .c-cli {
           display: flex;
           align-items: center;
-          gap: 0.4rem;
-          background: #1c1c1e;
+          gap: 0.75rem;
+          background: #0a0a10;
           border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 6px;
-          padding: 0.4rem 0.625rem;
-          transition: border-color 0.15s ease, background 0.15s ease;
+          border-radius: 10px;
+          padding: 1rem 1.25rem;
+          transition: border-color 0.2s ease, background 0.2s ease;
           min-width: 0;
         }
-        .contact-card:hover .c-cli {
-          border-color: rgba(255,255,255,0.14);
-          background: #232325;
+        .contact-card-border:hover .c-cli {
+          border-color: rgba(255,255,255,0.15);
+          background: #111118;
         }
         .c-cli-prompt {
-          font-size: clamp(0.75rem, 1.8vw, 0.875rem);
+          font-size: clamp(0.8rem, 1.8vw, 0.9375rem);
           font-family: ui-monospace, Menlo, monospace;
           color: #2dd4bf;
           flex-shrink: 0;
-          opacity: 0.7;
+          opacity: 0.65;
           user-select: none;
-          transition: opacity 0.15s ease;
+          transition: opacity 0.2s ease;
         }
-        .contact-card:hover .c-cli-prompt { opacity: 1; }
+        .contact-card-border:hover .c-cli-prompt { opacity: 1; }
         .c-value {
-          font-size: clamp(0.7rem, 1.6vw, 0.875rem);
+          font-size: clamp(0.75rem, 1.6vw, 0.9375rem);
           color: #94a3b8;
           font-family: ui-monospace, Menlo, monospace;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
           line-height: 1.4;
-          transition: color 0.15s ease;
+          transition: color 0.2s ease;
           font-weight: 400;
           flex: 1;
           min-width: 0;
         }
-        .contact-card:hover .c-value { color: #e2e8f0; }
+        .contact-card-border:hover .c-value { color: #e2e8f0; }
         .c-cli-copy {
           flex-shrink: 0;
-          font-size: 0.7rem;
-          color: rgba(45,212,191,0.45);
-          transition: color 0.15s ease;
+          font-size: 0.85rem;
+          color: rgba(45,212,191,0.4);
+          transition: color 0.2s ease;
           margin-left: auto;
-          padding-left: 0.3rem;
+          padding-left: 0.625rem;
         }
-        .contact-card:hover .c-cli-copy { color: rgba(45,212,191,0.85); }
+        .contact-card-border:hover .c-cli-copy { color: rgba(45,212,191,0.9); }
 
         .c-cli.is-copied {
           border-color: rgba(45,212,191,0.3);
@@ -531,75 +563,105 @@ const Footer = () => {
           .newsletter-sub { max-width: 95%; margin-bottom: 2rem; }
         }
 
-        /* Force dark values in newsletter band */
-        .newsletter-band .nl-search-modal {
-          background: #111118 !important;
-          border-color: rgba(255,255,255,0.07) !important;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(255,255,255,0.04) !important;
+        /* ══ NEWSLETTER FORM — elevated terminal/signal aesthetic ══ */
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes nlGlow {
+          0%, 100% { box-shadow: 0 0 18px rgba(14,165,164,0.18), 0 0 40px rgba(14,165,164,0.06), inset 0 1px 0 rgba(255,255,255,0.04); }
+          50%       { box-shadow: 0 0 28px rgba(14,165,164,0.28), 0 0 60px rgba(14,165,164,0.10), inset 0 1px 0 rgba(255,255,255,0.06); }
         }
-        .newsletter-band .nl-search-header {
-          border-bottom-color: rgba(255,255,255,0.06) !important;
+        @keyframes nlBorderPulse {
+          0%, 100% { opacity: 0.55; }
+          50%       { opacity: 1; }
         }
-        .newsletter-band .nl-input {
-          color: #f1f5f9 !important;
-        }
-        .newsletter-band .nl-input::placeholder {
-          color: #334155 !important;
-          opacity: 1 !important;
-        }
-        .newsletter-band .nl-btn {
-          color: #64748b !important;
-          background: rgba(255,255,255,0.04) !important;
-          border-color: rgba(255,255,255,0.08) !important;
-        }
-        .newsletter-band .nl-btn:hover:not(:disabled) {
-          color: #f1f5f9 !important;
-          background: rgba(255,255,255,0.08) !important;
-        }
-        .newsletter-band .bi-envelope {
-          color: #334155 !important;
+        @keyframes cursorBlink {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0; }
         }
 
         .nl-form { display: flex; flex-direction: column; align-items: center; gap: 0; width: min(680px, 92vw); }
 
+        /* Fixed-height slot — no reflow on state switch */
         .nl-slot {
           width: min(680px, 92vw);
-          height: 58px;
+          height: auto;
           flex-shrink: 0;
           position: relative;
         }
-        @media (max-width: 480px) { .nl-slot { height: 52px; } }
-        .nl-slot .nl-form {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-        }
+        .nl-slot .nl-form { width: 100%; }
         .nl-slot .nl-success {
-          position: absolute;
-          inset: 0;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 1rem 0;
         }
 
+        /* ── Outer glowing wrapper ── */
         .nl-search-modal {
           width: 100%;
-          border-radius: 14px;
-          background: var(--surface-secondary);
-          border: 0.5px solid var(--border-color);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.18), 0 0 0 0.5px var(--glass-inset-top);
+          border-radius: 16px;
+          background: #0a0a12;
+          /* Layered border: teal glow outer + dim inner separator */
+          border: 1px solid rgba(14,165,164,0.35);
+          box-shadow:
+            0 0 0 1px rgba(14,165,164,0.08),
+            0 0 24px rgba(14,165,164,0.18),
+            0 0 56px rgba(14,165,164,0.07),
+            inset 0 1px 0 rgba(255,255,255,0.04),
+            inset 0 -1px 0 rgba(0,0,0,0.3);
           display: flex;
           flex-direction: column;
           overflow: hidden;
+          animation: nlGlow 4s ease-in-out infinite;
+          position: relative;
         }
 
+        /* Teal top-edge highlight — like a lit instrument panel */
+        .nl-search-modal::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 10%; right: 10%; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(14,165,164,0.8), rgba(20,184,166,0.6), rgba(14,165,164,0.8), transparent);
+          animation: nlBorderPulse 4s ease-in-out infinite;
+          pointer-events: none;
+          z-index: 2;
+        }
+
+        /* Noise texture overlay for depth on dark bg */
+        .nl-search-modal::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 16px;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+          background-size: 150px 150px;
+          opacity: 0.5;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        /* ── Input row ── */
         .nl-search-header {
           display: flex;
           align-items: center;
-          padding: clamp(12px, 2.5vw, 18px) clamp(14px, 3vw, 20px);
-          gap: clamp(8px, 1.5vw, 12px);
-          border-bottom: 0.5px solid var(--border-color);
+          padding: clamp(16px, 3vw, 22px) clamp(18px, 3.5vw, 26px);
+          gap: clamp(10px, 2vw, 16px);
+          position: relative;
+          z-index: 3;
+        }
+
+        /* Teal blinking cursor prefix — replaces envelope icon */
+        .nl-cursor-prefix {
+          font-family: ui-monospace, Menlo, monospace;
+          font-size: clamp(0.875rem, 2vw, 1.05rem);
+          font-weight: 700;
+          color: #14b8a6;
+          flex-shrink: 0;
+          user-select: none;
+          text-shadow: 0 0 8px rgba(20,184,166,0.6);
+          animation: cursorBlink 1.2s step-end infinite;
+          line-height: 1;
         }
 
         .nl-input {
@@ -607,47 +669,51 @@ const Footer = () => {
           background: transparent;
           border: none;
           outline: none;
-          font-size: clamp(0.875rem, 2vw, 1.0625rem);
+          font-size: clamp(0.975rem, 2.2vw, 1.175rem);
           font-weight: 500;
-          color: var(--content-primary);
-          letter-spacing: -0.01em;
+          color: #e2e8f0;
+          letter-spacing: 0.01em;
           font-family: inherit;
+          caret-color: #14b8a6;
         }
         .nl-input::placeholder {
-          color: var(--content-faint);
-          opacity: 0.7;
+          color: rgba(100,116,139,0.7);
+          font-weight: 400;
         }
+        .nl-input:focus { color: #f8fafc; }
 
+        /* ── Submit button — solid teal pill, commands attention ── */
         .nl-btn {
           display: inline-flex;
           align-items: center;
-          gap: 0.35rem;
-          padding: 3px 7px;
-          border-radius: 6px;
-          font-size: clamp(0.6rem, 1.4vw, 0.7rem);
-          font-weight: 600;
-          letter-spacing: 0.04em;
-          color: var(--content-faint);
-          background: var(--hover-bg);
-          border: 1px solid var(--border-color);
+          gap: 0.5rem;
+          padding: 9px 20px;
+          border-radius: 10px;
+          font-size: clamp(0.72rem, 1.4vw, 0.8rem);
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: #ffffff;
+          background: linear-gradient(135deg, #0ea5a4 0%, #0d9488 100%);
+          border: 1px solid rgba(20,184,166,0.5);
+          box-shadow: 0 0 14px rgba(14,165,164,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
           cursor: pointer;
           flex-shrink: 0;
-          transition: color 0.12s ease, background 0.12s ease;
+          transition: all 0.2s ease;
           user-select: none;
           font-family: inherit;
           text-transform: uppercase;
         }
         .nl-btn:hover:not(:disabled) {
-          color: var(--content-primary);
-          background: var(--hover-bg-strong);
+          background: linear-gradient(135deg, #14b8a6 0%, #0ea5a4 100%);
+          box-shadow: 0 0 22px rgba(14,165,164,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+          transform: translateY(-1px);
         }
-        .nl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .nl-btn:active:not(:disabled) { transform: translateY(0); }
+        .nl-btn:disabled { opacity: 0.3; cursor: not-allowed; background: #334155; border-color: transparent; box-shadow: none; }
 
-        .nl-success { display: inline-flex; align-items: center; gap: 0.5rem; color: #34d399; font-size: clamp(0.9rem, 2vw, 1.2rem); animation: fadeIn 300ms ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        .nl-success { display: inline-flex; align-items: center; gap: 0.625rem; color: #34d399; font-size: clamp(0.9rem, 2vw, 1.15rem); animation: fadeIn 300ms ease; font-weight: 500; }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .spinner { width: 0.75rem; height: 0.75rem; border: 2px solid rgba(45,212,191,0.2); border-top-color: #2dd4bf; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        .spinner { width: 0.8rem; height: 0.8rem; border: 2px solid rgba(255,255,255,0.25); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.6s linear infinite; }
 
         .nl-input-wrap { position: relative; flex: 1; display: flex; align-items: center; min-width: 0; overflow: hidden; }
         .nl-input-wrap .nl-input { width: 100%; position: relative; z-index: 1; background: transparent; }
@@ -659,29 +725,29 @@ const Footer = () => {
           align-items: center;
           pointer-events: none;
           user-select: none;
-          font-size: clamp(0.875rem, 2vw, 1.0625rem);
+          font-size: clamp(0.975rem, 2.2vw, 1.175rem);
           font-weight: 500;
-          letter-spacing: -0.01em;
+          letter-spacing: 0.01em;
           white-space: pre;
           z-index: 0;
           overflow: hidden;
           max-width: 100%;
         }
         .nl-ghost-typed { color: transparent; }
-        .nl-ghost-suggestion { color: rgba(45,212,191,0.38); }
+        .nl-ghost-suggestion { color: rgba(20,184,166,0.45); }
 
         .nl-autocomplete-pill {
           display: inline-flex;
           align-items: center;
           gap: 0.3rem;
-          padding: 2px 6px;
-          border-radius: 5px;
-          font-size: clamp(0.6rem, 1.2vw, 0.72rem);
+          padding: 3px 8px;
+          border-radius: 6px;
+          font-size: clamp(0.6rem, 1.2vw, 0.7rem);
           font-weight: 700;
           letter-spacing: 0.06em;
-          color: rgba(45,212,191,0.55);
-          background: rgba(45,212,191,0.07);
-          border: 1px solid rgba(45,212,191,0.2);
+          color: rgba(20,184,166,0.7);
+          background: rgba(14,165,164,0.1);
+          border: 1px solid rgba(14,165,164,0.25);
           text-transform: uppercase;
           flex-shrink: 0;
           cursor: pointer;
@@ -691,12 +757,19 @@ const Footer = () => {
           user-select: none;
         }
         .nl-autocomplete-pill:hover {
-          color: rgba(45,212,191,0.9);
-          background: rgba(45,212,191,0.12);
-          border-color: rgba(45,212,191,0.4);
+          color: rgba(20,184,166,1);
+          background: rgba(14,165,164,0.18);
+          border-color: rgba(14,165,164,0.5);
         }
-        /* Hide tab pill on very small screens where it overlaps */
         @media (max-width: 400px) { .nl-autocomplete-pill { display: none; } }
+
+        /* Light mode — keep the dark terminal aesthetic so it pops on light bg */
+        :global(.light) .nl-search-modal {
+          background: #0a0a12 !important;
+          border-color: rgba(14,165,164,0.45) !important;
+        }
+        :global(.light) .nl-input { color: #e2e8f0 !important; }
+        :global(.light) .nl-input::placeholder { color: rgba(100,116,139,0.65) !important; }
 
         /* ══ BAND 3: Main footer ══ */
         .system-status { border: 1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.015); }
@@ -761,7 +834,7 @@ const Footer = () => {
         @media (min-width: 1024px) { .hud-border-top::before { left: 0; transform: none; } }
 
         .logo-badge-wrapper { position: relative; display: inline-flex; padding: 2px; border-radius: 1.125rem; background: transparent; cursor: pointer; }
-        .logo-badge-wrapper::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 2px; background: radial-gradient(360px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,255,166,0.85), rgba(255,215,0,0.65), rgba(236,72,153,0.65), rgba(147,51,234,0.65), rgba(59,130,246,0.55), transparent 70%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 0; }
+        .logo-badge-wrapper::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 2px; background: radial-gradient(320px circle at var(--cx, 50%) var(--cy, 50%), rgba(0,255,166,0.9), rgba(255,215,0,0.75), rgba(236,72,153,0.75), rgba(147,51,234,0.7), rgba(59,130,246,0.6), transparent 70%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 0; }
         .logo-badge-wrapper:hover::before { opacity: 1; }
         .logo-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.5rem; border-radius: 1rem; background: transparent; z-index: 1; width: fit-content; }
 
@@ -801,22 +874,29 @@ const Footer = () => {
         :global(.light) .contact-sub { color: #64748b; }
         :global(.light) .section-eyebrow-label { color: #94a3b8; }
 
+        /* Light mode: white card bodies, light CLI boxes */
+        :global(.light) .contact-card { background: #ffffff; }
+        :global(.light) .contact-card-border:hover .contact-card { background: #f8fafc; }
+
         :global(.light) .c-cli {
-          background: #3a3a3c;
-          border-color: rgba(255,255,255,0.1);
+          background: rgba(0,0,0,0.9);
+          border-color: rgba(14,165,164,0.22);
+          border-left: 3px solid #0ea5a4;
         }
-        :global(.light) .contact-card:hover .c-cli {
-          background: #48484a;
-          border-color: rgba(255,255,255,0.16);
+        :global(.light) .contact-card-border:hover .c-cli {
+          background: rgba(0,0,0,0.88);
+          border-color: rgba(14,165,164,0.35);
+          border-left: 3px solid #0ea5a4;
         }
-        :global(.light) .c-cli-prompt { color: #2dd4bf; }
-        :global(.light) .c-value { color: #94a3b8; }
-        :global(.light) .contact-card:hover .c-value { color: #e2e8f0; }
-        :global(.light) .c-cli-copy { color: rgba(45,212,191,0.45); }
-        :global(.light) .contact-card:hover .c-cli-copy { color: rgba(45,212,191,0.85); }
+        :global(.light) .c-cli-prompt { color: #14b8a6; opacity: 1; }
+        :global(.light) .c-value { color: #ffffff; }
+        :global(.light) .contact-card-border:hover .c-value { color: #ffffff; }
+        :global(.light) .c-cli-copy { color: rgba(255,255,255,0.45); }
+        :global(.light) .contact-card-border:hover .c-cli-copy { color: rgba(255,255,255,0.9); }
         :global(.light) .c-cli.is-copied {
-          background: #000000;
+          background: rgba(0,0,0,0.9);
           border-color: rgba(45,212,191,0.4);
+          border-left: 3px solid #2dd4bf;
         }
 
         /* Glass boxes for social icons */
@@ -865,7 +945,15 @@ const Footer = () => {
           {contacts.map((c, i) => {
             const isCopied = copiedEmail === c.value;
             return (
-              <div key={i} className="contact-card-border">
+              <div
+                key={i}
+                className="contact-card-border"
+                onMouseMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  e.currentTarget.style.setProperty('--cx', `${e.clientX - r.left}px`);
+                  e.currentTarget.style.setProperty('--cy', `${e.clientY - r.top}px`);
+                }}
+              >
                 <button
                   onClick={() => handleCopyEmail(c.value)}
                   className="contact-card"
@@ -928,7 +1016,7 @@ const Footer = () => {
               <form className="nl-form" onSubmit={handleNewsletterSubmit}>
                 <div className="nl-search-modal">
                   <div className="nl-search-header">
-                    <i className="bi bi-envelope" style={{ color: '#334155', fontSize: '0.9rem' }} />
+                    <span className="nl-cursor-prefix" aria-hidden>_</span>
 
                     <div className="nl-input-wrap">
                       {showSuggestion && (
@@ -941,7 +1029,7 @@ const Footer = () => {
                         ref={emailInputRef}
                         type="email"
                         className="nl-input"
-                        placeholder="What's your email address?"
+                        placeholder="Enter your email address for updates..."
                         value={email}
                         onChange={handleEmailChange}
                         onKeyDown={handleEmailKeyDown}
@@ -988,7 +1076,17 @@ const Footer = () => {
 
           {/* Brand */}
           <div className="flex flex-col items-center lg:items-start lg:w-1/3 space-y-6">
-            <a href="/#hero" aria-label="Go to top" ref={logoBadgeRef} className="logo-badge-wrapper group inline-flex">
+            <a
+              href="/#hero"
+              aria-label="Go to top"
+              ref={logoBadgeRef}
+              className="logo-badge-wrapper group inline-flex"
+              onMouseMove={(e) => {
+                const r = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty('--cx', `${e.clientX - r.left}px`);
+                e.currentTarget.style.setProperty('--cy', `${e.clientY - r.top}px`);
+              }}
+            >
               <div className="logo-badge">
                 <Image
                   src={logoImage}
