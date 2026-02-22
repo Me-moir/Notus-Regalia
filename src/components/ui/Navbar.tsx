@@ -112,7 +112,7 @@ const NAVBAR_CSS = `
 
 /* ─── Glass navbar ─── */
 .glass-navbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
   background: var(--glass-bg);
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border-color);

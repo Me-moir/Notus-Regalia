@@ -7,10 +7,11 @@ export const metadata: Metadata = {
   description: "Building Systems, Ventures, and Future Companies",
   icons: {
     icon: [
-      { url: '/assets/Notosphere-logo.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', type: 'image/x-icon' }
+      { url: '/assets/notosphere-logo.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32.png', type: 'image/png' },
+      { url: '/favicon.ico', type: 'image/x-icon' },
     ],
-    apple: [{ url: '/assets/Notosphere-logo.svg' }]
+    apple: [{ url: '/assets/notosphere-logo.svg' }]
   }
 };
 
