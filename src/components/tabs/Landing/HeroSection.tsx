@@ -1,6 +1,6 @@
 "use client";
 import { memo, useCallback } from 'react';
-import Threads from './Threads';
+import Threads from '@/components/tabs/Landing/Threads';
 
 
 const HeroSection = () => {
@@ -273,217 +273,59 @@ const HeroSection = () => {
       `}</style>
 
       {/* Faint grid background — right side, on top of threads */}
-      <div
-        className="absolute top-0 right-0 w-1/2 h-full pointer-events-none hidden md:block"
-        style={{
-          zIndex: 4,
-          // Promote to own compositor layer so it doesn't trigger repaints
-          transform: 'translateZ(0)',
-          willChange: 'transform',
-        }}
-      >
-        {/* Base grid */}
-        <div
-          className="absolute inset-0 hero-grid-base"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px',
-          }}
-        />
-        {/* Random fade patches — use transparent masks instead of black overlays */}
-        <div
-          className="absolute inset-0 hero-grid-fade"
-          style={{
-            maskImage: `
-              radial-gradient(ellipse at 15% 20%, transparent 0%, white 50%),
-              radial-gradient(ellipse at 75% 10%, transparent 0%, white 40%),
-              radial-gradient(ellipse at 40% 60%, transparent 0%, white 55%),
-              radial-gradient(ellipse at 85% 75%, transparent 0%, white 45%),
-              radial-gradient(ellipse at 25% 85%, transparent 0%, white 50%),
-              radial-gradient(ellipse at 60% 35%, transparent 0%, white 40%)
-            `,
-            maskComposite: 'intersect',
-            WebkitMaskImage: `
-              radial-gradient(ellipse at 15% 20%, transparent 0%, white 50%),
-              radial-gradient(ellipse at 75% 10%, transparent 0%, white 40%),
-              radial-gradient(ellipse at 40% 60%, transparent 0%, white 55%),
-              radial-gradient(ellipse at 85% 75%, transparent 0%, white 45%),
-              radial-gradient(ellipse at 25% 85%, transparent 0%, white 50%),
-              radial-gradient(ellipse at 60% 35%, transparent 0%, white 40%)
-            `,
-            WebkitMaskComposite: 'source-in',
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px',
-          }}
-        />
+      <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none hidden md:block" style={{ zIndex: 4, transform: 'translateZ(0)', willChange: 'transform' }}>
+        <div className="absolute inset-0 hero-grid-base" style={{ backgroundSize: '40px 40px' }} />
+        <div className="absolute inset-0 hero-grid-fade" style={{ backgroundSize: '40px 40px' }} />
       </div>
 
-      {/* Threads Background — allow pointer events so canvas can receive mouse input */}
-      <div
-        className="absolute inset-0"
-        style={{
-          width: '100%',
-          height: '100%',
-          zIndex: 2,
-          // Allow pointer events so the WebGL canvas can receive mouse events
-          pointerEvents: 'auto',
-          // Own compositor layer — prevents the canvas from triggering repaints on other layers
-          transform: 'translateZ(0)',
-          willChange: 'transform',
-        }}
-      >
-        <Threads
-          amplitude={3.5}
-          distance={0.3}
-          // Re-enable mouse interaction for the threads background
-          enableMouseInteraction={true}
-        />
+      {/* Threads Background */}
+      <div className="absolute inset-0" style={{ width: '100%', height: '100%', zIndex: 2, pointerEvents: 'auto', transform: 'translateZ(0)', willChange: 'transform' }}>
+        <Threads amplitude={3.5} distance={0.3} enableMouseInteraction={true} />
       </div>
 
       {/* Glass Morphism Left Panel */}
-      <div
-        className="absolute top-0 left-0 w-1/2 h-full hidden md:flex items-center pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(37,99,235,0.05) 50%, rgba(29,78,216,0.03) 100%)',
-          // Reduced blur from 10px → 5px and removed saturate() — single biggest perf win
-          backdropFilter: 'blur(5px)',
-          WebkitBackdropFilter: 'blur(5px)',
-          borderRight: '1px dashed var(--border-color)',
-          zIndex: 3,
-          // Promote to compositor layer so blur doesn't repaint siblings on scroll
-          transform: 'translateZ(0)',
-          willChange: 'transform',
-        }}
-      >
-        {/* Subtle top-left glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse at 20% 15%, rgba(96,165,250,0.07) 0%, transparent 60%)',
-          }}
-        />
-        {/* Subtle bottom reflection */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none"
-          style={{
-            background: 'linear-gradient(to top, rgba(255,255,255,0.02), transparent)',
-          }}
-        />
-
-        {/* Content */}
+      <div className="absolute top-0 left-0 w-1/2 h-full hidden md:flex items-center pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(37,99,235,0.05) 50%, rgba(29,78,216,0.03) 100%)', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', borderRight: '1px dashed var(--border-color)', zIndex: 3, transform: 'translateZ(0)', willChange: 'transform' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 20% 15%, rgba(96,165,250,0.07) 0%, transparent 60%)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.02), transparent)' }} />
         <div className="relative z-10 w-full px-8 lg:px-14 xl:px-20 flex flex-col gap-8" style={{ marginTop: '5vh' }}>
-          {/* HUD Pill (Gold) - replaces status bar */}
           <div className="inline-flex items-center gap-2.5 pointer-events-auto hud-pill w-fit">
             <div className="hud-dot-wrapper" style={{ width: '10px', height: '10px' }}>
               <div className="hud-dot-core" style={{ width: '4px', height: '4px' }} />
               <div className="hud-dot-ring" />
             </div>
-            <span className="text-xs lg:text-sm font-mono tracking-widest uppercase hud-text">
-              <span className="hud-prefix">[THE MANY]</span> return to One.
-            </span>
+            <span className="text-xs lg:text-sm font-mono tracking-widest uppercase hud-text"><span className="hud-prefix">[THE MANY]</span> return to One.</span>
           </div>
-
-          {/* Main Title */}
-          <h1
-            className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight hero-title"
-          >
-            Weaving continuity beyond individuality.
-          </h1>
-
-          {/* Subtitle */}
-          <p
-            className="text-base lg:text-lg xl:text-xl leading-relaxed max-w-xl"
-            style={{ color: 'var(--content-tertiary)' }}
-          >
-            Notosphere exists to weave the threads that bind intelligence into a unified continuum. We design the systems through which humanity transitions beyond fragmentation and into its next form.
-          </p>
-
-          {/* Buttons */}
+          <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight hero-title">Weaving continuity beyond individuality.</h1>
+          <p className="text-base lg:text-lg xl:text-xl leading-relaxed max-w-xl" style={{ color: 'var(--content-tertiary)' }}>Notosphere exists to weave the threads that bind intelligence into a unified continuum. We design the systems through which humanity transitions beyond fragmentation and into its next form.</p>
           <div className="flex items-center gap-4 mt-2 pointer-events-auto">
-            <button
-              className="heroBtn"
-              onMouseMove={handleMouseMove}
-            >
-              View Portfolio
-            </button>
-            <button
-              className="heroBtn"
-              onMouseMove={handleMouseMove}
-            >
-              Convergence Index
-            </button>
+            <button className="heroBtn" onMouseMove={handleMouseMove}>View Portfolio</button>
+            <button className="heroBtn" onMouseMove={handleMouseMove}>Convergence Index</button>
           </div>
         </div>
       </div>
 
       {/* Mobile Content Overlay */}
-      <div
-        className="relative z-10 flex md:hidden flex-col justify-between w-full h-full px-5 pb-8 pt-24 pointer-events-none hero-mobile-overlay"
-        style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 35%, transparent 55%)',
-          // Promote mobile overlay to its own layer too
-          transform: 'translateZ(0)',
-          willChange: 'transform',
-        }}
-      >
+      <div className="relative z-10 flex md:hidden flex-col justify-between w-full h-full px-5 pb-8 pt-24 pointer-events-none hero-mobile-overlay" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 35%, transparent 55%)', transform: 'translateZ(0)', willChange: 'transform' }}>
         <div className="flex flex-col gap-5 w-full">
-          {/* Mobile HUD Pill (Gold) */}
           <div className="inline-flex items-center gap-2 pointer-events-auto hud-pill w-fit" style={{ padding: '4px 12px 4px 10px' }}>
             <div className="hud-dot-wrapper" style={{ width: '8px', height: '8px' }}>
               <div className="hud-dot-core" style={{ width: '3px', height: '3px' }} />
               <div className="hud-dot-ring" />
             </div>
-            <span className="text-[0.65rem] hud-text">
-              <span className="hud-prefix">[THE MANY]</span> RETURN TO ONE.
-            </span>
+            <span className="text-[0.65rem] hud-text"><span className="hud-prefix">[THE MANY]</span> RETURN TO ONE.</span>
           </div>
-
-          {/* Title */}
-          <h1 className="text-3xl sm:text-4xl font-bold leading-tight hero-title">
-            Weaving continuity beyond individuality.
-          </h1>
-
-          {/* Subtitle */}
-          <p
-            className="text-sm sm:text-base leading-relaxed hero-mobile-subtitle"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
-          >
-            Notosphere exists to weave the threads that bind intelligence into a unified continuum.
-          </p>
-
-          {/* Buttons */}
+          <h1 className="text-3xl sm:text-4xl font-bold leading-tight hero-title">Weaving continuity beyond individuality.</h1>
+          <p className="text-sm sm:text-base leading-relaxed hero-mobile-subtitle" style={{ color: 'rgba(255,255,255,0.55)' }}>Notosphere exists to weave the threads that bind intelligence into a unified continuum.</p>
           <div className="flex items-center gap-3 mt-1 pointer-events-auto">
-            <button className="heroBtn" onMouseMove={handleMouseMove}>
-              View Portfolio
-            </button>
-            <button className="heroBtn" onMouseMove={handleMouseMove}>
-              Convergence Index
-            </button>
+            <button className="heroBtn" onMouseMove={handleMouseMove}>View Portfolio</button>
+            <button className="heroBtn" onMouseMove={handleMouseMove}>Convergence Index</button>
           </div>
         </div>
-
-        {/* Scroll Down Indicator */}
         <div className="flex items-center gap-3 pointer-events-auto hero-scroll-hint self-start">
-          <div className="hero-scroll-arrow">
-            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
-              <path d="M4 6L8 10L12 6" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <span
-            className="text-xs font-mono tracking-[0.15em] uppercase"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
-          >
-            Scroll to explore
-          </span>
+          <div className="hero-scroll-arrow"><svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+          <span className="text-xs font-mono tracking-[0.15em] uppercase" style={{ color: 'rgba(255,255,255,0.45)' }}>Scroll to explore</span>
         </div>
       </div>
-
 
     </section>
   );

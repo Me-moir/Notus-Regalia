@@ -1,7 +1,8 @@
 "use client";
 import { memo } from 'react';
-import Overview from './Overview';
-import AboutHeader from './AboutHeader';
+import Overview from './OverviewGrids';
+import DiscoverHeader from './DiscoverHeader';
+import WorldPanel from './AboutPanel';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Empty placeholder section — reused for future pages
@@ -46,48 +47,17 @@ PlaceholderSection.displayName = 'PlaceholderSection';
 const Discover = () => {
   return (
     <div style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      {/* About Header */}
-      <AboutHeader />
+      {/* Discover Header */}
+      <DiscoverHeader />
 
       {/* Overview Section */}
       <div id="section-overview">
         <Overview />
       </div>
-
-      {/* About Section — placeholder */}
-      <PlaceholderSection
-        id="section-about"
-        title="About"
-        subtitle="This section is coming soon."
-      />
-
-      {/* Direction Section — placeholder */}
-      <PlaceholderSection
-        id="section-direction"
-        title="Direction"
-        subtitle="This section is coming soon."
-      />
-
-      {/* Team Section — placeholder */}
-      <PlaceholderSection
-        id="section-team"
-        title="Team"
-        subtitle="This section is coming soon."
-      />
-
-      {/* Governance Section — placeholder */}
-      <PlaceholderSection
-        id="section-governance"
-        title="Governance"
-        subtitle="This section is coming soon."
-      />
-
-      {/* Affiliations Section — placeholder */}
-      <PlaceholderSection
-        id="section-affiliations"
-        title="Affiliations"
-        subtitle="This section is coming soon."
-      />
+      {/* World panel: company / direction / teams / governance / affiliations / reachout */}
+      <div id="section-world">
+        <WorldPanel />
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import HeroSection from '../Discover/HeroSection';
+import HeroSection from './HeroSection';
 
 const Landing = () => {
   return (

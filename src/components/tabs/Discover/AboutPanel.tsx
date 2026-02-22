@@ -13,7 +13,6 @@ import styles from "@/styles/About.module.css";
 
 type WorldContentType = "company" | "direction" | "teams" | "governance" | "affiliations" | "reachout";
 
-// Pre-computed corner positions
 type CornerPosition = {
   top?: number;
   bottom?: number;
@@ -33,7 +32,7 @@ const CORNER_POSITIONS: CornerPosition[] = [
   { bottom: 0, right: 0, borderR: true, borderB: true, delay: 1.5 },
 ];
 
-const About = memo(() => {
+const WorldPanel = memo(() => {
   const {
     activeContent,
     displayContent,
@@ -48,18 +47,15 @@ const About = memo(() => {
 
   const { handleMouseMove } = useAboutMouseTracking();
 
-  // Memoized data
   const activeContentData = WORLD_CONTENT_DATA[activeContent];
   const currentSubsectionKey = displaySubsection[activeContent];
   const currentSubsection = activeContentData.subsections.find(s => s.key === currentSubsectionKey) || activeContentData.subsections[0];
 
-  // Selector position style
   const selectorStyles = useMemo(() => ({
     top: `${selectorPosition * (100 / WORLD_GRID_ITEMS.length)}%`,
     height: `${100 / WORLD_GRID_ITEMS.length}%`,
   }), [selectorPosition]);
 
-  // Learn more link
   const getLearnMoreLink = useCallback(() => {
     const links: Record<WorldContentType, string> = {
       company: '/company',
@@ -74,7 +70,6 @@ const About = memo(() => {
 
   return (
     <>
-      {/* Meta tags to prevent search indexing */}
       <Head>
         <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, noydir" />
         <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
@@ -84,19 +79,15 @@ const About = memo(() => {
       </Head>
 
       <section className={styles.aboutSection} data-nosnippet="true">
-        {/* Noise texture */}
         <div className={styles.noiseTexture} />
 
         <div className="relative z-10 h-full">
           <div className={styles.mainGrid}>
-            {/* Left: Grid Navigation */}
             <div className={styles.gridNavigation}>
-              {/* Active Selector */}
               <div className={styles.activeSelector} style={selectorStyles}>
                 <div className={styles.selectorBackground} />
                 <div className={styles.selectorBorder} />
 
-                {/* Corner Indicators */}
                 {CORNER_POSITIONS.map((corner, idx) => (
                   <div
                     key={idx}
@@ -113,7 +104,6 @@ const About = memo(() => {
                 ))}
               </div>
 
-              {/* Grid Buttons */}
               {WORLD_GRID_ITEMS.map((item, index) => (
                 <GridNavButton
                   key={item.key}
@@ -126,10 +116,8 @@ const About = memo(() => {
               ))}
             </div>
 
-            {/* Right: Content Panel */}
             <div className={styles.contentPanel}>
               <div className={`${styles.contentWrapper} ${isTransitioning ? styles.transitioning : ''}`}>
-                {/* Tab Buttons */}
                 {(activeContentData.buttonType === 'tabs' || activeContentData.buttonType === 'cards') && (
                   <>
                     <div className={styles.tabButtonsContainer}>
@@ -147,68 +135,46 @@ const About = memo(() => {
                   </>
                 )}
 
-                {/* Tab Content */}
                 <div className={`${styles.tabContent} ${isTabTransitioning ? styles.transitioning : ''}`}>
-                  <h3 className={styles.sectionTitle}>
-                    {currentSubsection.label}
-                  </h3>
+                  <h3 className={styles.sectionTitle}>{currentSubsection.label}</h3>
 
-                  {/* Executive Cards (Teams section only) */}
                   {activeContent === 'teams' && currentSubsectionKey === 'core-executives' && (
                     <>
                       <div className={styles.descriptionContainer}>
                         {currentSubsection.description.map((paragraph, index) => (
-                          <p key={index} className={styles.descriptionText}>
-                            {paragraph}
-                          </p>
+                          <p key={index} className={styles.descriptionText}>{paragraph}</p>
                         ))}
                       </div>
 
                       {activeContentData.executives && (
                         <div className={styles.executivesGrid} aria-hidden="true" data-nosnippet="true">
                           {activeContentData.executives.map((exec) => (
-                            <ExecutiveCard
-                              key={exec.id}
-                              {...exec}
-                              onMouseMove={handleMouseMove}
-                            />
+                            <ExecutiveCard key={exec.id} {...exec} onMouseMove={handleMouseMove} />
                           ))}
                         </div>
                       )}
                     </>
                   )}
 
-                  {/* Regular Description Content */}
                   {!(activeContent === 'teams' && currentSubsectionKey === 'core-executives') && (
                     <div className={styles.descriptionContainer}>
                       {currentSubsection.description.map((paragraph, index) => (
-                        <p key={index} className={styles.descriptionText}>
-                          {paragraph}
-                        </p>
+                        <p key={index} className={styles.descriptionText}>{paragraph}</p>
                       ))}
                     </div>
                   )}
 
-                  {/* Affiliation Table */}
                   {activeContent === 'affiliations' && currentSubsection.entries && currentSubsection.entries.length > 0 && (
                     <div className={styles.affiliationTable}>
                       {currentSubsection.entries.map((entry) => (
-                        <AffiliationRow
-                          key={entry.id}
-                          {...entry}
-                          onMouseMove={handleMouseMove}
-                        />
+                        <AffiliationRow key={entry.id} {...entry} onMouseMove={handleMouseMove} />
                       ))}
                     </div>
                   )}
                 </div>
 
-                {/* Learn More Button */}
                 <div className={styles.learnMoreSection}>
-                  <LearnMoreButton
-                    href={getLearnMoreLink()}
-                    onMouseMove={handleMouseMove}
-                  />
+                  <LearnMoreButton href={getLearnMoreLink()} onMouseMove={handleMouseMove} />
                 </div>
               </div>
             </div>
@@ -219,6 +185,6 @@ const About = memo(() => {
   );
 });
 
-About.displayName = 'About';
+WorldPanel.displayName = 'WorldPanel';
 
-export default About;
+export default WorldPanel;
