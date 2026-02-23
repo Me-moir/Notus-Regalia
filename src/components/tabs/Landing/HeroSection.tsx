@@ -296,7 +296,7 @@ const HeroSection = () => {
             <span className="text-xs lg:text-sm font-mono tracking-widest uppercase hud-text"><span className="hud-prefix">[THE MANY]</span> return to One.</span>
           </div>
           <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight hero-title">Weaving continuity beyond individuality.</h1>
-          <p className="text-base lg:text-lg xl:text-xl leading-relaxed max-w-xl" style={{ color: 'var(--content-tertiary)' }}>Notosphere exists to weave the threads that bind intelligence into a unified continuum. We design the systems through which humanity transitions beyond fragmentation and into its next form.</p>
+          <p className="text-base lg:text-lg xl:text-xl leading-relaxed max-w-xl" style={{ color: 'var(--content-tertiary)' }}>Notus Regalia exists to weave the threads that bind intelligence into a unified continuum. We design the systems through which humanity transitions beyond fragmentation and into its next form.</p>
           <div className="flex items-center gap-4 mt-2 pointer-events-auto">
             <button className="heroBtn" onMouseMove={handleMouseMove}>View Portfolio</button>
             <button className="heroBtn" onMouseMove={handleMouseMove}>Convergence Index</button>
@@ -315,7 +315,7 @@ const HeroSection = () => {
             <span className="text-[0.65rem] hud-text"><span className="hud-prefix">[THE MANY]</span> RETURN TO ONE.</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold leading-tight hero-title">Weaving continuity beyond individuality.</h1>
-          <p className="text-sm sm:text-base leading-relaxed hero-mobile-subtitle" style={{ color: 'rgba(255,255,255,0.55)' }}>Notosphere exists to weave the threads that bind intelligence into a unified continuum.</p>
+          <p className="text-sm sm:text-base leading-relaxed hero-mobile-subtitle" style={{ color: 'rgba(255,255,255,0.55)' }}>Notus Regalia exists to weave the threads that bind intelligence into a unified continuum.</p>
           <div className="flex items-center gap-3 mt-1 pointer-events-auto">
             <button className="heroBtn" onMouseMove={handleMouseMove}>View Portfolio</button>
             <button className="heroBtn" onMouseMove={handleMouseMove}>Convergence Index</button>

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
-const logoImage = '/assets/Notosphere-logo.svg';
+const logoImage = '/assets/Notus-Regalia-logo.svg';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -437,7 +437,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         <div className="p-6" style={{ borderBottom: '1px solid var(--border-color)' }}>
           <Image 
             src={logoImage} 
-            alt="Notosphere" 
+            alt="Notus Regalia" 
             width={200} 
             height={56} 
             className="h-14 w-auto mx-auto rounded-md" 

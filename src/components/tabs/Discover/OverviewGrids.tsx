@@ -26,7 +26,7 @@ const Overview = memo(() => {
         {/* "What's in Regalitica?" header */}
         <div className="text-center mb-6 md:mb-10 lg:mb-12">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold inline">
-            {'What\'s in Notosphere? '.split('').map((letter, i) => (
+            {'Notus Regalia — '.split('').map((letter, i) => (
               <span 
                 key={i} 
                 className={styles.premiumBtnLetter}

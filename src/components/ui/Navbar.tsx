@@ -885,13 +885,13 @@ const Navbar = ({
             aria-label="Go to home page"
           >
             <div className="logo-icon">
-              <Image src="/assets/Notosphere-logo.svg" alt="Notosphere" width={42} height={42} priority />
+              <Image src="/assets/Notus-Regalia-logo.svg" alt="Notus Regalia" width={42} height={42} priority />
             </div>
             <div
               className="logo-text"
               style={{ fontSize: isMobile ? '0.95rem' : undefined, letterSpacing: 'normal', textTransform: 'none', margin: 0 }}
             >
-              Notosphere <span style={{ color: '#EB1143', fontWeight: 300 }}>Group</span>
+              Notus <span style={{ color: '#EB1143', fontWeight: 300 }}>Regalia</span>
             </div>
           </button>
 

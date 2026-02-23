@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
-const logoImage = '/assets/Notosphere-logo.svg';
+const logoImage = '/assets/Notus-Regalia-logo.svg';
 
 function hexToRgb(hex: string) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -132,10 +132,10 @@ function DotPattern({
 }
 
 const contactEmails = [
-  { label: 'General',      address: 'hello@notosphere.com' },
-  { label: 'Careers',      address: 'careers@notosphere.com' },
-  { label: 'Partnerships', address: 'partners@notosphere.com' },
-  { label: 'Support',      address: 'support@notosphere.com' },
+  { label: 'General',      address: 'info@notus-regalia.com' },
+  { label: 'Careers',      address: 'careers@notus-regalia.com' },
+  { label: 'Partnerships', address: 'partners@notus-regalia.com' },
+  { label: 'Support',      address: 'support@notus-regalia.com' },
 ];
 
 // Copy icon SVG
@@ -424,10 +424,10 @@ const Footer = () => {
 
         /* ── Contact emails ── */
         .ct-email-list {
-          display: grid; grid-template-columns: repeat(2, 1fr);
+          display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 2.5rem;
         }
-        .ct-email-row { display: flex; flex-direction: column; gap: 0.4rem; }
+        .ct-email-row { display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
         .ct-email-label {
           font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.16em;
           color: rgba(255,255,255,0.28); font-weight: 500;
@@ -440,7 +440,10 @@ const Footer = () => {
           color: rgba(255,255,255,0.7); font-weight: 500; letter-spacing: 0.01em;
           cursor: pointer; background: none; border: none; padding: 0; text-align: left;
           transition: color 0.2s ease;
+          white-space: nowrap; /* keep email on single line */
+          overflow: visible;
         }
+        .ct-email-btn > span { display: inline-block; }
         .ct-email-btn:hover { color: #ffffff; }
         .ct-email-btn:hover .ct-copy-icon { opacity: 1; }
         .ct-email-btn.is-copied { color: #E31B54; }
@@ -459,6 +462,8 @@ const Footer = () => {
           .split-panel-nl, .split-panel-ct { margin-left: 0; clip-path: none; }
           .split-panel-nl-bg, .split-panel-ct-bg { clip-path: none; left: 0; right: 0; }
           .split-panel-nl { border-bottom: 1px solid rgba(255,255,255,0.06); }
+          .ct-email-list { grid-template-columns: 1fr; }
+          .ct-email-btn { white-space: normal; }
         }
 
         /* ══ MAIN FOOTER ══ */
@@ -589,7 +594,7 @@ const Footer = () => {
           />
           <div className="split-panel-content" style={{ marginLeft: 'auto' }}>
             <div style={{ textAlign: 'right' }}>
-              <p className="sp-eyebrow" style={{ justifyContent: 'flex-end' }}><span className="sp-eyebrow-dot" />Notosphere Signal</p>
+              <p className="sp-eyebrow" style={{ justifyContent: 'flex-end' }}><span className="sp-eyebrow-dot" />Notus Regalia Signal</p>
               <h2 className="sp-title">Newsletter</h2>
               <p className="sp-sub" style={{ marginLeft: 'auto' }}>
                 Curated insights on emerging ideas, ventures, and moments that matter — delivered sparingly, always with intent. No noise. No algorithms. Just signal.
@@ -647,14 +652,14 @@ const Footer = () => {
               }}
             >
               <div className="logo-badge">
-                <Image src={logoImage} alt="Notosphere" width={160} height={160}
+                <Image src={logoImage} alt="Notus Regalia" width={160} height={160}
                   className="logo-badge-img h-40 w-40 object-contain relative z-10 transition-transform duration-500 opacity-95 group-hover:opacity-100"
                   priority={false} />
               </div>
             </a>
             <div className="space-y-3">
               <h3 className="footer-brand-title">
-                Notosphere <span style={{ color: '#EB1143', fontWeight: 300 }}>Group</span>
+                Notus <span style={{ color: '#EB1143', fontWeight: 300 }}>Regalia</span>
               </h3>
               <div className="footer-tagline">
                 <p>Beyond Perception.</p>
@@ -686,7 +691,7 @@ const Footer = () => {
         {/* Bottom bar */}
         <div className="flex flex-col-reverse sm:flex-row items-center sm:justify-between justify-center pt-10 border-t border-dashed border-white/10 gap-5 footer-bottom">
           <p className="footer-meta uppercase tracking-wider footer-copyright">
-            &copy; 2026 Notosphere Group — The Notos Dynasty
+            &copy; 2026 Notus Regalia — The Notus Dynasty
             <br />
             All rights reserved.
           </p>

@@ -57,7 +57,7 @@ export interface AboutGridItem {
       icon: 'bi-mortarboard',
       title: 'Founder-Operator Model',
       description: [
-        'Notosphere functions as a founder-operator platform. While student-founded, ventures are governed with institutional discipline and long-term ownership principles.'
+        'Notus Regalia functions as a founder-operator platform. While student-founded, ventures are governed with institutional discipline and long-term ownership principles.'
       ]
     },
     {
@@ -102,7 +102,7 @@ export interface AboutGridItem {
           key: 'our-story',
           label: 'Our Story',
           description: [
-            'Founded with a vision to bridge the gap between emerging technology and real-world impact, Notosphere began as a student-led initiative focused on solving complex challenges through innovative solutions.',
+            'Founded with a vision to bridge the gap between emerging technology and real-world impact, Notus Regalia began as a student-led initiative focused on solving complex challenges through innovative solutions.',
             'What started as a small group of passionate builders has evolved into a multi-venture platform operating across diverse sectors including healthcare, fintech, cleantech, and education.',
             'Our journey has been marked by a commitment to disciplined execution, strategic partnerships, and a relentless focus on creating value that extends beyond traditional metrics.'
           ]

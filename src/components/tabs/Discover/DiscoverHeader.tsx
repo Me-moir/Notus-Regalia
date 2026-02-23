@@ -35,7 +35,7 @@ const DiscoverHeader = memo(() => {
               backgroundClip: "text",
             }}
           >
-            NOTOSPHERE
+            NOTUS REGALIA
           </h1>
           <p
             className="select-none font-mono text-xs tracking-[0.15em] sm:text-sm"
