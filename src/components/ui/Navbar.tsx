@@ -70,9 +70,9 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-const ThemeToggleIconOnly = () => {
+// ── Shared dark-mode hook ──
+function useDarkMode() {
   const [dark, setDark] = useState(false);
-
   useEffect(() => {
     const root = document.documentElement;
     setDark(root.classList.contains('dark'));
@@ -80,22 +80,96 @@ const ThemeToggleIconOnly = () => {
     obs.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => obs.disconnect();
   }, []);
-
   const toggle = useCallback(() => {
     const root = document.documentElement;
     root.classList.toggle('dark');
     root.classList.toggle('light');
     setDark(prev => !prev);
   }, []);
+  return { dark, toggle };
+}
 
+// ── Theme toggle — styled exactly like main nav tab buttons ──
+const ThemeToggleTabBtn = ({ isMobile }: { isMobile: boolean }) => {
+  const { dark, toggle } = useDarkMode();
+  return (
+    <div className="tab-item-border">
+      <div className="tab-item">
+        <button
+          className="tab-label-btn"
+          onClick={toggle}
+          aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+          style={{ padding: isMobile ? '11px 13px' : '11px 18px 11px 16px' }}
+        >
+          <i className={`bi ${dark ? 'bi-sun' : 'bi-moon'}`} style={{ fontSize: '0.85rem' }} />
+          {!isMobile && <span>{dark ? 'Light' : 'Dark'}</span>}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ── Hide-navbar button — styled exactly like main nav tab buttons ──
+const HideNavTabBtn = ({
+  isMobile,
+  onClick,
+}: {
+  isMobile: boolean;
+  onClick: () => void;
+}) => (
+  <div className="tab-item-border collapse-btn-desktop">
+    <div className="tab-item">
+      <button
+        className="tab-label-btn collapse-btn-desktop"
+        onClick={onClick}
+        aria-label="Hide navigation bar"
+        style={{ padding: isMobile ? '11px 13px' : '11px 18px 11px 16px' }}
+      >
+        <i className="bi bi-eye-slash" style={{ fontSize: '0.85rem' }} />
+        {!isMobile && <span>Hide</span>}
+      </button>
+    </div>
+  </div>
+);
+
+// ── Search button — styled exactly like main nav tab buttons ──
+const SearchTabBtn = ({
+  isMobile,
+  onClick,
+}: {
+  isMobile: boolean;
+  onClick: () => void;
+}) => (
+  <div className="tab-item-border">
+    <div className="tab-item">
+      <button
+        className="tab-label-btn"
+        onClick={onClick}
+        aria-label="Open search"
+        style={{ padding: isMobile ? '11px 13px' : '11px 18px 11px 16px' }}
+      >
+        <i className="bi bi-search" style={{ fontSize: '0.85rem' }} />
+        {!isMobile && <span>Search</span>}
+        {!isMobile && <span className="search-shortcut">⌘K</span>}
+      </button>
+    </div>
+  </div>
+);
+
+// ── Sticky theme tab: shown below "Show Nav" when navbar is collapsed ──
+const StickyThemeTab = ({ visible, isMobile }: { visible: boolean; isMobile: boolean }) => {
+  const { dark, toggle } = useDarkMode();
   return (
     <button
+      className={`nav-theme-tab${visible ? ' tab-visible' : ''}`}
       onClick={toggle}
-      className="nav-icon-btn"
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-      data-tip={dark ? 'Light mode' : 'Dark mode'}
     >
-      <i className={`bi ${dark ? 'bi-sun' : 'bi-moon'}`} style={{ fontSize: '1rem' }} />
+      <i
+        className={`bi ${dark ? 'bi-sun' : 'bi-moon'} reveal-tab-icon`}
+        style={{ fontSize: '0.9rem' }}
+      />
+      {!isMobile && <span>{dark ? 'Light' : 'Dark'}</span>}
     </button>
   );
 };
@@ -105,6 +179,13 @@ const NAVBAR_CSS = `
   0%   { background-position: 0% 0%; }
   100% { background-position: 200% 0%; }
 }
+
+/* Light-mode overrides: keep navbar visually white while retaining glass blur/shadow */
+:root.light .glass-navbar {
+  background: linear-gradient(to bottom, #f8fafc 0%, #eef2f6 60%);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+:root.light .glass-navbar::before { display: none; }
 @keyframes subIn {
   from { opacity:0; transform:translateX(10px); }
   to   { opacity:1; transform:translateX(0); }
@@ -116,9 +197,10 @@ const NAVBAR_CSS = `
 
 .glass-navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 60;
-  background: var(--glass-bg);
+  /* Match contact-band visual while retaining liquid glass texture */
+  background: linear-gradient(160deg, #0a0a0f 0%, #0d0d14 60%, #080810 100%);
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
   box-shadow:
     0 8px 32px var(--glass-shadow-1), 0 12px 48px var(--glass-shadow-2),
     inset 0 1px 1px var(--glass-inset-top), inset 0 -1px 1px var(--glass-inset-bottom);
@@ -156,43 +238,10 @@ const NAVBAR_CSS = `
 .logo-icon svg { width: 20px; height: 20px; fill: rgba(255,255,255,0.92); }
 .logo-text { font-size: 1.18rem; font-weight: 800; letter-spacing: -0.03em; color: var(--content-primary); line-height: 1; }
 
-.nav-icon-btn {
-  position: relative;
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 9px;
-  border: 1px solid var(--border-color);
-  background: var(--hover-bg, rgba(255,255,255,0.08));
-  color: var(--content-primary);
-  font-size: 1rem; cursor: pointer; flex-shrink: 0;
-  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease, transform 0.18s ease, box-shadow 0.18s ease;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top, rgba(255,255,255,0.06));
-}
-.nav-icon-btn:hover {
-  background: var(--hover-bg-strong, rgba(255,255,255,0.16));
-  border-color: var(--content-faint, rgba(255,255,255,0.25));
-  box-shadow: 0 3px 10px rgba(0,0,0,0.22), inset 0 1px 0 var(--glass-inset-top, rgba(255,255,255,0.06));
-  transform: translateY(-1px);
-}
-.nav-icon-btn:active { transform: translateY(0); }
-.nav-icon-btn::after {
-  content: attr(data-tip);
-  position: absolute;
-  top: calc(100% + 9px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-4px);
-  background: var(--surface-secondary, #1a1a1a);
-  color: var(--content-primary);
-  font-size: 0.7rem; font-weight: 500;
-  white-space: nowrap; padding: 4px 9px; border-radius: 6px;
-  border: 1px solid var(--border-color);
-  pointer-events: none; opacity: 0;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  z-index: 999;
-}
-.nav-icon-btn:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-.nav-reveal-tab {
-  position: fixed; top: 16px; right: 0; z-index: 59;
+/* ── Shared base styles for both sticky side tabs ── */
+.nav-reveal-tab,
+.nav-theme-tab {
+  position: fixed; right: 0; z-index: 59;
   display: flex; align-items: center; gap: 7px;
   padding: 9px 14px 9px 12px;
   border-radius: 10px 0 0 10px;
@@ -208,17 +257,26 @@ const NAVBAR_CSS = `
     transform 0.38s cubic-bezier(0.34, 1.18, 0.64, 1),
     color 0.15s ease, box-shadow 0.2s ease;
 }
-.nav-reveal-tab.tab-visible { opacity: 1; pointer-events: auto; transform: translateX(0); }
-.nav-reveal-tab:hover { color: var(--content-primary); box-shadow: -6px 4px 28px rgba(0,0,0,0.35); }
-.nav-reveal-tab:hover .reveal-tab-icon { transform: translateX(-2px); }
+.nav-reveal-tab { top: 16px; }
+.nav-theme-tab  { top: calc(16px + 38px + 6px); }
+.nav-reveal-tab,
+.nav-theme-tab  { min-width: 118px; justify-content: flex-start; }
+.nav-reveal-tab.tab-visible,
+.nav-theme-tab.tab-visible  { opacity: 1; pointer-events: auto; transform: translateX(0); }
+.nav-theme-tab.tab-visible { transition-delay: 0.06s; }
+.nav-reveal-tab:hover,
+.nav-theme-tab:hover { color: var(--content-primary); box-shadow: -6px 4px 28px rgba(0,0,0,0.35); }
+.nav-reveal-tab:hover .reveal-tab-icon,
+.nav-theme-tab:hover  .reveal-tab-icon { transform: translateX(-2px); }
 .reveal-tab-icon { font-size: 0.82rem; transition: transform 0.2s cubic-bezier(0.34,1.18,0.64,1); }
-.nav-reveal-tab::before {
-  content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px;
+.nav-reveal-tab::before,
+.nav-theme-tab::before {
+  content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2.5px;
   border-radius: 999px;
   background: linear-gradient(180deg,
-    rgba(0,255,166,0.9) 0%, rgba(255,215,0,0.7) 33%,
-    rgba(236,72,153,0.7) 66%, rgba(147,51,234,0.6) 100%);
-  opacity: 0.75;
+    rgba(220,20,60,1) 0%, rgba(200,15,50,0.9) 50%, rgba(180,10,40,0.75) 100%);
+  opacity: 0.9;
+  box-shadow: 0 0 6px rgba(220,20,60,0.6);
 }
 
 .nav-divider {
@@ -230,7 +288,6 @@ const NAVBAR_CSS = `
 .nav-center {
   position: relative; flex: 1; min-width: 0;
   display: flex; align-items: center;
-  /* FIX: was overflow:hidden which clipped the ::before gradient border bleed */
   overflow: visible;
 }
 
@@ -241,7 +298,6 @@ const NAVBAR_CSS = `
 .tabs-row.expanded { opacity: 0; transform: translateX(-16px); }
 .tabs-row.expanded .tab-label-btn { pointer-events: none; }
 
-/* ─── Subs row ─── */
 .subs-row {
   position: absolute; left: 0; top: 50%;
   transform: translateY(-50%) translateX(20px);
@@ -250,13 +306,11 @@ const NAVBAR_CSS = `
   opacity: 0; pointer-events: none;
   transition: opacity 0.22s ease, transform 0.24s ease;
   white-space: nowrap;
-  /* FIX: was overflow:hidden which also clipped gradient borders */
   overflow: visible;
   z-index: 10;
 }
 .subs-row.expanded { opacity: 1; transform: translateY(-50%) translateX(0); pointer-events: auto; }
 
-/* ─── Right controls: fade out entirely when subs-row is open ─── */
 .nav-right-controls {
   display: flex; align-items: center; gap: 8px;
   flex-shrink: 0; margin-left: auto;
@@ -264,43 +318,25 @@ const NAVBAR_CSS = `
   transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 .nav-right-controls.controls-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  opacity: 0; visibility: hidden; pointer-events: none;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   GRADIENT BORDER — ::before pseudo on wrapper, masked to border only.
-   The ::before is a full-bleed animated gradient clamped to a 2px ring
-   using outline-based clip: we set border-radius + overflow:hidden on
-   the wrapper so ::before fills it, then the inner .tab-item covers
-   everything except the border gap with its own opaque background.
-   Key: .tab-item uses a NON-transparent background (forced solid color
-   via a CSS variable you must define), so the gradient shows ONLY in
-   the 2px gap between wrapper edge and inner element edge.
-───────────────────────────────────────────────────────────────── */
-
+/* ── Tab pill wrapper (shared by nav items AND right-control buttons) ── */
 .tab-item-border {
   display: inline-flex; flex-shrink: 0;
   border-radius: 10.5px;
   padding: 1px;
   position: relative;
-  /* Default: transparent so no border shows */
   background: transparent;
 }
-
-/* The animated gradient sits on ::before, filling the wrapper */
 .tab-item-border::before {
   content: '';
   position: absolute; inset: 0;
   border-radius: 10.5px;
   background: linear-gradient(90deg,
-    rgba(0,255,166,0.0)  0%,
-    rgba(0,255,166,0.9) 15%,
-    rgba(255,215,0,0.7) 30%,
-    rgba(236,72,153,0.7) 45%,
-    rgba(147,51,234,0.7) 60%,
-    rgba(59,130,246,0.6) 75%,
+    rgba(0,255,166,0.0) 0%, rgba(0,255,166,0.9) 15%,
+    rgba(255,215,0,0.7) 30%, rgba(236,72,153,0.7) 45%,
+    rgba(147,51,234,0.7) 60%, rgba(59,130,246,0.6) 75%,
     rgba(0,255,166,0.0) 90%);
   background-size: 200% 100%;
   animation: orbitBorder 3s linear infinite;
@@ -308,35 +344,39 @@ const NAVBAR_CSS = `
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-
 .tab-item-border:hover::before,
-.tab-item-border.is-active::before {
-  opacity: 1;
-}
+.tab-item-border.is-active::before { opacity: 1; }
 
 .tab-item {
   display: inline-flex; align-items: stretch; border-radius: 9.5px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top);
   transition: box-shadow 0.2s ease; flex-shrink: 0;
-  /* CRITICAL: must be a solid/opaque color — this covers the ::before gradient
-     inside the button, leaving only the 2px ring around the edge visible.
-     Uses --navbar-bg which you should set to your navbar's actual background color. */
   background: var(--navbar-bg, #0f0f0f);
-  position: relative;
-  width: 100%;
-  z-index: 1;
+  position: relative; width: 100%; z-index: 1;
 }
 .tab-item-border:hover .tab-item {
   box-shadow: 0 4px 14px rgba(0,0,0,0.26), inset 0 1px 0 var(--glass-inset-top);
 }
-.tab-item.is-active {
-  background: var(--navbar-bg-active, #1a1a1a);
-}
-
+.tab-item.is-active { background: var(--navbar-bg-active, #1a1a1a); }
 .dark .tab-item:not(.is-active) {
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top);
   transition: box-shadow 0.25s ease;
+}
+
+:root.light .tab-item {
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,1);
+  outline: 1px solid rgba(0,0,0,0.11);
+}
+:root.light .tab-item.is-active {
+  background: #f5f5f5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13), 0 5px 20px rgba(0,0,0,0.09), inset 0 1px 0 rgba(255,255,255,0.8);
+  outline: 1px solid rgba(0,0,0,0.15);
+}
+:root.light .tab-item-border:hover .tab-item {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 8px 24px rgba(0,0,0,0.09), inset 0 1px 0 rgba(255,255,255,1);
+  outline: 1px solid rgba(0,0,0,0.15);
 }
 
 .tab-label-btn {
@@ -399,34 +439,22 @@ const NAVBAR_CSS = `
   animation-delay: calc(var(--i, 0) * 0.04s);
 }
 
-.search-trigger {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 24px; min-width: 160px; border-radius: 10px;
-  border: none; background: transparent; color: var(--content-faint);
-  font-size: 0.94rem; font-weight: 500; cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 var(--glass-inset-top);
-  transition: color 0.15s ease, box-shadow 0.2s ease, transform 0.15s ease;
-  user-select: none; flex-shrink: 0;
-}
-.search-trigger:hover {
-  color: var(--content-primary);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 var(--glass-inset-top);
-  transform: translateY(-1px);
-}
-.search-trigger .search-shortcut {
+/* ── ⌘K badge inside search button ── */
+.search-shortcut {
   display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 5px;
   font-size: 0.72rem; font-weight: 600; color: var(--content-faint);
   background: var(--hover-bg); border: 1px solid var(--border-color);
-  opacity: 0.7; letter-spacing: 0.03em;
+  opacity: 0.7; letter-spacing: 0.03em; margin-left: 2px;
 }
 
 @media (max-width: 640px) {
-  .nav-center, .nav-divider.desktop-only, .search-trigger { display: none; }
+  .nav-center, .nav-divider.desktop-only { display: none; }
   .tab-sep, .tab-arrow-btn { display: none; }
   .tab-label-btn { padding: 6px 11px; font-size: 0.84rem; }
-  .nav-icon-btn.collapse-btn-desktop { display: none; }
-  .nav-divider.collapse-btn-desktop { display: none; }
+  /* Hide "Hide" button on mobile — sidebar covers this UX */
+  .collapse-btn-desktop { display: none !important; }
   .nav-reveal-tab { top: 12px; padding: 7px 11px 7px 10px; font-size: 0.74rem; }
+  .nav-theme-tab  { top: calc(12px + 34px + 5px); padding: 7px 11px 7px 10px; font-size: 0.74rem; }
 }
 
 .mobile-burger {
@@ -488,13 +516,10 @@ const NAVBAR_CSS = `
 }
 .info-hub-outer.hub-visible { grid-template-rows: 1fr; opacity: 1; border-top-color: var(--border-color); pointer-events: auto; }
 .info-hub-clip { overflow: hidden; min-height: 0; }
-
 .info-hub-expanded { overflow: hidden; transition: max-height 0.44s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; }
 .info-hub-expanded.state-hidden { max-height: 0; opacity: 0; pointer-events: none; }
 .info-hub-expanded.state-visible { max-height: 320px; opacity: 1; pointer-events: auto; }
-
 .info-hub-grid { display: flex; justify-content: center; }
-
 .info-hub-card {
   position: relative; display: flex; flex-direction: column;
   padding: 24px 22px 26px; border: none; background: transparent;
@@ -504,7 +529,6 @@ const NAVBAR_CSS = `
 .info-hub-card:last-child { border-right: none; }
 .info-hub-card:hover:not(.card-active) { background: rgba(255,255,255,0.025); }
 .info-hub-card.card-active { background: rgba(255,255,255,0.03); }
-
 .card-hover-spot {
   position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(180px circle at var(--cx,50%) var(--cy,50%), rgba(255,255,255,0.04), transparent 70%);
@@ -512,7 +536,6 @@ const NAVBAR_CSS = `
 }
 .info-hub-card:not(.card-active):hover .card-hover-spot { opacity: 1; }
 .card-content { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 5px; }
-
 .info-hub-card-icon { font-size: 1.6rem; margin-bottom: 5px; color: var(--content-secondary); transition: color 0.18s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1); }
 .info-hub-card.card-active .info-hub-card-icon { color: var(--content-primary); transform: translateY(-3px); }
 .info-hub-card-title { font-size: 0.93rem; font-weight: 700; letter-spacing: 0.01em; line-height: 1.2; color: var(--content-secondary); transition: color 0.18s ease, transform 0.26s cubic-bezier(0.34,1.56,0.64,1); }
@@ -523,16 +546,13 @@ const NAVBAR_CSS = `
   animation: cardFadeUp 0.32s cubic-bezier(0.34,1.18,0.64,1) both;
   animation-delay: calc(var(--ci, 0) * 0.045s + 0.06s);
 }
-
 .info-hub-slim { overflow: hidden; transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease; }
 .info-hub-slim.state-hidden { max-height: 0; opacity: 0; pointer-events: none; }
 .info-hub-slim.state-visible { max-height: 58px; opacity: 1; pointer-events: auto; }
 .info-hub-slim-inner { display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; height: 54px; border-right: 1px solid var(--border-color); }
 .info-hub-slim-inner::-webkit-scrollbar { display: none; }
-
 .info-slim-label { display: flex; align-items: center; gap: 7px; padding: 0 40px; flex-shrink: 0; border-right: 1px solid var(--border-color); min-width: 210px; }
 .info-slim-label span { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--content-muted); white-space: nowrap; }
-
 .info-slim-tab {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   padding: 0 20px; border: none; background: transparent;
@@ -548,13 +568,11 @@ const NAVBAR_CSS = `
   background: linear-gradient(90deg, transparent 0%, rgba(0,255,166,0.8) 15%, rgba(255,215,0,0.6) 30%, rgba(236,72,153,0.6) 45%, rgba(147,51,234,0.6) 60%, rgba(59,130,246,0.5) 75%, transparent 90%);
   background-size: 200% 100%; animation: orbitBorder 2.5s linear infinite;
 }
-
 :root.light .info-hub-card.card-active,
 :root.light .info-slim-tab.slim-active { background: #000000; color: #ffffff; }
 :root.light .info-hub-card.card-active .info-hub-card-icon,
 :root.light .info-hub-card.card-active .info-hub-card-title,
 :root.light .info-hub-card.card-active .info-hub-card-desc { color: #ffffff; }
-
 .info-slim-expand {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 0 20px; border: none; background: transparent;
@@ -613,24 +631,18 @@ const Navbar = ({
     navCollapsedRef.current = true;
     setExpandedTab(null);
 
-    // Always attach the restore listener — even if already at top,
-    // user may scroll down then back up and expect navbar to return.
     let hasScrolledAway = window.scrollY > 10;
-
     const restore = () => {
       if (!hasScrolledAway) {
-        // Track when they first scroll meaningfully away from top
         if (window.scrollY > 10) hasScrolledAway = true;
         return;
       }
-      // Once they've scrolled away, restore when they return near top
       if (window.scrollY <= 10) {
         setNavCollapsed(false);
         navCollapsedRef.current = false;
         window.removeEventListener('scroll', restore);
       }
     };
-
     window.addEventListener('scroll', restore, { passive: true });
   }, []);
 
@@ -859,6 +871,9 @@ const Navbar = ({
         {!isMobile && <span>Show Nav</span>}
       </button>
 
+      {/* ══ STICKY THEME TOGGLE TAB ══ */}
+      <StickyThemeTab visible={navCollapsed} isMobile={isMobile} />
+
       <nav ref={navContainerRef} className={`glass-navbar${navCollapsed ? ' nav-collapsed' : ''}`}>
 
         {/* ══ MAIN BAR ROW ══ */}
@@ -876,7 +891,7 @@ const Navbar = ({
               className="logo-text"
               style={{ fontSize: isMobile ? '0.95rem' : undefined, letterSpacing: 'normal', textTransform: 'none', margin: 0 }}
             >
-              Notosphere <span className="text-slate-500 font-light">Group</span>
+              Notosphere <span style={{ color: '#EB1143', fontWeight: 300 }}>Group</span>
             </div>
           </button>
 
@@ -958,24 +973,11 @@ const Navbar = ({
             </div>
           </div>
 
-          {/* ── RIGHT CONTROLS — hidden when subs-row is expanded ── */}
+          {/* ── RIGHT CONTROLS: [Theme] [Hide] [Search] — no dividers ── */}
           <div className={`nav-right-controls${isExpanded ? ' controls-hidden' : ''}`}>
-            <ThemeToggleIconOnly />
-            <div className="nav-divider" style={{ height: '28px', alignSelf: 'center' }} />
-            <button className="search-trigger" onClick={openSearch}>
-              <i className="bi bi-search" style={{ fontSize: '0.87rem' }} />
-              {!isMobile && <span>Search</span>}
-              {!isMobile && <span className="search-shortcut">⌘K</span>}
-            </button>
-            <div className="nav-divider collapse-btn-desktop" style={{ height: '28px', alignSelf: 'center' }} />
-            <button
-              className="nav-icon-btn collapse-btn-desktop"
-              onClick={handleCollapseNav}
-              data-tip="Hide navbar"
-              aria-label="Hide navigation bar"
-            >
-              <i className="bi bi-eye-slash" style={{ fontSize: '1.05rem' }} />
-            </button>
+            <ThemeToggleTabBtn isMobile={isMobile} />
+            <HideNavTabBtn isMobile={isMobile} onClick={handleCollapseNav} />
+            <SearchTabBtn isMobile={isMobile} onClick={openSearch} />
             <button className="mobile-burger" onClick={openMobile} aria-label="Open menu">
               <i className="bi bi-list" />
             </button>
