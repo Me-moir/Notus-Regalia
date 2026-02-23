@@ -236,7 +236,7 @@
 }
 
 .sectionTitle {
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: var(--content-primary);
   margin-bottom: 1rem;
@@ -245,27 +245,27 @@
 
 @media (min-width: 640px) {
   .sectionTitle {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     margin-bottom: 1.25rem;
   }
 }
 
 @media (min-width: 768px) {
   .sectionTitle {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .sectionTitle {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 }
 
 @media (min-width: 1280px) {
   .sectionTitle {
-    font-size: 1.875rem;
+    font-size: 2rem;
   }
 }
 
@@ -282,26 +282,26 @@
 }
 
 .descriptionText {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--content-muted);
-  line-height: 1.5rem;
+  line-height: 1.9;
 }
 
 @media (min-width: 640px) {
-  .descriptionText {
-    font-size: 0.875rem;
-  }
-}
-
-@media (min-width: 768px) {
   .descriptionText {
     font-size: 1rem;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .descriptionText {
     font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .descriptionText {
+    font-size: 1.25rem;
   }
 }
 

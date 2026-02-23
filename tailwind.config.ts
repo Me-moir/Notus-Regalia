@@ -7,6 +7,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      lineHeight: {
+        relaxed: '1.9',
+      },
       colors: {
         surface: {
           primary: 'var(--surface-primary)',

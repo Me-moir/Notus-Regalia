@@ -297,3 +297,20 @@ img[src*="/assets/Notus-Regalia-logo.svg"] {
   mix-blend-mode: normal !important;
   background: transparent !important;
 }
+
+/* Increase paragraph line-height for improved readability */
+:root {
+  --content-line-height: 1.9;
+}
+
+p,
+li,
+dd,
+blockquote {
+  line-height: var(--content-line-height);
+}
+
+/* Ensure Tailwind utility 'leading-relaxed' matches this spacing */
+.leading-relaxed {
+  line-height: var(--content-line-height) !important;
+}

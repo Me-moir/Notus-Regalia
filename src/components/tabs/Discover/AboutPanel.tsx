@@ -78,7 +78,7 @@ const ABOUT_TAB_CSS = `
   border: none;
   border-radius: 9.5px;
   padding: 0.5rem 1.25rem;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -96,7 +96,7 @@ const ABOUT_TAB_CSS = `
 @media (min-width: 640px) {
   .about-tab-btn {
     padding: 0.625rem 2rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
   }
 }
 
@@ -179,7 +179,7 @@ const ABOUT_TAB_CSS = `
   text-decoration: none;
   border-radius: 9.5px;
   padding: 0.5rem 1.25rem;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -197,7 +197,7 @@ const ABOUT_TAB_CSS = `
 @media (min-width: 640px) {
   .about-lm-btn {
     padding: 0.625rem 2rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
   }
 }
 
@@ -317,7 +317,7 @@ const AboutPanel = memo(() => {
 
         <div className="relative z-10 h-full">
 
-          {/* ── About Us Header — no background, sits above the panel ── */}
+          {/* ── About Us Header ── */}
           <div
             style={{
               width: '100%',
@@ -347,7 +347,7 @@ const AboutPanel = memo(() => {
             </p>
           </div>
 
-          {/* ── Panel — background lives here only ── */}
+          {/* ── Panel ── */}
           <div className={styles.mainGrid}>
 
             <div className={styles.gridNavigation}>
@@ -391,7 +391,7 @@ const AboutPanel = memo(() => {
                       {activeContentData.subsections.map((subsection) => (
                         <AboutTabButton
                           key={subsection.key}
-                          label={subsection.label}
+                          label={subsection.label}       
                           isActive={activeSubsection[activeContent] === subsection.key}
                           onClick={() => handleSubsectionChange(subsection.key)}
                           onMouseMove={handleMouseMove}
@@ -402,8 +402,8 @@ const AboutPanel = memo(() => {
                   </>
                 )}
 
-                <div className={`${styles.tabContent} ${isTabTransitioning ? styles.transitioning : ""}`}>
-                  <h3 className={styles.sectionTitle}>{currentSubsection.label}</h3>
+                <div className={`${styles.tabContent} ${isTabTransitioning ? styles.transitioning : ""}`} style={{ paddingTop: '2rem' }}>
+                  <h3 className={styles.sectionTitle}>{currentSubsection.contentTitle}</h3>  {/* ← content heading */}
                   {currentSubsection.description && (
                     <div className={styles.descriptionContainer}>
                       {currentSubsection.description.map((paragraph, index) => (
