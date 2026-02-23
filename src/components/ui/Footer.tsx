@@ -258,6 +258,11 @@ const Footer = () => {
           background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.06) 80%, transparent);
         }
 
+        /* Bottom bar divider overrideable for theme */
+        .footer-bottom { border-color: rgba(255,255,255,0.06); }
+
+        .footer-copyright { color: rgba(255,255,255,0.45); }
+
         /* ══ SPLIT BAND ══ */
         .split-band {
           position: relative;
@@ -525,6 +530,9 @@ const Footer = () => {
         :global(.light) .tech-link { color: #0f172a; }
         :global(.light) .tech-link::before, :global(.light) .tech-link::after { color: #EB1143; }
         :global(.light) .hud-border-top::before { background: linear-gradient(90deg, #EB1143, #c40e38); box-shadow: 0 0 8px rgba(235,17,67,0.5); }
+        /* Light-mode footer overrides for copyright and bottom divider */
+        :global(.light) .footer-bottom { border-color: rgba(0,0,0,0.08) !important; }
+        :global(.light) .footer-copyright { color: rgba(15,23,42,0.75) !important; }
       `}</style>
 
       <div className="absolute inset-0 pointer-events-none footer-grid-bg" />
@@ -676,9 +684,11 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center sm:justify-between justify-center pt-10 border-t border-dashed border-white/10 gap-5">
-          <p className="footer-meta uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.45)' }}>
-            &copy; 2026 Notosphere Group. All rights reserved.
+        <div className="flex flex-col-reverse sm:flex-row items-center sm:justify-between justify-center pt-10 border-t border-dashed border-white/10 gap-5 footer-bottom">
+          <p className="footer-meta uppercase tracking-wider footer-copyright">
+            &copy; 2026 Notosphere Group — The Notos Dynasty
+            <br />
+            All rights reserved.
           </p>
           <div className="flex items-center gap-2.5">
             {['bi-twitter-x', 'bi-github', 'bi-discord', 'bi-linkedin'].map((icon, idx) => (
