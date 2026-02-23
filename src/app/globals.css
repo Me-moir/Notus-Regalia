@@ -290,10 +290,8 @@ body {
     sans-serif;
 }
 
-/* Ensure the original SVG logo is not recolored/inverted by global filters
-   (Next/Image generates transformed URLs like /_next/image?url=%2Fassets%2FNotosphere-logo.svg...) */
-img[src*="Notosphere-logo.svg"],
-img[src*="/assets/Notosphere-logo.svg"] {
+
+img[src*="/assets/Notus-Regalia-logo.svg"] {
   filter: none !important;
   -webkit-filter: none !important;
   mix-blend-mode: normal !important;

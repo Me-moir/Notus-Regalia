@@ -3,15 +3,15 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Notosphere",
+  title: "Notus Regalia",
   description: "Building Systems, Ventures, and Future Companies",
   icons: {
     icon: [
-      { url: '/assets/notosphere-logo.svg', type: 'image/svg+xml' },
+      { url: '/assets/notus-regalia-logo.svg', type: 'image/svg+xml' },
       { url: '/favicon-32.png', type: 'image/png' },
       { url: '/favicon.ico', type: 'image/x-icon' },
     ],
-    apple: [{ url: '/assets/notosphere-logo.svg' }]
+    apple: [{ url: '/assets/notus-regalia-logo.svg' }]
   }
 };
 
