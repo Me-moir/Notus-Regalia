@@ -70,39 +70,39 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-// ── Shared dark-mode hook ──
-function useDarkMode() {
-  const [dark, setDark] = useState(false);
+// ── Shared night-mode hook ──
+function useNightMode() {
+  const [night, setNight] = useState(false);
   useEffect(() => {
     const root = document.documentElement;
-    setDark(root.classList.contains('dark'));
-    const obs = new MutationObserver(() => setDark(root.classList.contains('dark')));
+    setNight(root.classList.contains('night'));
+    const obs = new MutationObserver(() => setNight(root.classList.contains('night')));
     obs.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => obs.disconnect();
   }, []);
   const toggle = useCallback(() => {
     const root = document.documentElement;
-    root.classList.toggle('dark');
+    root.classList.toggle('night');
     root.classList.toggle('light');
-    setDark(prev => !prev);
+    setNight(prev => !prev);
   }, []);
-  return { dark, toggle };
+  return { night, toggle };
 }
 
 // ── Theme toggle — styled exactly like main nav tab buttons ──
 const ThemeToggleTabBtn = ({ isMobile }: { isMobile: boolean }) => {
-  const { dark, toggle } = useDarkMode();
+  const { night, toggle } = useNightMode();
   return (
     <div className="tab-item-border">
       <div className="tab-item">
         <button
           className="tab-label-btn"
           onClick={toggle}
-          aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+          aria-label={night ? 'Switch to light mode' : 'Switch to night mode'}
           style={{ padding: isMobile ? '11px 13px' : '11px 18px 11px 16px' }}
         >
-          <i className={`bi ${dark ? 'bi-sun' : 'bi-moon'}`} style={{ fontSize: '0.85rem' }} />
-          {!isMobile && <span>{dark ? 'Light' : 'Dark'}</span>}
+          <i className={`bi ${night ? 'bi-sun' : 'bi-moon'}`} style={{ fontSize: '0.85rem' }} />
+          {!isMobile && <span>{night ? 'Light' : 'Night'}</span>}
         </button>
       </div>
     </div>
@@ -160,11 +160,11 @@ const SearchTabBtn = ({
 // Clicking directly mutates document.documentElement classes — React is never
 // involved, so the tab-visible slide-in transition is never interrupted.
 // Both icons and both text labels live in the DOM permanently; CSS rules
-// keyed off :root.dark show/hide the correct one.
+// keyed off :root.night show/hide the correct one.
 const StickyThemeTab = ({ visible, isMobile }: { visible: boolean; isMobile: boolean }) => {
   const handleClick = useCallback(() => {
     const root = document.documentElement;
-    root.classList.toggle('dark');
+    root.classList.toggle('night');
     root.classList.toggle('light');
   }, []);
 
@@ -172,7 +172,7 @@ const StickyThemeTab = ({ visible, isMobile }: { visible: boolean; isMobile: boo
     <button
       className={`nav-theme-tab${visible ? ' tab-visible' : ''}`}
       onClick={handleClick}
-      aria-label="Toggle light/dark mode"
+      aria-label="Toggle light/night mode"
     >
       <span className="sticky-theme-icon reveal-tab-icon" aria-hidden>
         <i className="bi bi-moon sticky-icon-moon" />
@@ -180,7 +180,7 @@ const StickyThemeTab = ({ visible, isMobile }: { visible: boolean; isMobile: boo
       </span>
       {!isMobile && (
         <span className="sticky-theme-label">
-          <span className="sticky-label-dark">Dark</span>
+          <span className="sticky-label-night">Night</span>
           <span className="sticky-label-light">Light</span>
         </span>
       )}
@@ -286,20 +286,20 @@ const NAVBAR_CSS = `
 .sticky-theme-icon { position: relative; display: inline-flex; width: 0.9rem; height: 0.9rem; font-size: 0.9rem; flex-shrink: 0; }
 .sticky-icon-moon,
 .sticky-icon-sun  { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; transition: opacity 0.18s ease; }
-/* default (dark mode): show sun, hide moon */
+/* default (night mode): show sun, hide moon */
 .sticky-icon-moon { opacity: 1; }
 .sticky-icon-sun  { opacity: 0; }
-:root.dark .sticky-icon-moon { opacity: 0; }
-:root.dark .sticky-icon-sun  { opacity: 1; }
+:root.night .sticky-icon-moon { opacity: 0; }
+:root.night .sticky-icon-sun  { opacity: 1; }
 /* label: both always in DOM, opacity-swap — display:none causes reflow which
    re-triggers the parent button's opacity/transform transitions (the visible flash) */
 .sticky-theme-label { position: relative; display: inline-block; min-width: 2.6rem; }
-.sticky-label-dark,
+.sticky-label-night,
 .sticky-label-light { transition: opacity 0.18s ease; }
-.sticky-label-dark  { opacity: 1; position: relative; }
+.sticky-label-night  { opacity: 1; position: relative; }
 .sticky-label-light { opacity: 0; position: absolute; left: 0; top: 0; pointer-events: none; }
-:root.dark .sticky-label-dark  { opacity: 0; pointer-events: none; }
-:root.dark .sticky-label-light { opacity: 1; pointer-events: auto; }
+:root.night .sticky-label-night  { opacity: 0; pointer-events: none; }
+:root.night .sticky-label-light { opacity: 1; pointer-events: auto; }
 .nav-reveal-tab::before,
 .nav-theme-tab::before {
   content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2.5px;
@@ -389,7 +389,7 @@ const NAVBAR_CSS = `
   box-shadow: 0 4px 14px rgba(0,0,0,0.26), inset 0 1px 0 var(--glass-inset-top);
 }
 .tab-item.is-active { background: var(--navbar-bg-active, #1a1a1a); }
-.dark .tab-item:not(.is-active) {
+.night .tab-item:not(.is-active) {
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top);
   transition: box-shadow 0.25s ease;
 }
@@ -636,7 +636,7 @@ const Navbar = ({
   const [mobileExpandedTab, setMobileExpandedTab] = useState<string | null>(null);
   const [hubExpanded, setHubExpanded]             = useState(true);
   const [navCollapsed, setNavCollapsed]           = useState(false);
-  const { dark: isDark, toggle: toggleDark } = useDarkMode();
+  const { night: isNight, toggle: toggleNight } = useNightMode();
 
   const navContainerRef  = useRef<HTMLDivElement>(null);
   const rafIdRef         = useRef<number | null>(null);

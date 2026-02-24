@@ -17,7 +17,6 @@ const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{
         background: 'var(--surface-primary)',
-        // Prevent layout/paint from propagating up the tree on scroll
         contain: 'layout paint',
       }}
     >
@@ -69,11 +68,11 @@ const HeroSection = () => {
           padding: 1px;
           background: radial-gradient(
             200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-            rgba(0, 255, 166, 0.8),
-            rgba(255, 215, 0, 0.6),
-            rgba(236, 72, 153, 0.6),
-            rgba(147, 51, 234, 0.6),
-            rgba(59, 130, 246, 0.5),
+            rgba(227, 27, 84, 0.85),
+            rgba(235, 17, 67, 0.7),
+            rgba(196, 14, 56, 0.6),
+            rgba(159, 10, 42, 0.5),
+            rgba(120, 5, 30, 0.4),
             transparent 70%
           );
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -149,18 +148,18 @@ const HeroSection = () => {
           animation: scrollBounce 1.8s ease-in-out infinite;
         }
 
-        /* --- FUTURISTIC HUD PILLBOX (TEAL) --- */
+        /* --- FUTURISTIC HUD PILLBOX (CRIMSON) --- */
         .hud-pill {
           position: relative;
           overflow: hidden;
           padding: 6px 18px 6px 14px;
           border-radius: 999px;
-          border: 1px solid rgba(14,165,164,0.28);
-          background: linear-gradient(90deg, rgba(14,165,164,0.08) 0%, rgba(14,165,164,0.02) 100%);
+          border: 1px solid rgba(227, 27, 84, 0.28);
+          background: linear-gradient(90deg, rgba(227, 27, 84, 0.08) 0%, rgba(227, 27, 84, 0.02) 100%);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
-          border-left: 3px solid #0ea5a4;
-          box-shadow: 0 0 20px rgba(14,165,164,0.06) inset;
+          border-left: 3px solid #E31B54;
+          box-shadow: 0 0 20px rgba(227, 27, 84, 0.06) inset;
         }
 
         .hud-pill::after {
@@ -193,9 +192,9 @@ const HeroSection = () => {
         .hud-dot-core {
           width: 4px;
           height: 4px;
-          background-color: #0ea5a4;
+          background-color: #E31B54;
           border-radius: 50%;
-          box-shadow: 0 0 8px #14b8a6, 0 0 12px #14b8a6;
+          box-shadow: 0 0 8px #EB1143, 0 0 12px #EB1143;
           z-index: 2;
         }
 
@@ -203,7 +202,7 @@ const HeroSection = () => {
           position: absolute;
           width: 100%;
           height: 100%;
-          border: 1px solid rgba(14,165,164,0.6);
+          border: 1px solid rgba(227, 27, 84, 0.6);
           border-radius: 50%;
           animation: radarPulse 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
           z-index: 1;
@@ -216,8 +215,8 @@ const HeroSection = () => {
 
         .hud-text {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          color: #14b8a6;
-          text-shadow: 0 0 8px rgba(20,184,166,0.35);
+          color: #EB1143;
+          text-shadow: 0 0 8px rgba(235, 17, 67, 0.35);
           letter-spacing: 0.08em;
         }
 
@@ -239,21 +238,21 @@ const HeroSection = () => {
           .hud-dot-wrapper { width: 8px; height: 8px; }
         }
 
-        /* Light mode variant: dark background but retain gold border accents */
+        /* Light mode variant */
         :global(.light) .hud-pill {
           background: rgba(0,0,0,0.9) !important;
-          border: 1px solid rgba(14,165,164,0.22) !important;
-          border-left: 3px solid #0ea5a4 !important;
-          box-shadow: 0 0 18px rgba(14,165,164,0.06) inset !important;
+          border: 1px solid rgba(227, 27, 84, 0.22) !important;
+          border-left: 3px solid #E31B54 !important;
+          box-shadow: 0 0 18px rgba(227, 27, 84, 0.06) inset !important;
         }
 
         :global(.light) .hud-pill::after {
-          background: linear-gradient(90deg, transparent, rgba(14,165,164,0.08), transparent) !important;
+          background: linear-gradient(90deg, transparent, rgba(227, 27, 84, 0.08), transparent) !important;
         }
 
         :global(.light) .hud-text {
-          color: #e6fffb !important;
-          text-shadow: 0 0 6px rgba(14,165,164,0.08) !important;
+          color: #ff6b8a !important;
+          text-shadow: 0 0 6px rgba(227, 27, 84, 0.08) !important;
         }
 
         :global(.light) .hud-prefix {
@@ -262,12 +261,20 @@ const HeroSection = () => {
         }
 
         :global(.light) .hud-dot-core {
-          background-color: #0ea5a4 !important;
-          box-shadow: 0 0 8px #14b8a6, 0 0 12px #14b8a6 !important;
+          background-color: #E31B54 !important;
+          box-shadow: 0 0 8px #EB1143, 0 0 12px #EB1143 !important;
         }
 
         :global(.light) .hud-dot-ring {
-          border-color: rgba(14,165,164,0.6) !important;
+          border-color: rgba(227, 27, 84, 0.6) !important;
+        }
+
+        /* Light mode glass panel — restore cool white */
+        :global(.light) .hero-glass-panel {
+          background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(37,99,235,0.05) 50%, rgba(29,78,216,0.03) 100%) !important;
+        }
+        :global(.light) .hero-glass-radial {
+          background: radial-gradient(ellipse at 20% 15%, rgba(96,165,250,0.07) 0%, transparent 60%) !important;
         }
 
       `}</style>
@@ -284,8 +291,8 @@ const HeroSection = () => {
       </div>
 
       {/* Glass Morphism Left Panel */}
-      <div className="absolute top-0 left-0 w-1/2 h-full hidden md:flex items-center pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(37,99,235,0.05) 50%, rgba(29,78,216,0.03) 100%)', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', borderRight: '1px dashed var(--border-color)', zIndex: 3, transform: 'translateZ(0)', willChange: 'transform' }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 20% 15%, rgba(96,165,250,0.07) 0%, transparent 60%)' }} />
+      <div className="absolute top-0 left-0 w-1/2 h-full hidden md:flex items-center pointer-events-none hero-glass-panel" style={{ background: 'linear-gradient(135deg, rgba(7,7,14,0.72) 0%, rgba(10,10,15,0.60) 50%, rgba(8,8,16,0.45) 100%)', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)', borderRight: '1px dashed var(--border-color)', zIndex: 3, transform: 'translateZ(0)', willChange: 'transform' }}>
+        <div className="absolute inset-0 pointer-events-none hero-glass-radial" style={{ background: 'radial-gradient(ellipse at 20% 15%, rgba(30,42,56,0.35) 0%, transparent 60%)' }} />
         <div className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(255,255,255,0.02), transparent)' }} />
         <div className="relative z-10 w-full px-8 lg:px-14 xl:px-20 flex flex-col gap-8" style={{ marginTop: '5vh' }}>
           <div className="inline-flex items-center gap-2.5 pointer-events-auto hud-pill w-fit">
