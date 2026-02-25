@@ -114,10 +114,14 @@ const AboutPanel = memo(() => {
     return links[activeContent];
   }, [activeContent]);
 
-
-
   return (
-    <section ref={sectionRef} className={styles.aboutSection} data-nosnippet="true">
+    <div className="mb-20 md:mb-102">
+    <section
+      ref={sectionRef}
+      className={styles.aboutSection}
+      data-nosnippet="true"
+      style={{ borderTop: '1px dashed var(--border-dashed)' }}
+    >
         <div className={styles.noiseTexture} />
 
         <div className="relative z-10 h-full">
@@ -131,8 +135,8 @@ const AboutPanel = memo(() => {
               flexDirection: 'column',
               alignItems: 'center',
               textAlign: 'center',
-              paddingTop: '3rem',
-              paddingBottom: '2rem',
+              paddingTop: '6rem',
+              paddingBottom: '4rem',
               background: 'transparent',
             }}
           >
@@ -141,7 +145,7 @@ const AboutPanel = memo(() => {
               Company Profile
             </div>
 
-            <h2 className={styles.aboutHeaderTitle}>About Us</h2>
+            <h2 className={styles.aboutHeaderTitle}>The Company</h2>
             <p
               className={styles.aboutHeaderDesc}
               style={{
@@ -151,6 +155,7 @@ const AboutPanel = memo(() => {
                 textAlign: 'center',
                 maxWidth: 'none',
                 width: 'auto',
+                fontSize: '1.2rem',
               }}
             >
               We build with intention — exploring the intersection of technology, design, and human experience.
@@ -244,10 +249,10 @@ const AboutPanel = memo(() => {
             </div>
 
           </div>
-
           </div>
         </div>
       </section>
+    </div>
   );
 });
 

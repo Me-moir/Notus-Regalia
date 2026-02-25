@@ -73,7 +73,7 @@
   .subtitle {
     display: block;
     font-size: 0.75rem;
-    color: #E31B54;
+    color: rgba(255, 255, 255, 0.35);
     position: relative;
     z-index: 10;
     text-align: right;
@@ -81,6 +81,10 @@
     opacity: 0.8;
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
+}
+
+:global(:root.light) .subtitle {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .active .subtitle {

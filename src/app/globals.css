@@ -179,7 +179,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: auto;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* GPU acceleration for smooth animations */
@@ -279,9 +278,6 @@ body {
 /* ═══════════════════════════════════════════════
    THEME TRANSITION UTILITY
    ═══════════════════════════════════════════════ */
-.theme-transition {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
 
 /* Preserve system font for specific inline exceptions */
 .preserve-system {
