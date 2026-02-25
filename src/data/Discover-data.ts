@@ -351,3 +351,166 @@ export const ABOUT_PANEL_CONTENT: Record<
     ]
   }
 };
+
+// ─── Strategic Capital ────────────────────────────────────────────────────────
+
+export type InvestorType =
+  | 'Founder Capital'
+  | 'Angel Investor'
+  | 'High-Net-Worth (HNW) Private Investor'
+  | 'Strategic Investor'
+  | 'Institutional Investor'
+  | 'Seed Investor'
+  | 'Growth Investor';
+
+export type InvestmentStructure =
+  | 'Equity'
+  | 'SAFE'
+  | 'Convertible Note'
+  | 'Direct Investment';
+
+export interface Investor {
+  id: string;
+  name: string;
+  /** URL to logo image — omit to use auto-generated initials placeholder */
+  logo?: string;
+  type: InvestorType;
+  /** Internal phase ID, e.g. 'phase-1' */
+  phase: string;
+  /** Human-readable label shown in modal eyebrow, e.g. 'Phase I — Foundational Capital' */
+  phaseLabel: string;
+  description: string;
+  year: string;
+  roundName: string;
+  investmentStructure: InvestmentStructure;
+  strategicImpact: string[];
+  link?: string;
+}
+
+export interface CapitalPhase {
+  id: string;
+  label: string;
+  title: string;
+  description: string;
+  investors: Investor[];
+  /** true = render investor cards; false = render Coming Soon block */
+  live: boolean;
+}
+
+export interface CapitalStat {
+  value: string;
+  label: string;
+  accent: boolean;
+}
+
+/** Accent color per investor type — used by cards and modal. */
+export const INVESTOR_TYPE_COLORS: Record<InvestorType, string> = {
+  'Founder Capital':                       '#E31B54',
+  'Angel Investor':                        '#f59e0b',
+  'High-Net-Worth (HNW) Private Investor': '#8b5cf6',
+  'Strategic Investor':                    '#3b82f6',
+  'Institutional Investor':                '#06b6d4',
+  'Seed Investor':                         '#10b981',
+  'Growth Investor':                       '#f97316',
+};
+
+// ── Phase I investors ─────────────────────────────────────────────────────────
+
+const PHASE_I_INVESTORS: Investor[] = [
+  {
+    id: 'inv-001',
+    name: 'Notus Founding Capital',
+    type: 'Founder Capital',
+    phase: 'phase-1',
+    phaseLabel: 'Phase I — Foundational Capital',
+    description:
+      'Internal capital allocated directly by the founding team to establish the core architecture and initial R&D framework of the Notus continuum.',
+    year: '2025',
+    roundName: 'Phase I',
+    investmentStructure: 'Direct Investment',
+    strategicImpact: ['Core system development', 'Infrastructure scaling', 'Research expansion'],
+    link: '#',
+  },
+  {
+    id: 'inv-002',
+    name: 'Arclight Holdings',
+    type: 'Angel Investor',
+    phase: 'phase-1',
+    phaseLabel: 'Phase I — Foundational Capital',
+    description:
+      'An early backer with deep conviction in the Notus thesis, providing foundational capital that enabled the team to move with speed before external validation.',
+    year: '2025',
+    roundName: 'Phase I',
+    investmentStructure: 'SAFE',
+    strategicImpact: ['Core system development', 'Team growth'],
+    link: '#',
+  },
+  {
+    id: 'inv-003',
+    name: 'Meridian Private Office',
+    type: 'High-Net-Worth (HNW) Private Investor',
+    phase: 'phase-1',
+    phaseLabel: 'Phase I — Foundational Capital',
+    description:
+      'A family office aligned with long-horizon mission ventures, joining Phase I to support the architecture and governance formation of the platform.',
+    year: '2025',
+    roundName: 'Phase I',
+    investmentStructure: 'Convertible Note',
+    strategicImpact: ['Infrastructure scaling', 'Research expansion', 'Market validation'],
+    link: '#',
+  },
+  {
+    id: 'inv-004',
+    name: 'Vantage Syndicate',
+    type: 'Strategic Investor',
+    phase: 'phase-1',
+    phaseLabel: 'Phase I — Foundational Capital',
+    description:
+      'A strategic vehicle that contributed both capital and operational context, specifically enabling early contracts and technology deployment groundwork.',
+    year: '2026',
+    roundName: 'Phase I',
+    investmentStructure: 'Equity',
+    strategicImpact: ['Core system development', 'Market validation', 'Team growth'],
+    link: '#',
+  },
+];
+
+// ── Phase definitions ─────────────────────────────────────────────────────────
+
+export const CAPITAL_PHASES: CapitalPhase[] = [
+  {
+    id: 'phase-1',
+    label: 'Phase I',
+    title: 'Phase I — Foundational Capital',
+    description:
+      'Internal capital, founder allocation & early backers. Architecture, R&D groundwork, formation.',
+    investors: PHASE_I_INVESTORS,
+    live: true,
+  },
+  {
+    id: 'phase-2',
+    label: 'Phase II',
+    title: 'Phase II — Strategic Capital',
+    description:
+      'Selective external investors. Productization, systems deployment, early contracts.',
+    investors: [],
+    live: false,
+  },
+  {
+    id: 'phase-3',
+    label: 'Phase III',
+    title: 'Phase III — Institutional Capital',
+    description:
+      'VC / institutional / structured funds. National scaling, infrastructure expansion.',
+    investors: [],
+    live: false,
+  },
+];
+
+// ── Hero stats box ────────────────────────────────────────────────────────────
+
+export const CAPITAL_STATS: CapitalStat[] = [
+  { value: String(PHASE_I_INVESTORS.length), label: 'Phase I Backers', accent: false },
+  { value: '₱1.5M',                          label: 'Raised in Phase I', accent: true  },
+  { value: '2025–',                           label: 'Active Since',     accent: false },
+];

@@ -417,7 +417,106 @@ const NAVBAR_CSS = `
 }
 .tab-label-btn:hover, .tab-label-btn.is-active { color: var(--content-primary); }
 .tab-label-btn.is-active { font-weight: 600; }
+/* ── Spring physics keyframe ── */
+@keyframes tabPress {
+  0%   { transform: scale(1); }
+  15%  { transform: scale(0.96); }
+  50%  { transform: scale(1.02); }
+  72%  { transform: scale(0.992); }
+  88%  { transform: scale(1.004); }
+  100% { transform: scale(1); }
+}
 
+.tab-pressed {
+  animation: tabPress 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  transform-origin: center !important;
+}
+
+/* ── Transform-origin on every interactive element ── */
+.tab-item-border,
+.tab-label-btn,
+.tab-arrow-btn,
+.sub-btn,
+.sub-parent,
+.sub-close,
+.info-hub-card,
+.info-slim-tab,
+.info-slim-expand,
+.logo-mark,
+.mob-tab-btn,
+.mob-subtab-btn,
+.mob-close,
+.mob-search,
+.nav-reveal-tab,
+.nav-theme-tab,
+.mobile-burger {
+  transform-origin: center;
+}
+
+/* ── Main nav tab borders ── */
+.tab-item-border:active {
+  animation: tabPress 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Tab label & arrow buttons ── */
+.tab-label-btn:active {
+  animation: tabPress 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.tab-arrow-btn:active {
+  animation: tabPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Expanded subtab row ── */
+.sub-btn:active {
+  animation: tabPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.sub-parent:active {
+  animation: tabPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.sub-close:active {
+  animation: tabPress 0.68s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Info hub expanded cards ── */
+.info-hub-card:active .card-content {
+  animation: tabPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Info slim tabs & expand toggle ── */
+.info-slim-tab:active {
+  animation: tabPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.info-slim-expand:active {
+  animation: tabPress 0.68s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Logo mark — slightly longer, feels weighty ── */
+.logo-mark:active {
+  animation: tabPress 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Mobile burger ── */
+.mobile-burger:active {
+  animation: tabPress 0.68s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Mobile sidebar nav buttons ── */
+.mob-tab-btn:active,
+.mob-subtab-btn:active {
+  animation: tabPress 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.mob-close:active {
+  animation: tabPress 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.mob-search:active {
+  animation: tabPress 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Sticky reveal & theme tabs ── */
+.nav-reveal-tab:active,
+.nav-theme-tab:active {
+  animation: tabPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 .tab-sep {
   width: 1px; margin: 6px 0; background: var(--border-color); opacity: 0.45;
   flex-shrink: 0; pointer-events: none;
@@ -857,10 +956,48 @@ const Navbar = ({
     if (dx > 60 && dy < dx) closeMobile();
   }, [closeMobile]);
 
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [mobileOpen]);
+useEffect(() => {
+  document.body.style.overflow = mobileOpen ? 'hidden' : '';
+  return () => { document.body.style.overflow = ''; };
+}, [mobileOpen]);
+
+useEffect(() => {
+  const SELECTORS = [
+    '.tab-item-border',
+    '.tab-label-btn',
+    '.tab-arrow-btn',
+    '.sub-btn',
+    '.sub-parent',
+    '.sub-close',
+    '.info-hub-card',
+    '.info-slim-tab',
+    '.info-slim-expand',
+    '.logo-mark',
+    '.mob-tab-btn',
+    '.mob-subtab-btn',
+    '.mob-close',
+    '.mob-search',
+    '.nav-reveal-tab',
+    '.nav-theme-tab',
+    '.mobile-burger',
+  ].join(', ');
+
+  const onPointerDown = (e: PointerEvent) => {
+    const target = (e.target as Element).closest(SELECTORS);
+    if (!target) return;
+    target.classList.remove('tab-pressed');
+    void (target as HTMLElement).offsetWidth;
+    target.classList.add('tab-pressed');
+    const cleanup = () => {
+      target.classList.remove('tab-pressed');
+      target.removeEventListener('animationend', cleanup);
+    };
+    target.addEventListener('animationend', cleanup);
+  };
+
+  document.addEventListener('pointerdown', onPointerDown);
+  return () => document.removeEventListener('pointerdown', onPointerDown);
+}, []);
 
   const activeSet = useMemo(() => {
     const set = new Set<string>();
@@ -1074,6 +1211,7 @@ const Navbar = ({
         </div>
 
       </nav>
+
 
       {/* MOBILE SIDEBAR */}
       <div className={`mob-overlay${mobileOpen ? ' open' : ''}`} onClick={closeMobile} />

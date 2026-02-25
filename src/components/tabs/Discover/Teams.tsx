@@ -151,7 +151,10 @@ const FounderCard = memo(({ founder, index, onExpand }: { founder: Founder; inde
   };
 
   return (
-    <div ref={ref} className="fc-outer" style={{ animationDelay: `${index * 80}ms` }} onMouseMove={handleMouseMove} onClick={() => onExpand(founder)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onExpand(founder); }}>
+    <div ref={ref} className="fc-outer" style={{ animationDelay: `${index * 80}ms` }} onMouseMove={handleMouseMove} onClick={() => {
+  if (ref.current) ref.current.classList.add('fc-expanding');
+  onExpand(founder);
+}} tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onExpand(founder); }}>
       <div className="fc-gradient-border" />
       <div className="fc-inner">
         <div className="fc-portrait">
@@ -198,12 +201,53 @@ FounderCard.displayName = 'FounderCard';
 ───────────────────────────────────────── */
 const Teams = () => {
   const [activeFounder, setActiveFounder] = useState<Founder | null>(null);
-  const handleExpand = useCallback((f: Founder) => setActiveFounder(f), []);
-  const handleClose = useCallback(() => setActiveFounder(null), []);
+const handleExpand = useCallback((f: Founder) => {
+  setActiveFounder(f);
+}, []);
+
+const handleClose = useCallback(() => {
+  setActiveFounder(null);
+  // Remove fc-expanding from all cards after modal closes
+  document.querySelectorAll('.fc-outer.fc-expanding').forEach(el => {
+    el.classList.remove('fc-expanding');
+  });
+}, []);
+
+useEffect(() => {
+  const onPointerDown = (e: PointerEvent) => {
+    const target = (e.target as Element).closest(
+      '.teams-tab-border, .teams-tab-item'
+    );
+    if (!target) return;
+    const wrapper =
+      (e.target as Element).closest('.teams-tab-border') ??
+      target;
+    wrapper.classList.remove('teams-tab-pressed');
+    void (wrapper as HTMLElement).offsetWidth;
+    wrapper.classList.add('teams-tab-pressed');
+    const cleanup = () => {
+      wrapper.classList.remove('teams-tab-pressed');
+      wrapper.removeEventListener('animationend', cleanup);
+    };
+    wrapper.addEventListener('animationend', cleanup);
+  };
+  document.addEventListener('pointerdown', onPointerDown);
+  return () => document.removeEventListener('pointerdown', onPointerDown);
+}, []);
 
   return (
     <>
       <style>{`
+
+      .fc-outer.fc-expanding {
+  transform: none !important;
+  transition: none !important;
+}
+.fc-outer.fc-expanding .fc-gradient-border {
+  opacity: 0 !important;
+  transition: none !important;
+}
+
         @keyframes orbitBorder {
           0%   { background-position: 0% 0%; }
           100% { background-position: 200% 0%; }
@@ -341,10 +385,24 @@ const Teams = () => {
         :root.light .founders-label{color:rgba(0,0,0,.3);}
         :root.light .founders-label-line{background:linear-gradient(to right,rgba(0,0,0,.1),transparent);}
         .founders-label-line{flex:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,.08),transparent);}
+
+        @keyframes teamsTabPress {
+  0%   { transform: scale(1); }
+  15%  { transform: scale(0.96); }
+  50%  { transform: scale(1.02); }
+  72%  { transform: scale(0.992); }
+  88%  { transform: scale(1.004); }
+  100% { transform: scale(1); }
+}
+.teams-tab-pressed {
+  animation: teamsTabPress 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  transform-origin: center !important;
+}
+
       `}</style>
 
       {/* ── mt-32 md:mt-52 adds the gap between AboutPanel's bottom border and Teams' top border ── */}
-      <div className="mb-20 md:mb-32 mt-52 md:mt-64">
+      <div style={{ paddingBottom: '8rem' }}>
         <section id="section-teams" className="teams-root">
           <div className="teams-hero">
             <div className="teams-hero-left">

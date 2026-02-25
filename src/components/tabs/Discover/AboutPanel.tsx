@@ -115,7 +115,7 @@ const AboutPanel = memo(() => {
   }, [activeContent]);
 
   return (
-    <div className="mb-20 md:mb-102">
+    <div style={{ paddingBottom: '8rem' }}>
     <section
       ref={sectionRef}
       className={styles.aboutSection}

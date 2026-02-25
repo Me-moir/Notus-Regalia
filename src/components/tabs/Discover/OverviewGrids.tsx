@@ -9,7 +9,7 @@ const Overview = memo(() => {
   const [learnMoreHovered, setLearnMoreHovered] = useState(false);
 
   return (
-    <div className="mb-20 md:mb-32">
+    <div style={{ paddingBottom: '8rem' }}>
       <section
         className="relative overflow-hidden"
         style={{

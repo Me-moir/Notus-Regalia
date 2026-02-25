@@ -256,7 +256,7 @@
   width: 100%;
   border: none;
   border-radius: 9.5px;
-  padding: 0.5rem 1.25rem;
+  padding: 0.8rem 1.25rem;           /* ← was 0.5rem */
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -269,7 +269,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top, rgba(255,255,255,0.06));
   transition: color 0.15s ease, background 0.15s ease, box-shadow 0.2s ease;
 }
-@media (min-width: 640px) { .tabBtn { padding: 0.625rem 2rem; } }
+@media (min-width: 640px) { .tabBtn { padding: 0.9rem 2rem; } }  /* ← was 0.625rem */
 .tabBorder:hover .tabBtn {
   color: var(--content-primary, rgba(255,255,255,0.92));
   box-shadow: 0 4px 14px rgba(0,0,0,0.26), inset 0 1px 0 var(--glass-inset-top, rgba(255,255,255,0.06));
@@ -281,8 +281,7 @@
   box-shadow: 0 4px 14px rgba(0,0,0,0.26), inset 0 1px 0 var(--glass-inset-top, rgba(255,255,255,0.06));
 }
 
-/* ── Light mode overrides for tab buttons — same pattern as Teams component ── */
-
+/* ── Light mode overrides for tab buttons ── */
 :global(:root.light) .tabBtn {
   background: #ffffff;
   color: rgba(0,0,0,0.45);
@@ -347,7 +346,7 @@
   width: 100%;
   text-decoration: none;
   border-radius: 9.5px;
-  padding: 0.5rem 1.25rem;
+  padding: 0.8rem 1.25rem;           /* ← was 0.5rem */
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -360,14 +359,13 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.18), inset 0 1px 0 var(--glass-inset-top, rgba(255,255,255,0.06));
   transition: color 0.15s ease, background 0.15s ease, box-shadow 0.2s ease;
 }
-@media (min-width: 640px) { .lmBtn { padding: 0.625rem 2rem; } }
+@media (min-width: 640px) { .lmBtn { padding: 0.9rem 2rem; } }  /* ← was 0.625rem */
 .lmBorder:hover .lmBtn {
   color: var(--content-primary, rgba(255,255,255,0.92));
   box-shadow: 0 4px 14px rgba(0,0,0,0.26), inset 0 1px 0 var(--glass-inset-top, rgba(255,255,255,0.06));
 }
 
 /* ── Light mode overrides for learn more button ── */
-
 :global(:root.light) .lmBtn {
   background: #ffffff;
   color: rgba(0,0,0,0.45);
@@ -500,4 +498,42 @@
   backdrop-filter: none;
   border: none;
   box-shadow: 0 1px 6px rgba(227, 27, 84, 0.35);
+}
+
+/* ── Spring press keyframe ── */
+@keyframes tabBtnPress {
+  0%   { transform: scale(1); }
+  15%  { transform: scale(0.96); }
+  50%  { transform: scale(1.02); }
+  72%  { transform: scale(0.992); }
+  88%  { transform: scale(1.004); }
+  100% { transform: scale(1); }
+}
+
+/* ── Transform-origin on all interactive elements ── */
+.tabBorder,
+.tabBtn,
+.lmBorder,
+.lmBtn {
+  transform-origin: center;
+}
+
+/* ── Tab border wrapper ── */
+.tabBorder:active {
+  animation: tabBtnPress 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Tab inner button ── */
+.tabBtn:active {
+  animation: tabBtnPress 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Learn More border wrapper ── */
+.lmBorder:active {
+  animation: tabBtnPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Learn More inner button/link ── */
+.lmBtn:active {
+  animation: tabBtnPress 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

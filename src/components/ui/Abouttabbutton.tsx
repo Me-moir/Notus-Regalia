@@ -59,7 +59,7 @@ const ABOUT_TAB_CSS = `
   width: 100%;
   border: none;
   border-radius: 9.5px;
-  padding: 0.5rem 1.25rem;
+  padding: 0.8rem 1.25rem;        /* ← increased from 0.5rem */
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -77,7 +77,7 @@ const ABOUT_TAB_CSS = `
 
 @media (min-width: 640px) {
   .about-tab-btn {
-    padding: 0.625rem 2rem;
+    padding: 0.9rem 2rem;          /* ← increased from 0.625rem */
     font-size: 0.875rem;
   }
 }

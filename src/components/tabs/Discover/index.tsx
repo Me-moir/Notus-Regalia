@@ -4,7 +4,7 @@ import Overview from './OverviewGrids';
 import DiscoverHeader from './DiscoverHeader';
 import WorldPanel from './AboutPanel';
 import Teams from './Teams';
-import Affiliations from './Affiliations';
+import Affiliations from './StrategicCapital';
 
 const Discover = () => {
   return (
