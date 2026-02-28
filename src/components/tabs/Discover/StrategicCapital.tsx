@@ -557,6 +557,7 @@ const StrategicCapital = () => {
         .sc-disclosure-badge-active .sc-disclosure-label {
           color: #fff !important; -webkit-text-fill-color: #fff !important;
         }
+
         /* Tooltip */
         .sc-disclosure-tooltip {
           position: fixed; width: 300px; padding: 14px 16px;
@@ -566,7 +567,7 @@ const StrategicCapital = () => {
           color: rgba(255,255,255,0.65); -webkit-text-fill-color: rgba(255,255,255,0.65);
           background-clip: unset; -webkit-background-clip: unset;
           font-weight: 400; font-family: inherit; letter-spacing: 0;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 0 1px rgba(227,27,84,0.1), 0 0 32px rgba(227,27,84,0.1);
+          box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(227,27,84,0.1), 0 0 32px rgba(227,27,84,0.1);
           pointer-events: none; opacity: 0;
           transition: opacity 0.2s ease, transform 0.2s ease;
           z-index: 99999; text-transform: none; white-space: normal; text-align: justify;
@@ -920,10 +921,11 @@ const StrategicCapital = () => {
         :root.light .sc-coming-soon-dot    { background: rgba(0,0,0,.3) !important; }
         :root.light .sc-coming-soon-text   { color: rgba(0,0,0,.45) !important; }
         :root.light .sc-contact-line       { color: rgba(0,0,0,.45) !important; }
+
         /* light — disclosure */
         :root.light .sc-disclosure-badge { border-color: rgba(0,0,0,0.12) !important; background: rgba(0,0,0,0.04) !important; }
         :root.light .sc-disclosure-wrap:hover .sc-disclosure-badge,
-        :root.light .sc-disclosure-badge-active { background: #C81040 !important; border-color: #E31B54 !important; box-shadow: 0 0 18px rgba(227,27,84,0.45), 0 2px 8px rgba(0,0,0,0.4) !important; }
+        :root.light .sc-disclosure-badge-active { background: #C81040 !important; border-color: #E31B54 !important; box-shadow: 0 0 18px rgba(227,27,84,0.1), 0 2px 8px rgba(0,0,0,0.4) !important; }
         :root.light .sc-disclosure-icon  { color: rgba(0,0,0,0.3) !important; -webkit-text-fill-color: rgba(0,0,0,0.3) !important; }
         :root.light .sc-disclosure-wrap:hover .sc-disclosure-icon,
         :root.light .sc-disclosure-badge-active .sc-disclosure-icon { color: #fff !important; -webkit-text-fill-color: #fff !important; }
@@ -932,6 +934,7 @@ const StrategicCapital = () => {
         :root.light .sc-disclosure-badge-active .sc-disclosure-label { color: #fff !important; -webkit-text-fill-color: #fff !important; }
         :root.light .sc-disclosure-tooltip { background: linear-gradient(160deg,#050508 0%,#09090f 50%,#0d0509 100%) !important; border: 1px solid rgba(227,27,84,0.5) !important; color: rgba(255,255,255,0.65) !important; -webkit-text-fill-color: rgba(255,255,255,0.65) !important; }
         :root.light .sc-disclosure-arrow { background: #050508 !important; border-color: rgba(227,27,84,0.5) !important; }
+        
         /* light — modal */
         :root.light .sc-modal-panel   { background: #f8fafc !important; border: 1px solid rgba(0,0,0,.12) !important; box-shadow: 0 24px 60px rgba(0,0,0,.14), 0 0 0 1px rgba(0,0,0,.06) !important; }
         :root.light .sc-modal-logo-header { background: linear-gradient(170deg,#e8edf5 0%,#dce3ef 100%) !important; border-bottom: 1px solid rgba(0,0,0,.08) !important; }

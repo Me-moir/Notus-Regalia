@@ -131,14 +131,14 @@ export const OverviewContent: OverviewContent[] = [
   },
   {
     icon: 'bi-mortarboard',
-    title: 'Founder-Operator Model',
+    title: 'Founding Governance',
     description: [
       'Notus Regalia functions as a founder-operator platform. While student-founded, ventures are governed with institutional discipline and long-term ownership principles.'
     ]
   },
   {
     icon: 'bi-leaf',
-    title: 'Early-Stage Capital Formation',
+    title: 'Seed Stage',
     description: [
       'We focus on converting undeveloped concepts into venture-ready entities through disciplined validation and controlled deployment of resources.'
     ]

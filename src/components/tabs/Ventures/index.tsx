@@ -1,22 +1,21 @@
 "use client";
-import { lazy, Suspense } from 'react';
+import { useState } from 'react';
+import VenturesTab from './Defense';
 
-// Eager load: First section loads immediately
-import VenturesTab from './VenturesTab';
-
-// Lazy load: add more sections as you build them
+type VenturesSubtab = 'ventures-defense' | 'ventures-civic-operations' | 'ventures-healthcare';
 
 interface VenturesProps {
-  // Add props here if needed in the future
+  activeSubtab?: string;
 }
 
-const Ventures = ({}: VenturesProps) => {
+const Ventures = ({ activeSubtab }: VenturesProps) => {
+  const active = (activeSubtab as VenturesSubtab) ?? 'ventures-defense';
+
   return (
     <>
-      {/* First section - loads immediately */}
-      <VenturesTab />
-      
-      {/* Future sections - lazy load as you add them */}
+      {active === 'ventures-defense' && <VenturesTab />}
+      {active === 'ventures-civic-operations' && <VenturesTab />}
+      {active === 'ventures-healthcare' && <VenturesTab />}
     </>
   );
 };

@@ -62,10 +62,9 @@ const NAV_ITEMS: NavItem[] = [
     icon: 'bi-crosshair',
     isSpecial: true,
     subtabs: [
-      { id: 'ventures-portfolio', label: 'Portfolio' },
-      { id: 'ventures-invest',    label: 'Invest' },
-      { id: 'ventures-pitch',     label: 'Pitch Us' },
-      { id: 'ventures-thesis',    label: 'Thesis' },
+      { id: 'ventures-defense',         label: 'Strategic Defense & Intelligence' },
+      { id: 'ventures-civic-operations', label: 'Civic Integration' },
+      { id: 'ventures-healthcare',       label: 'Healthcare' },
     ],
   },
 ];

@@ -345,8 +345,6 @@ const Footer = () => {
         }
 
         /* ── Light-mode token overrides ── */
-        /* Add .light to <html> or <body> (or wherever your theme toggle lives)
-           and all tokens below cascade down automatically — no :global() needed. */
         .light .nr-footer {
           --f-bg:              linear-gradient(to bottom, #f8fafc 0%, #eef2f6 60%);
           --f-glass-bg:        rgba(248,250,252,0.92);
@@ -396,7 +394,6 @@ const Footer = () => {
           transform-origin: top; transform: scaleY(0.35);
           background: var(--f-border); pointer-events: none;
         }
-        /* In light mode the ::after static border is lighter */
         .light .nr-footer::after { background: var(--f-border); }
 
         /* ── Grid background ── */
@@ -419,7 +416,6 @@ const Footer = () => {
           display: flex;
           height: 560px;
           overflow: hidden;
-          /* Hardcoded dark — never changes with theme */
           border-top: 1px solid rgba(255,255,255,0.22);
           background: #000000;
           isolation: isolate;
@@ -438,7 +434,7 @@ const Footer = () => {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          padding: 5rem clamp(3rem, 7vw, 7rem);
+          padding: 5rem clamp(2rem, 4vw, 7rem);
           overflow: hidden;
           height: 100%;
           z-index: 1;
@@ -470,9 +466,16 @@ const Footer = () => {
           position: relative;
           z-index: 2;
           width: 100%;
-          max-width: 560px;
+          /* FIX: constrain the left (contact) panel content so emails don't
+             bleed into the diagonal seam on small screens like MBP 13".
+             The seam eats ~72px from the right edge of the left panel,
+             so we pull the max-width back by that amount plus a safety buffer. */
+          max-width: calc(100% - 96px);
         }
-        .split-panel-ct .split-panel-content { max-width: 100%; }
+        .split-panel-ct .split-panel-content {
+          /* Right (newsletter) panel can use full width — content sits left of seam */
+          max-width: 100%;
+        }
 
         /* Always-dark text inside split band */
         .sp-eyebrow {
@@ -565,7 +568,11 @@ const Footer = () => {
         .spinner { width: 0.75rem; height: 0.75rem; border: 1.5px solid rgba(255,255,255,0.2); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.6s linear infinite; }
 
         /* ── Contact emails (always dark) ── */
-        .ct-email-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 10rem; }
+        .ct-email-list {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 2.5rem clamp(1.5rem, 4vw, 10rem);
+        }
         .ct-email-row { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
         .ct-email-label {
           font-size: clamp(0.65rem, 1.4vw, 0.8rem);
@@ -575,12 +582,17 @@ const Footer = () => {
         .ct-email-btn {
           display: inline-flex; align-items: center; gap: 0.6rem;
           font-family: ui-monospace, Menlo, monospace;
-          font-size: clamp(0.875rem, 2vw, 1.05rem);
+          font-size: clamp(0.75rem, 1.4vw, 0.8rem);
           color: rgba(255,255,255,0.7); font-weight: 500; letter-spacing: 0.01em;
           cursor: pointer; background: none; border: none; padding: 0; text-align: left;
-          transition: color 0.2s ease; white-space: nowrap; overflow: visible;
+          transition: color 0.2s ease;
+          /* FIX: allow wrapping on small screens instead of overflowing into the seam */
+          white-space: normal;
+          word-break: break-all;
+          overflow-wrap: anywhere;
+          min-width: 0;
         }
-        .ct-email-btn > span { display: inline-block; }
+        .ct-email-btn > span { display: inline; }
         .ct-email-btn:hover { color: #ffffff; }
         .ct-email-btn:hover .ct-copy-icon { opacity: 1; }
         .ct-email-btn.is-copied { color: #E31B54; }
@@ -598,8 +610,9 @@ const Footer = () => {
           .split-panel-nl-bg, .split-panel-ct-bg { clip-path: none; left: 0; right: 0; }
           .split-panel-nl { border-bottom: 1px solid rgba(255,255,255,0.06); }
           .ct-email-list { grid-template-columns: 1fr; }
-          .ct-email-btn { white-space: normal; }
           .sp-sub { max-width: 100%; }
+          /* On mobile, restore full width since there's no seam */
+          .split-panel-content { max-width: 100%; }
         }
 
         /* ─────────────────────────────────────────────
@@ -634,9 +647,7 @@ const Footer = () => {
           opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
         }
         .nr-band3.border-top-active::before { opacity: 1; }
-        /* Light mode: hide the shimmer border (doesn't look right on light bg) */
         .light .nr-band3::before { display: none; }
-        /* Light mode: softer band border */
         .light .nr-band3 { border-top-color: var(--f-border); }
 
         /* ── Brand title ── */
@@ -666,14 +677,12 @@ const Footer = () => {
           background: var(--f-status-bg);
           border-radius: 2px;
         }
-        /* Always dark text inside badge — it stays dark-bg in light mode too */
         .nr-system-status-text {
           font-size: clamp(0.65rem, 1.4vw, 0.8rem);
           font-weight: 500; letter-spacing: 0.12em;
           text-transform: uppercase;
           color: var(--f-status-text);
         }
-        /* In light mode the badge is dark so text stays light */
         .light .nr-system-status-text { color: #94a3b8; }
 
         /* ── Nav titles ── */
