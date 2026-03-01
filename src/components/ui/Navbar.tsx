@@ -576,9 +576,10 @@ const NAVBAR_CSS = `
   .nav-theme-tab  { top: calc(12px + 34px + 5px); padding: 7px 11px 7px 10px; font-size: 0.74rem; }
   .nav-icon-btn-wrap::after { display: none; }
   .strip-label { width: 10vw; min-width: 10vw; max-width: 10vw; justify-content: center; padding: 0; }
-  .strip-label span { font-size: 0.7rem; letter-spacing: 0.08em; }
+  .strip-label { display: none !important; }
   .strip-tab { padding: 0 14px; font-size: 0.82rem; }
   .strip-collapse { padding: 0 14px; }
+  .strip-collapse:hover i { transform: translateX(2px); }
 }
 
 .mobile-burger {
@@ -641,10 +642,11 @@ interface StripRowProps {
   activeSubtabId: string | null;
   onSubtabClick: (sub: SubtabItem) => void;
   onCollapse: () => void;
+  isMobile?: boolean;
 }
 
 const StripRow = memo(({
-  item, isVisible, activeSubtabId, onSubtabClick, onCollapse,
+  item, isVisible, activeSubtabId, onSubtabClick, onCollapse, isMobile,
 }: StripRowProps) => {
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -653,6 +655,45 @@ const StripRow = memo(({
   const [animate, setAnimate] = useState(false);
   const [entering, setEntering] = useState(false);
   const hasPlacedRef = useRef(false);
+  const [atEnd, setAtEnd] = useState(false);
+
+  // Track scroll position to determine arrow direction
+  const updateScrollState = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    setAtEnd(maxScroll > 2 && track.scrollLeft >= maxScroll - 2);
+  }, []);
+
+  // Listen for scroll events on the track
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const handler = () => updateScrollState();
+    track.addEventListener('scroll', handler, { passive: true });
+    // initial check
+    updateScrollState();
+    return () => track.removeEventListener('scroll', handler);
+  }, [isVisible, updateScrollState]);
+
+  // Auto-scroll the active subtab button into center view
+  useEffect(() => {
+    if (!activeSubtabId || !isVisible) return;
+    const idx = item.subtabs!.findIndex(s => s.id === activeSubtabId);
+    if (idx < 0) return;
+    const btn = btnRefs.current[idx];
+    const track = trackRef.current;
+    if (!btn || !track) return;
+
+    // Wait a frame for layout to settle
+    requestAnimationFrame(() => {
+      const trackRect = track.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      const btnCenter = btnRect.left + btnRect.width / 2 - trackRect.left + track.scrollLeft;
+      const targetScroll = btnCenter - trackRect.width / 2;
+      track.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
+    });
+  }, [activeSubtabId, isVisible, item.subtabs]);
 
   const place = useCallback((shouldAnimate: boolean) => {
     if (!activeSubtabId) return;
@@ -709,6 +750,27 @@ const StripRow = memo(({
       : 'none',
   };
 
+  const handleArrowClick = useCallback(() => {
+    if (isMobile && trackRef.current) {
+      const track = trackRef.current;
+      if (atEnd) {
+        // Arrow is pointing left — scroll back to start
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        // Arrow is pointing right — scroll forward
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        const newLeft = Math.min(track.scrollLeft + track.clientWidth * 0.65, maxScroll);
+        track.scrollTo({ left: newLeft, behavior: 'smooth' });
+      }
+    } else {
+      onCollapse();
+    }
+  }, [isMobile, atEnd, onCollapse]);
+
+  const arrowIcon = isMobile
+    ? (atEnd ? 'bi-chevron-left' : 'bi-chevron-right')
+    : 'bi-chevron-up';
+
   return (
     <div className={`subtab-strip-outer${isVisible ? ' strip-visible' : ''}${entering ? ' strip-entering' : ''}`}>
       <div className="subtab-strip-clip">
@@ -743,10 +805,10 @@ const StripRow = memo(({
 
           <button
             className="strip-collapse"
-            onClick={onCollapse}
-            aria-label={`Hide ${item.label} sections`}
+            onClick={handleArrowClick}
+            aria-label={isMobile ? `Scroll ${item.label} sections` : `Hide ${item.label} sections`}
           >
-            <i className="bi bi-chevron-up" />
+            <i className={`bi ${arrowIcon}`} />
           </button>
 
         </div>
@@ -952,6 +1014,13 @@ const Navbar = ({
     } else window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [setActiveTab, onSubtabClick]);
 
+  const handleMobileInfoSubtabClick = useCallback((sub: SubtabItem) => {
+    setActiveTab('information');
+    onInfoContentChange?.(sub.id as InfoContentType);
+    setMobileOpen(false); setMobileExpandedTab(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [setActiveTab, onInfoContentChange]);
+
   const handleMobileSearch = useCallback(() => { setMobileOpen(false); setSearchOpen(true); }, []);
 
   const onSidebarTouchStart = useCallback((e: React.TouchEvent) => {
@@ -1124,6 +1193,7 @@ const Navbar = ({
               activeSubtabId={activeSubtabId ?? null}
               onSubtabClick={(sub) => isInfoTab ? handleInfoSubtabClick(sub) : handleSubtabClick(item.id, sub)}
               onCollapse={() => { manualOpenRef.current = false; setStripOpen(false); }}
+              isMobile={isMobile}
             />
           );
         })}
@@ -1153,6 +1223,7 @@ const Navbar = ({
             const active        = activeSet.has(item.id);
             const isTabExpanded = mobileExpandedTab === item.id;
             const hasSubtabs    = !!(item.subtabs?.length);
+            const isInfoTab     = item.id === 'information';
             return (
               <div key={item.id}>
                 <button
@@ -1170,20 +1241,25 @@ const Navbar = ({
                 {hasSubtabs && (
                   <div className={`mob-subtabs ${isTabExpanded ? 'expanded' : 'collapsed'}`}>
                     <button
-                      className={`mob-subtab-btn${active && !activeSubtab ? ' is-active' : ''}`}
+                      className={`mob-subtab-btn${active && !activeSubtab && !(isInfoTab && activeInfoContent) ? ' is-active' : ''}`}
                       onClick={() => handleMobileTabClick(item.id)}
                     >
                       All {item.label}
                     </button>
-                    {item.subtabs!.map(sub => (
-                      <button
-                        key={sub.id}
-                        className={`mob-subtab-btn${activeSubtab === sub.id ? ' is-active' : ''}`}
-                        onClick={() => handleMobileSubtabClick(item.id, sub)}
-                      >
-                        {sub.label}
-                      </button>
-                    ))}
+                    {item.subtabs!.map(sub => {
+                      const isSubActive = isInfoTab
+                        ? activeInfoContent === sub.id
+                        : activeSubtab === sub.id;
+                      return (
+                        <button
+                          key={sub.id}
+                          className={`mob-subtab-btn${isSubActive ? ' is-active' : ''}`}
+                          onClick={() => isInfoTab ? handleMobileInfoSubtabClick(sub) : handleMobileSubtabClick(item.id, sub)}
+                        >
+                          {sub.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

@@ -627,9 +627,13 @@ const StrategicCapital = () => {
 
         .sc-phase-block { margin-bottom: 4rem; animation: sc-phase-in 0.6s cubic-bezier(0.22,1,0.36,1) both; }
         .sc-phase-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 0.75rem; }
+        @media(max-width: 767px) { .sc-phase-header { gap: 0.75rem; } }
         .sc-phase-title {
           font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 300;
           letter-spacing: -0.02em; color: var(--content-primary); white-space: nowrap;
+        }
+        @media(max-width: 767px) {
+          .sc-phase-title { white-space: normal; word-break: break-word; min-width: 0; flex-shrink: 1; }
         }
         .sc-phase-title-accent { color: #E31B54; }
         .sc-phase-live-dot {
@@ -696,6 +700,17 @@ const StrategicCapital = () => {
         .ic-outer:hover .ic-structure { transform: translateY(-1px); }
         .ic-footer { display: flex; align-items: center; gap: .75rem; padding: 1rem 1.25rem 1.25rem; border-top: 1px solid rgba(255,255,255,.04); margin-top: auto; transition: border-color .3s; }
         .ic-outer:hover .ic-footer { border-color: rgba(255,255,255,.08); }
+
+        /* ── Mobile investor cards: match founder card sizes ── */
+        @media(max-width:767px){
+          .ic-info{padding:1rem 0.85rem 0.75rem;gap:.4rem;}
+          .ic-name{font-size:0.9rem;}
+          .ic-type{font-size:.6rem;letter-spacing:.08em;}
+          .ic-structure{font-size:.55rem;}
+          .ic-phase-badge{font-size:.42rem;padding:3px 6px;top:.5rem;left:.5rem;}
+          .ic-footer{padding:0.6rem 0.75rem 0.75rem;gap:.5rem;}
+          .ic-btn{padding:8px 10px !important;font-size:0.75rem !important;}
+        }
 
         /* ── Modal shell ── */
         .sc-modal-overlay {

@@ -62,6 +62,18 @@ const handleInfoContentChange = useCallback((content: InfoContentType) => {
     setActiveSubtab(subtabId);
   }, []);
 
+  const handleFooterNavigate = useCallback((tabId: string, subtabId?: string, infoContent?: string) => {
+    if (!isValidTab(tabId)) return;
+    setActiveTab(tabId);
+    const url = new URL(window.location.href);
+    if (tabId === 'home') url.searchParams.delete('tab');
+    else url.searchParams.set('tab', tabId);
+    window.history.pushState({ tab: tabId }, '', url);
+    if (subtabId) setActiveSubtab(subtabId);
+    if (infoContent) setActiveInfoContent(infoContent as InfoContentType);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [isValidTab]);
+
   return (
     <div className="min-h-screen theme-transition" style={{ background: 'var(--surface-primary)', color: 'var(--content-primary)' }}>
       <Navbar
@@ -80,7 +92,7 @@ const handleInfoContentChange = useCallback((content: InfoContentType) => {
           onInfoContentChange={handleInfoContentChange}
         />
       </main>
-      <Footer />
+      <Footer onNavigate={handleFooterNavigate} />
     </div>
   );
 };

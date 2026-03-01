@@ -85,36 +85,55 @@ function FounderModal({ founder, onClose }: { founder: Founder; onClose: () => v
           </div>
         </div>
 
-        {/* Portrait column — no minHeight, fills panel height naturally */}
-        <div style={{
-          position: 'relative', flexShrink: 0, width: '280px',
-          overflow: 'hidden',
-          background: 'linear-gradient(170deg, #0e0e1c 0%, #160c14 100%)',
-        }}>
-          {founder.src ? (
-            <Image src={founder.src} alt={founder.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} sizes="280px" />
-          ) : (
-            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(227,27,84,0.15) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
-          )}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '55%', background: 'linear-gradient(to top, #0d0d1a 20%, transparent)', pointerEvents: 'none', zIndex: 1 }} />
-          <span className="fc-modal-chip" style={{
-            position: 'absolute', top: '14px', left: '14px', zIndex: 3,
-            fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px',
-            letterSpacing: '0.16em', textTransform: 'uppercase' as const,
-            color: 'rgba(255,255,255,0.7)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.15)', padding: '5px 11px', borderRadius: '4px',
-          }}>{founder.codename}</span>
+        {/* ── Mobile: top row with image + title side-by-side ── */}
+        <div className="fc-modal-top-row">
+
+          {/* Portrait column */}
+          <div className="fc-modal-portrait-mobile" style={{
+            position: 'relative', flexShrink: 0, width: '280px',
+            overflow: 'hidden',
+            background: 'linear-gradient(170deg, #0e0e1c 0%, #160c14 100%)',
+          }}>
+            {founder.src ? (
+              <Image src={founder.src} alt={founder.name} fill style={{ objectFit: 'cover', objectPosition: 'center top' }} sizes="280px" />
+            ) : (
+              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(227,27,84,0.15) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
+            )}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '55%', background: 'linear-gradient(to top, #0d0d1a 20%, transparent)', pointerEvents: 'none', zIndex: 1 }} />
+            <span className="fc-modal-chip" style={{
+              position: 'absolute', top: '14px', left: '14px', zIndex: 3,
+              fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px',
+              letterSpacing: '0.16em', textTransform: 'uppercase' as const,
+              color: 'rgba(255,255,255,0.7)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,255,255,0.15)', padding: '5px 11px', borderRadius: '4px',
+            }}>{founder.codename}</span>
+          </div>
+
+          {/* Mobile-only title block (next to image) */}
+          <div className="fc-modal-title-mobile">
+            <div className="fc-modal-eyebrow" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700, color: 'rgba(255,255,255,0.30)', marginBottom: '8px' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#E31B54', flexShrink: 0 }} />
+              Since {founder.since}
+            </div>
+            <h2 className="fc-modal-name" style={{ fontSize: 'clamp(1.1rem, 3vw, 1.4rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, background: 'linear-gradient(135deg, #f1f5f9 0%, rgba(241,245,249,0.6) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', margin: 0 }}>{founder.name}</h2>
+            <p style={{ fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px', color: '#E31B54', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', margin: '6px 0 0' }}>{founder.title}</p>
+            <span className="fc-modal-role-tag" style={{ display: 'inline-block', marginTop: '8px', fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '9px', textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', padding: '3px 8px', borderRadius: '4px', alignSelf: 'flex-start' }}>{founder.role}</span>
+          </div>
+
         </div>
 
-        {/* Info column — minHeight:0 allows overflowY:auto to activate when content exceeds height */}
+        {/* Info column */}
         <div className="fc-modal-info" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '2.25rem 2.5rem 2rem 2rem', borderLeft: '1px solid rgba(255,255,255,0.06)', overflowY: 'auto', minWidth: 0 }}>
-          <div className="fc-modal-eyebrow" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700, color: 'rgba(255,255,255,0.30)', marginBottom: '16px' }}>
-            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#E31B54', flexShrink: 0 }} />
-            Founding Member · Since {founder.since}
+          {/* Desktop-only eyebrow/name/title (hidden on mobile since it's in the top row) */}
+          <div className="fc-modal-desktop-header">
+            <div className="fc-modal-eyebrow" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700, color: 'rgba(255,255,255,0.30)', marginBottom: '16px' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#E31B54', flexShrink: 0 }} />
+              Founding Member · Since {founder.since}
+            </div>
+            <h2 className="fc-modal-name" style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, background: 'linear-gradient(135deg, #f1f5f9 0%, rgba(241,245,249,0.6) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', margin: 0 }}>{founder.name}</h2>
+            <p style={{ fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '11px', color: '#E31B54', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', margin: '10px 0 0' }}>{founder.title}</p>
+            <span className="fc-modal-role-tag" style={{ display: 'inline-block', marginTop: '14px', fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px', textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', padding: '4px 12px', borderRadius: '4px', alignSelf: 'flex-start' }}>{founder.role}</span>
           </div>
-          <h2 className="fc-modal-name" style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, background: 'linear-gradient(135deg, #f1f5f9 0%, rgba(241,245,249,0.6) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', margin: 0 }}>{founder.name}</h2>
-          <p style={{ fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '11px', color: '#E31B54', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.14em', margin: '10px 0 0' }}>{founder.title}</p>
-          <span className="fc-modal-role-tag" style={{ display: 'inline-block', marginTop: '14px', fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '10px', textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.30)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', padding: '4px 12px', borderRadius: '4px', alignSelf: 'flex-start' }}>{founder.role}</span>
           <div className="fc-modal-divider" style={{ width: '100%', height: '1px', margin: '24px 0', background: 'linear-gradient(90deg, rgba(227,27,84,0.3), rgba(255,255,255,0.06) 50%, transparent)' }} />
           <div style={{ marginBottom: '24px' }}>
             <span className="fc-modal-about-label" style={{ display: 'block', fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '9px', textTransform: 'uppercase' as const, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.25)', marginBottom: '10px' }}>About</span>
@@ -373,6 +392,53 @@ const TheOrganization = () => {
         :root.light .fc-outer:hover .fc-footer{border-color:rgba(0,0,0,.1);}
         .fc-btn { padding: 12px 18px !important; font-size: 0.93rem !important; font-weight: 600 !important; }
         .modal-btn { padding: 12px 20px !important; font-size: 0.93rem !important; font-weight: 600 !important; }
+
+        /* ── Mobile founder cards: smaller to prevent button cropping ── */
+        @media(max-width:767px){
+          .fc-portrait{aspect-ratio:2/3;}
+          .fc-info{padding:1rem 0.85rem 0.75rem;gap:.4rem;}
+          .fc-name{font-size:0.9rem;}
+          .fc-title{font-size:.6rem;letter-spacing:.08em;}
+          .fc-role{font-size:.55rem;}
+          .fc-id{font-size:.42rem;padding:3px 6px;top:.5rem;left:.5rem;}
+          .fc-footer{padding:0.6rem 0.75rem 0.75rem;gap:.5rem;}
+          .fc-btn{padding:8px 10px !important;font-size:0.75rem !important;}
+        }
+
+        /* ── Mobile modal layout ── */
+        @media(max-width:767px){
+          .fc-modal-panel{flex-direction:column !important;}
+          .fc-modal-top-row{
+            display:flex !important;flex-direction:row !important;
+            border-bottom:1px solid rgba(255,255,255,.06);
+          }
+          .fc-modal-portrait-mobile{
+            position:relative;width:30%;min-width:30%;max-width:30%;flex-shrink:0;
+            overflow:hidden;
+            background:linear-gradient(170deg,#0e0e1c 0%,#160c14 100%);
+          }
+          .fc-modal-title-mobile{
+            flex:1;display:flex;flex-direction:column;justify-content:center;
+            padding:1rem 1rem;min-width:0;width:70%;
+          }
+          .fc-modal-info{
+            border-left:none !important;
+            padding:1.25rem 1.25rem 1.5rem !important;
+          }
+          .fc-modal-outer{max-width:100% !important;max-height:92vh !important;margin:0 8px;}
+          .fc-modal-stats{height:auto !important;}
+          .fc-modal-stats > div{padding:0.75rem 0.5rem !important;}
+          .modal-btn{padding:10px 14px !important;font-size:0.82rem !important;}
+        }
+        @media(min-width:768px){
+          .fc-modal-top-row{display:contents !important;}
+          .fc-modal-portrait-mobile{display:contents;}
+          .fc-modal-title-mobile{display:none !important;}
+          .fc-modal-desktop-header{display:block;}
+        }
+        @media(max-width:767px){
+          .fc-modal-desktop-header{display:none !important;}
+        }
 
         .fc-modal-outer {
           position:relative; display:flex; flex-direction:column;

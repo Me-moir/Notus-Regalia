@@ -75,6 +75,7 @@ const DiscoverHeader = memo(() => {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
+              textAlign: "center",
             }}
           >
             NOTUS REGALIA

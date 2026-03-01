@@ -15,22 +15,21 @@ interface SectionItem {
   tabId: string;
   subtabId?: string;
   icon: string;
+  aka?: string;
 }
 
 const FREQUENT: SectionItem[] = [
-  { label: 'Home',         tabId: 'home',                                          icon: 'bi-house' },
-  { label: 'Overview',     tabId: 'discover',    subtabId: 'discover-overview',     icon: 'bi-grid' },
-  { label: 'About',        tabId: 'discover',    subtabId: 'discover-about',        icon: 'bi-info-circle' },
-  { label: 'Team',         tabId: 'discover',    subtabId: 'discover-team',         icon: 'bi-people' },
-  { label: 'Information',  tabId: 'information',                                    icon: 'bi-pin' },
+  { label: 'The Company',       tabId: 'discover',    subtabId: 'discover-thecompany',        icon: 'bi-building',        aka: 'About Us, Company Profile' },
+  { label: 'The Organization',  tabId: 'discover',    subtabId: 'discover-theorganization',   icon: 'bi-people',          aka: 'Teams, Founders' },
+  { label: 'Strategic Capital',  tabId: 'discover',    subtabId: 'discover-strategiccapital',  icon: 'bi-graph-up-arrow',  aka: 'Seeds, Investors' },
 ];
 
 const SUGGESTED: SectionItem[] = [
-  { label: 'Direction',     tabId: 'discover',    subtabId: 'discover-direction',     icon: 'bi-compass' },
-  { label: 'Governance',    tabId: 'discover',    subtabId: 'discover-governance',    icon: 'bi-bank' },
-  { label: 'Affiliations',  tabId: 'discover',    subtabId: 'discover-affiliations',  icon: 'bi-diagram-3' },
-  { label: 'Ventures',      tabId: 'ventures',                                        icon: 'bi-crosshair' },
-  { label: 'Releases',      tabId: 'information', subtabId: 'info-releases',           icon: 'bi-bell' },
+  { label: 'Home',              tabId: 'home',                                                  icon: 'bi-house' },
+  { label: 'Overview',          tabId: 'discover',    subtabId: 'discover-overview',           icon: 'bi-grid' },
+  { label: 'Information',       tabId: 'information',                                           icon: 'bi-pin' },
+  { label: 'Ventures',          tabId: 'ventures',                                              icon: 'bi-crosshair' },
+  { label: 'Releases',          tabId: 'information', subtabId: 'statements',                   icon: 'bi-bell' },
 ];
 
 
@@ -233,13 +232,13 @@ const SearchModal = ({ isOpen, onClose, onNavigate }: SearchModalProps) => {
   const filteredFrequent = useMemo(() => {
     if (!query.trim()) return FREQUENT;
     const q = query.toLowerCase();
-    return FREQUENT.filter(i => i.label.toLowerCase().includes(q));
+    return FREQUENT.filter(i => i.label.toLowerCase().includes(q) || (i.aka && i.aka.toLowerCase().includes(q)));
   }, [query]);
 
   const filteredSuggested = useMemo(() => {
     if (!query.trim()) return SUGGESTED;
     const q = query.toLowerCase();
-    return SUGGESTED.filter(i => i.label.toLowerCase().includes(q));
+    return SUGGESTED.filter(i => i.label.toLowerCase().includes(q) || (i.aka && i.aka.toLowerCase().includes(q)));
   }, [query]);
 
   if (!isOpen) return null;
@@ -275,13 +274,20 @@ const SearchModal = ({ isOpen, onClose, onNavigate }: SearchModalProps) => {
                   <div className="search-accordion">
                     <div className="search-accordion-header" onClick={() => setFrequentOpen(v => !v)}>
                       <i className={`bi bi-chevron-right chevron${frequentOpen ? ' open' : ''}`} />
-                      Trending Sections
+                      Trending
                     </div>
                     <div className={`search-accordion-items ${frequentOpen ? 'expanded' : 'collapsed'}`}>
                       {filteredFrequent.map(item => (
                         <div key={item.label} className="search-item" onClick={() => handleItemClick(item)}>
                           <i className={`bi ${item.icon}`} />
-                          {item.label}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <span>{item.label}</span>
+                            {item.aka && (
+                              <span style={{ fontSize: '0.72rem', color: 'var(--content-faint)', opacity: 0.6, fontWeight: 400 }}>
+                                {item.aka}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>

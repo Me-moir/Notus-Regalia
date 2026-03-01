@@ -151,7 +151,11 @@ function CopyIcon({ copied }: { copied: boolean }) {
   );
 }
 
-const Footer = () => {
+interface FooterProps {
+  onNavigate?: (tabId: string, subtabId?: string, infoContent?: string) => void;
+}
+
+const Footer = ({ onNavigate }: FooterProps) => {
   const footerRef  = useRef<HTMLElement>(null);
   const splitRef   = useRef<HTMLDivElement>(null);
   const nlBgRef    = useRef<HTMLDivElement>(null);
@@ -179,10 +183,34 @@ const Footer = () => {
     if (e.key === 'Tab' && showSuggestion) { e.preventDefault(); completeSuggestion(); }
   };
   const handleCopyEmail = (address: string) => {
-    navigator.clipboard.writeText(address).then(() => {
-      setCopiedEmail(address);
-      setTimeout(() => setCopiedEmail(null), 2000);
-    });
+    const fallbackCopy = (text: string) => {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      textarea.style.top = '-9999px';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        setCopiedEmail(address);
+        setTimeout(() => setCopiedEmail(null), 2000);
+      } catch {
+        // silently fail
+      }
+      document.body.removeChild(textarea);
+    };
+
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(address).then(() => {
+        setCopiedEmail(address);
+        setTimeout(() => setCopiedEmail(null), 2000);
+      }).catch(() => fallbackCopy(address));
+    } else {
+      fallbackCopy(address);
+    }
   };
 
   useEffect(() => {
@@ -284,13 +312,67 @@ const Footer = () => {
     setTimeout(() => setSubmitState('idle'), 4000);
   };
 
-  const sections = [
-    { title: 'Information', links: ['About', 'Organization', 'Vision', 'Ventures', 'Approach'] },
-    { title: 'Reach Out',   links: ['Contact', 'Support', 'Feedback', 'Report bug'] },
-    { title: 'Tools',       links: ["The Fool's Sandbox", "Attributions", "Resources"] },
-    { title: 'Affiliates',  links: ['Partners', 'Sponsors', 'Licenses'] },
-    { title: 'Community',   links: ['Contribute', 'Build With Us', 'Become a Fool', 'Sandbox Program'] },
-    { title: 'Legal',       links: ['Acceptable Use Policy', 'Terms & Conditions', 'Privacy Policy', 'Cookie Policy'] },
+  interface FooterLink {
+    label: string;
+    tabId?: string;
+    subtabId?: string;
+    infoContent?: string;
+    href?: string;
+  }
+
+  const sections: { title: string; links: FooterLink[] }[] = [
+    {
+      title: 'Discover',
+      links: [
+        { label: 'Overview',          tabId: 'discover', subtabId: 'discover-overview' },
+        { label: 'The Company',       tabId: 'discover', subtabId: 'discover-thecompany' },
+        { label: 'The Organization',  tabId: 'discover', subtabId: 'discover-theorganization' },
+        { label: 'Strategic Capital', tabId: 'discover', subtabId: 'discover-strategiccapital' },
+      ]
+    },
+    {
+      title: 'Information',
+      links: [
+        { label: 'Releases',           tabId: 'information', infoContent: 'statements' },
+        { label: 'News & Media',       tabId: 'information', infoContent: 'news' },
+        { label: 'Investor Relations', tabId: 'information', infoContent: 'investor-relations' },
+        { label: 'Documents',          tabId: 'information', infoContent: 'documents' },
+      ]
+    },
+    {
+      title: 'Ventures',
+      links: [
+        { label: 'Defense',          tabId: 'ventures', subtabId: 'defense' },
+        { label: 'Healthcare',       tabId: 'ventures', subtabId: 'healthcare' },
+        { label: 'Civic Operations', tabId: 'ventures', subtabId: 'civic-operations' },
+      ]
+    },
+    {
+      title: 'Reach Out',
+      links: [
+        { label: 'Contact',  href: '/contact' },
+        { label: 'Support',  href: '/contact' },
+        { label: 'Feedback', href: '/contact' },
+      ]
+    },
+    {
+      title: 'Community',
+      links: [
+        { label: 'Contribute',      href: '#' },
+        { label: 'Build With Us',   href: '#' },
+        { label: 'Become a Fool',   href: '#' },
+        { label: 'Sandbox Program', href: '#' },
+      ]
+    },
+    {
+      title: 'Legal',
+      links: [
+        { label: 'Acceptable Use Policy', tabId: 'information', infoContent: 'use-policy' },
+        { label: 'Terms & Conditions',    tabId: 'information', infoContent: 'terms' },
+        { label: 'Privacy Policy',        tabId: 'information', infoContent: 'privacy' },
+        { label: 'Licenses',              tabId: 'information', infoContent: 'licenses' },
+      ]
+    },
   ];
 
   return (
@@ -983,7 +1065,22 @@ const Footer = () => {
                 <h4 className="nr-nav-title">{section.title}</h4>
                 <ul className="space-y-2.5 mt-4">
                   {section.links.map((link, linkIdx) => (
-                    <li key={linkIdx}><a href="#" className="nr-nav-link">{link}</a></li>
+                    <li key={linkIdx}>
+                      {link.tabId && onNavigate ? (
+                        <a
+                          href="#"
+                          className="nr-nav-link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onNavigate(link.tabId!, link.subtabId, link.infoContent);
+                          }}
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <a href={link.href || '#'} className="nr-nav-link">{link.label}</a>
+                      )}
+                    </li>
                   ))}
                 </ul>
               </div>
