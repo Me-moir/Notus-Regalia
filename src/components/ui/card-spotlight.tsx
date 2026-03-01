@@ -54,7 +54,7 @@ export function CardSpotlight({ children, className }: CardSpotlightProps) {
           content: '';
           position: absolute; inset: 0; padding: 1px; border-radius: 1rem;
           pointer-events: none; z-index: 1; opacity: 0;
-          background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 166, 0.8), rgba(255, 215, 0, 0.6), rgba(236, 72, 153, 0.6), rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.5), transparent 70%);
+          background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(227, 27, 84, 0.85), rgba(235, 17, 67, 0.7), rgba(200, 16, 60, 0.6), rgba(160, 12, 48, 0.5), rgba(120, 8, 36, 0.4), transparent 70%);
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor; mask-composite: exclude;
           transition: opacity 0.35s ease, transform 0.35s ease;
@@ -79,7 +79,7 @@ export function CardSpotlight({ children, className }: CardSpotlightProps) {
         }
         /* Lighter overlay colors for light theme */
         html.light .uiverse-card-border::before {
-          background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 150, 100, 0.55), rgba(250, 200, 90, 0.45), rgba(220, 90, 140, 0.35), rgba(120, 70, 200, 0.32), rgba(40, 110, 220, 0.32), transparent 70%) !important;
+          background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(227, 27, 84, 0.65), rgba(235, 17, 67, 0.5), rgba(200, 16, 60, 0.4), rgba(160, 12, 48, 0.35), rgba(120, 8, 36, 0.3), transparent 70%) !important;
           -webkit-mask-composite: xor; mask-composite: exclude;
         }
 
@@ -134,9 +134,9 @@ export function CardSpotlight({ children, className }: CardSpotlightProps) {
             radial-gradient(at 88% 40%, hsla(240, 15%, 5%, 1) 0px, transparent 85%),
             radial-gradient(at 49% 30%, hsla(240, 15%, 5%, 1) 0px, transparent 85%),
             radial-gradient(at 14% 26%, hsla(240, 15%, 5%, 1) 0px, transparent 85%),
-            radial-gradient(at 0% 100%,  rgba(147,51,234,0.45)  0px, transparent 80%),
-            radial-gradient(at 100% 100%,rgba(59,130,246,0.4)   0px, transparent 80%),
-            radial-gradient(at 50% 100%, rgba(220,38,38,0.3)    0px, transparent 70%)
+            radial-gradient(at 0% 100%,  rgba(227,27,84,0.5)    0px, transparent 80%),
+            radial-gradient(at 100% 100%,rgba(200,16,60,0.4)    0px, transparent 80%),
+            radial-gradient(at 50% 100%, rgba(235,17,67,0.35)   0px, transparent 70%)
           `,
           borderRadius: "1rem",
           boxShadow: "0px -16px 24px 0px rgba(255, 255, 255, 0.06) inset",

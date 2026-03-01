@@ -1,7 +1,7 @@
 "use client";
 import { memo, useState, useEffect, useCallback } from 'react';
 import { contentData } from '@/data/information-data';
-import ContentSection from './ContentSection';
+import ContentHeader from './ContentHeader';
 
 const COOKIE_KEY = 'nr-cookie-consent';
 
@@ -212,13 +212,60 @@ interface PrivacyProps {
   isTransitioning?: boolean;
 }
 
+const privacyContent = contentData.privacy;
+
 const Privacy = memo(({ isTransitioning = false }: PrivacyProps) => {
   return (
-    <div>
-      <ContentSection content={contentData.privacy} isTransitioning={isTransitioning} />
-      <div className="px-4 sm:px-8 lg:px-20 pb-8 sm:pb-12 lg:pb-16">
-        <div className="max-w-7xl mx-auto">
-          <CookieSettings />
+    <div className="px-4 sm:px-8 lg:px-20 py-8 sm:py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto">
+        <div>
+          <ContentHeader
+            icon={privacyContent.icon}
+            title={privacyContent.title}
+            isTransitioning={isTransitioning}
+          />
+        </div>
+
+        <div className="space-y-6 sm:space-y-8">
+          {privacyContent.sections.map((section, index) => (
+            <div key={index}>
+              <div className="space-y-3 sm:space-y-4">
+                {section.heading && (
+                  <h3
+                    className="text-xl sm:text-2xl lg:text-3xl font-semibold"
+                    style={{ color: 'var(--content-primary)' }}
+                  >
+                    {section.heading}
+                  </h3>
+                )}
+
+                <div className="space-y-3 sm:space-y-4">
+                  {section.content.map((paragraph, pIndex) => (
+                    <p
+                      key={pIndex}
+                      className="text-base sm:text-lg lg:text-xl leading-relaxed"
+                      style={{ color: 'var(--content-muted)' }}
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Inject Cookie Preferences right after Cookie Usage */}
+                {section.heading === 'Cookie Usage' && <CookieSettings />}
+
+                {index < privacyContent.sections.length - 1 && (
+                  <div className="w-full h-px bg-gradient-to-r from-transparent via-[var(--border-color)] to-transparent mt-6 sm:mt-8" />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8" style={{ borderTop: '1px solid var(--border-color)' }}>
+          <p className="text-sm sm:text-base text-center" style={{ color: 'var(--content-muted)' }}>
+            Last updated: January 2026 • For questions or concerns, please contact our legal team
+          </p>
         </div>
       </div>
     </div>

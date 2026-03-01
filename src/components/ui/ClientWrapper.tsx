@@ -7,12 +7,12 @@ import LoadingScreen from './LoadingScreen';
 import CookieBanner from './CookieBanner';
 import type { InfoContentType } from '@/data/information-data';
 
-type TabType = 'home' | 'discover' | 'information' | 'affiliations' | 'ventures';
-const VALID_TABS: TabType[] = ['home', 'discover', 'information', 'affiliations', 'ventures'];
+type TabType = 'home' | 'discover' | 'information' | 'affiliations' | 'technologies';
+const VALID_TABS: TabType[] = ['home', 'discover', 'information', 'affiliations', 'technologies'];
 
 const DEFAULT_SUBTABS: Partial<Record<TabType, string>> = {
   discover: 'discover-overview',
-  ventures: 'ventures-defense',
+  technologies: 'technologies-defense',
 };
 
 const ClientWrapper = () => {

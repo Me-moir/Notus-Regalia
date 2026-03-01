@@ -57,14 +57,14 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    id: 'ventures',
-    label: 'Ventures',
+    id: 'technologies',
+    label: 'Technologies',
     icon: 'bi-crosshair',
     isSpecial: true,
     subtabs: [
-      { id: 'ventures-defense',         label: 'Defense Sector' },
-      { id: 'ventures-healthcare',       label: 'Healthcare Sector' },
-      { id: 'ventures-civic-operations', label: 'Civic Integration' },
+      { id: 'technologies-defense',         label: 'Defense Sector' },
+      { id: 'technologies-healthcare',       label: 'Healthcare Sector' },
+      { id: 'technologies-civic-operations', label: 'Civic Integration' },
     ],
   },
 ];
@@ -329,17 +329,21 @@ const NAVBAR_CSS = `
 /* ── Tab pill ── */
 .tab-item-border {
   display: inline-flex; flex-shrink: 0;
-  border-radius: 10.5px; padding: 0.5px; position: relative; background: transparent;
+  border-radius: 10.5px; padding: 1.5px; position: relative; background: transparent;
 }
 .tab-item-border::before {
   content: ''; position: absolute; inset: 0; border-radius: 10.5px;
+  padding: 1.5px;
   background: linear-gradient(90deg,
-    rgba(0,255,166,0.0) 0%, rgba(0,255,166,0.55) 15%,
-    rgba(255,215,0,0.45) 30%, rgba(236,72,153,0.45) 45%,
-    rgba(147,51,234,0.45) 60%, rgba(59,130,246,0.4) 75%,
+    rgba(0,255,166,0.0) 0%, rgba(0,255,166,0.7) 15%,
+    rgba(255,215,0,0.6) 30%, rgba(236,72,153,0.6) 45%,
+    rgba(147,51,234,0.6) 60%, rgba(59,130,246,0.55) 75%,
     rgba(0,255,166,0.0) 90%);
   background-size: 200% 100%;
   animation: orbitBorder 3s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
 }
 .tab-item-border:hover::before,

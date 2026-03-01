@@ -410,7 +410,7 @@ const TheOrganization = () => {
           .fc-modal-panel{flex-direction:column !important;}
           .fc-modal-top-row{
             display:flex !important;flex-direction:row !important;
-            border-bottom:1px solid rgba(255,255,255,.06);
+            border-bottom:1px solid rgba(255,255,255,.08);
           }
           .fc-modal-portrait-mobile{
             position:relative;width:30%;min-width:30%;max-width:30%;flex-shrink:0;
@@ -421,6 +421,9 @@ const TheOrganization = () => {
             flex:1;display:flex;flex-direction:column;justify-content:center;
             padding:1rem 1rem;min-width:0;width:70%;
           }
+          .fc-modal-chip{display:none !important;}
+          .fc-modal-role-tag{display:none !important;}
+          .fc-modal-divider{display:none !important;}
           .fc-modal-info{
             border-left:none !important;
             padding:1.25rem 1.25rem 1.5rem !important;

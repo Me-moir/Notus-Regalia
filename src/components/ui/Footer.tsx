@@ -342,11 +342,11 @@ const Footer = ({ onNavigate }: FooterProps) => {
       ]
     },
     {
-      title: 'Ventures',
+      title: 'Technologies',
       links: [
-        { label: 'Defense',          tabId: 'ventures', subtabId: 'defense' },
-        { label: 'Healthcare',       tabId: 'ventures', subtabId: 'healthcare' },
-        { label: 'Civic Operations', tabId: 'ventures', subtabId: 'civic-operations' },
+        { label: 'Defense',          tabId: 'technologies', subtabId: 'defense' },
+        { label: 'Healthcare',       tabId: 'technologies', subtabId: 'healthcare' },
+        { label: 'Civic Operations', tabId: 'technologies', subtabId: 'civic-operations' },
       ]
     },
     {

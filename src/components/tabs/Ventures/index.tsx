@@ -4,25 +4,25 @@ import DefenseTab from './Defense';
 import CivicTab from './Civic';
 import HealthcareTab from './Healthcare';
 
-type VenturesSubtab = 'ventures-defense' | 'ventures-civic-operations' | 'ventures-healthcare';
+type TechnologiesSubtab = 'technologies-defense' | 'technologies-civic-operations' | 'technologies-healthcare';
 
-interface VenturesProps {
+interface TechnologiesProps {
   activeSubtab?: string;
 }
 
-const Ventures = ({ activeSubtab }: VenturesProps) => {
-  const active: VenturesSubtab =
-    activeSubtab === 'ventures-defense' || activeSubtab === 'ventures-civic-operations' || activeSubtab === 'ventures-healthcare'
+const Technologies = ({ activeSubtab }: TechnologiesProps) => {
+  const active: TechnologiesSubtab =
+    activeSubtab === 'technologies-defense' || activeSubtab === 'technologies-civic-operations' || activeSubtab === 'technologies-healthcare'
       ? activeSubtab
-      : 'ventures-defense';
+      : 'technologies-defense';
 
   return (
     <>
-      {active === 'ventures-defense' && <DefenseTab />}
-      {active === 'ventures-civic-operations' && <CivicTab />}
-      {active === 'ventures-healthcare' && <HealthcareTab />}
+      {active === 'technologies-defense' && <DefenseTab />}
+      {active === 'technologies-civic-operations' && <CivicTab />}
+      {active === 'technologies-healthcare' && <HealthcareTab />}
     </>
   );
 };
 
-export default Ventures;
+export default Technologies;

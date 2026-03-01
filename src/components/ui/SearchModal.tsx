@@ -42,10 +42,10 @@ const ALL_SECTIONS: SectionItem[] = [
   { label: 'Investor Relations',tabId: 'information', infoContent: 'investor-relations',                         icon: 'bi-graph-up-arrow',  aka: 'Financial, Reports, Shareholders',            keywords: ['investor', 'investors', 'relations', 'financial', 'shareholders', 'equity', 'stock', 'dividends', 'ir', 'quarterly', 'annual report'] },
   { label: 'Report a Problem',  tabId: 'information', infoContent: 'report',                                     icon: 'bi-flag',            aka: 'Issue, Bug, Complaint',                       keywords: ['report', 'problem', 'issue', 'bug', 'complaint', 'feedback', 'abuse', 'security', 'vulnerability', 'contact legal'] },
 
-  // Ventures
-  { label: 'Defense',           tabId: 'ventures',    subtabId: 'defense',                                      icon: 'bi-shield',          aka: 'Military, Security, Intelligence',            keywords: ['defense', 'military', 'security', 'intelligence', 'warfare', 'weapons', 'tactical', 'army', 'navy'] },
-  { label: 'Healthcare',        tabId: 'ventures',    subtabId: 'healthcare',                                   icon: 'bi-heart-pulse',     aka: 'Medical, Biotech, Health',                    keywords: ['healthcare', 'health', 'medical', 'biotech', 'pharma', 'hospital', 'clinical', 'patient', 'wellness'] },
-  { label: 'Civic Operations',  tabId: 'ventures',    subtabId: 'civic-operations',                             icon: 'bi-buildings',       aka: 'Government, Infrastructure, Public',          keywords: ['civic', 'operations', 'government', 'infrastructure', 'public', 'urban', 'city', 'municipal', 'community'] },
+  // Technologies
+  { label: 'Defense',           tabId: 'technologies', subtabId: 'defense',                                      icon: 'bi-shield',          aka: 'Military, Security, Intelligence',            keywords: ['defense', 'military', 'security', 'intelligence', 'warfare', 'weapons', 'tactical', 'army', 'navy'] },
+  { label: 'Healthcare',        tabId: 'technologies', subtabId: 'healthcare',                                   icon: 'bi-heart-pulse',     aka: 'Medical, Biotech, Health',                    keywords: ['healthcare', 'health', 'medical', 'biotech', 'pharma', 'hospital', 'clinical', 'patient', 'wellness'] },
+  { label: 'Civic Operations',  tabId: 'technologies', subtabId: 'civic-operations',                             icon: 'bi-buildings',       aka: 'Government, Infrastructure, Public',          keywords: ['civic', 'operations', 'government', 'infrastructure', 'public', 'urban', 'city', 'municipal', 'community'] },
 ];
 
 const TRENDING: SectionItem[] = ALL_SECTIONS.filter(i =>
@@ -53,16 +53,16 @@ const TRENDING: SectionItem[] = ALL_SECTIONS.filter(i =>
 );
 
 const SUGGESTED: SectionItem[] = ALL_SECTIONS.filter(i =>
-  ['Home', 'Overview', 'Releases', 'Ventures', 'Policies'].includes(i.label)
+  ['Home', 'Overview', 'Releases', 'Technologies', 'Policies'].includes(i.label)
 ).map(i => {
-  // For Ventures without a subtab, just point to the tab
-  if (i.label === 'Ventures') return { ...i, subtabId: undefined };
+  // For Technologies without a subtab, just point to the tab
+  if (i.label === 'Technologies') return { ...i, subtabId: undefined };
   return i;
 });
-// Add a general Ventures entry
-const VENTURES_ENTRY: SectionItem = { label: 'Ventures', tabId: 'ventures', icon: 'bi-crosshair', aka: 'Portfolio Companies', keywords: ['ventures', 'portfolio'] };
-if (!SUGGESTED.find(s => s.label === 'Ventures')) {
-  SUGGESTED.push(VENTURES_ENTRY);
+// Add a general Technologies entry
+const TECHNOLOGIES_ENTRY: SectionItem = { label: 'Technologies', tabId: 'technologies', icon: 'bi-crosshair', aka: 'Portfolio Companies, Ventures', keywords: ['technologies', 'ventures', 'portfolio', 'tech'] };
+if (!SUGGESTED.find(s => s.label === 'Technologies')) {
+  SUGGESTED.push(TECHNOLOGIES_ENTRY);
 }
 // Also add Information general entry
 const INFO_ENTRY: SectionItem = { label: 'Information', tabId: 'information', icon: 'bi-pin', aka: 'Info Hub', keywords: ['information', 'info'] };

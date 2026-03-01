@@ -106,11 +106,11 @@ const PartnerCard = ({ partner }: { partner: Partner }) => (
         padding: 1px;
         background: radial-gradient(
           160px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-          rgba(0, 255, 166, 0.9),
-          rgba(255, 215, 0, 0.7),
-          rgba(236, 72, 153, 0.6),
-          rgba(147, 51, 234, 0.55),
-          rgba(59, 130, 246, 0.5),
+          rgba(227, 27, 84, 0.9),
+          rgba(235, 17, 67, 0.75),
+          rgba(200, 16, 60, 0.6),
+          rgba(160, 12, 48, 0.5),
+          rgba(120, 8, 36, 0.4),
           transparent 72%
         );
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);

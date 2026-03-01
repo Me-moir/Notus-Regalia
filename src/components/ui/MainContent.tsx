@@ -4,7 +4,7 @@ import type { InfoContentType } from '@/data/information-data';
 
 const LandingTab     = lazy(() => import('@/components/tabs/Landing'));
 const DiscoverTab    = lazy(() => import('@/components/tabs/Discover'));
-const VenturesTab    = lazy(() => import('@/components/tabs/Ventures'));
+const TechnologiesTab = lazy(() => import('@/components/tabs/Ventures'));
 const InformationTab = lazy(() => import('@/components/tabs/Information'));
 
 interface MainContentProps {
@@ -42,8 +42,8 @@ const MainContent = ({ activeTab, activeSubtab, activeInfoContent, onInfoContent
         return <LandingTab />;
       case 'discover':
         return <DiscoverTab />;
-      case 'ventures':
-        return <VenturesTab activeSubtab={activeSubtab} />;
+      case 'technologies':
+        return <TechnologiesTab activeSubtab={activeSubtab} />;
       case 'information':
         return (
           <InformationTab
